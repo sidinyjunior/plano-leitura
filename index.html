@@ -7,7 +7,7 @@
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Bíblia 26-27">
+    <meta name="apple-mobile-web-app-title" content="Plano Bíblico 26–27">
     <link rel="apple-touch-icon" href="assets/icone.png">
 
     <link rel="icon" type="image/png" href="assets/icone.png">
@@ -66,9 +66,63 @@
         .info { display: flex; flex-direction: column; }
         .info-date { font-size: 11px; color: #95a5a6; text-transform: uppercase; font-weight: bold; }
         .info-book { font-size: 14px; font-weight: 600; color: #2c3e50; }
+
+
+/* =========================
+   SPLASH SCREEN (FAKE)
+   ========================= */
+#splash-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg); /* usa a mesma cor do app */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.4s ease;
+}
+
+#splash-screen img {
+  width: 160px;            /* 🔥 CONTROLE DO TAMANHO DA IMAGEM */
+  max-width: 70%;
+  border-radius: 28px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+#splash-screen h1 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #2d3436;
+  text-align: center;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+#splash-screen p {
+  font-size: 0.85rem;
+  color: var(--cinza-texto);
+  margin-top: 6px;
+}
+
+/* animação de saída */
+#splash-screen.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
     </style>
 </head>
+
 <body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash-screen">
+  <img src="assets/icone.png" alt="Logo">
+  <h1>Plano Bienal de Leitura da Bíblia</h1>
+  <p>2026 • 2027</p>
+</div>
 
     <div id="install-banner">
         <div class="install-text">Adicione à Tela Inicial Para Usar Como Aplicativo</div>
@@ -134,5 +188,31 @@
     function toggleTri(idx) { const el = document.getElementById(`list-${idx}`); const show = el.style.display === "block"; document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none'); el.style.display = show ? "none" : "block"; }
     function updateProgress() { let tItems = 0, tDone = 0; CONFIG.forEach((t, tIdx) => { const boxes = document.querySelectorAll(`#list-${tIdx} .check-btn`), done = document.querySelectorAll(`#list-${tIdx} .check-btn.done`); const p = boxes.length ? Math.round((done.length / boxes.length) * 100) : 0; if(document.getElementById(`tri-bar-${tIdx}`)) document.getElementById(`tri-bar-${tIdx}`).style.width = p + "%"; if(document.getElementById(`tri-perc-${tIdx}`)) document.getElementById(`tri-perc-${tIdx}`).innerText = p + "%"; tItems += boxes.length; tDone += done.length; }); const mainP = tItems ? Math.round((tDone / tItems) * 100) : 0; if(document.getElementById('main-bar')) document.getElementById('main-bar').style.width = mainP + "%"; if(document.getElementById('main-percent')) document.getElementById('main-percent').innerText = mainP + "% Concluído Geral"; }
 </script>
+
+<script>
+  window.addEventListener("load", () => {
+    if (sessionStorage.getItem("splashShown")) {
+      const splash = document.getElementById("splash-screen");
+      if (splash) splash.remove();
+      return;
+    }
+
+    sessionStorage.setItem("splashShown", "true");
+
+    setTimeout(() => {
+      const splash = document.getElementById("splash-screen");
+      if (splash) {
+        splash.classList.add("hide");
+        setTimeout(() => splash.remove(), 400);
+      }
+    }, 1500);
+  });
+</script>
+
+
 </body>
+
 </html>
+
+
+
