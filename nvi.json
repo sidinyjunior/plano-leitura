@@ -1,0 +1,16 @@
+{
+  "versao": "NVI",
+  "estilo": "Nova Versão Internacional",
+  "livros": [
+    {
+      "nome": "Gênesis",
+      "capitulos": [
+        [
+          "No princípio Deus criou os céus e a terra.",
+          "Era a terra sem forma e vazia; trevas cobriam a face do abismo, e o Espírito de Deus se movia sobre a face das águas.",
+          "Disse Deus: \"Haja luz\", e houve luz."
+        ]
+      ]
+    }
+  ]
+}
