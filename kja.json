@@ -1,0 +1,16 @@
+{
+  "versao": "KJA",
+  "estilo": "King James Atualizada",
+  "livros": [
+    {
+      "nome": "Gênesis",
+      "capitulos": [
+        [
+          "No princípio, criou Deus os céus e a terra.",
+          "A terra, entretanto, era sem forma e vazia; a escuridão cobria a face do abismo, e o Espírito de Deus se movia sobre as águas.",
+          "Disse Deus: \"Haja luz!\" E houve luz."
+        ]
+      ]
+    }
+  ]
+}
