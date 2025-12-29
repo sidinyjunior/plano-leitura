@@ -19,6 +19,8 @@
         :root {
             --cinza-claro: #d1d8e0; --verde-whatsapp: #25D366; --verde-escuro: #128C7E; --cinza-texto: #7f8c8d; 
             --amarelo: #f1c40f; --verde-sucesso: #2ecc71; --bg: #f4f7f6; --azul-link: #3498db; --vermelho: #e74c3c;
+            /* Variáveis de Leitura */
+            --font-size-leitura: 1.2rem; --bg-leitor: #ffffff; --texto-leitor: #2d3436;
         }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         .main-title { font-size: clamp(0.7rem, 3.8vw, 0.9rem); font-weight: 800; color: #2d3436; margin: 0 0 10px 0; text-transform: uppercase; white-space: nowrap; letter-spacing: -0.02em; }
@@ -32,88 +34,102 @@
         .input-name { width: 100%; padding: 15px; border: 2px solid #edf2f7; border-radius: 15px; outline: none; font-size: 1rem; box-sizing: border-box; background: #f8fafc; color: #2d3436; }
         .btn-add { width: 100%; padding: 16px; border: none; border-radius: 15px; background: linear-gradient(135deg, var(--verde-whatsapp), var(--verde-escuro)); color: white; font-weight: bold; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3); }
 
-        #install-banner { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 420px; background: #1f2933; padding: 16px; border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); z-index: 3000; display: none; text-align: center; }
-        .install-text { font-weight: 700; font-size: 0.9rem; color: #ffffff; margin-bottom: 14px; }
-        .btn-install-now { display: inline-block; padding: 10px 20px; border: none; border-radius: 10px; background: var(--azul-link); color: white; font-weight: bold; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .btn-close-banner { font-size: 0.75rem; margin-top: 15px; text-decoration: underline; cursor: pointer; color: var(--cinza-texto); display: block; }
+        /* LEITOR */
+        #reader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-leitor); z-index: 5000; display: none; flex-direction: column; color: var(--texto-leitor); transition: 0.3s; }
+        .reader-header { padding: 10px 15px; background: #1a4731; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .reader-toolbar { display: flex; background: #245e41; padding: 8px 15px; gap: 10px; align-items: center; overflow-x: auto; white-space: nowrap; }
+        .reader-content { flex: 1; overflow-y: auto; padding: 20px; font-size: var(--font-size-leitura); line-height: 1.6; }
+        .verse-row { margin-bottom: 15px; cursor: pointer; border-radius: 8px; padding: 5px; }
+        .verse-num { font-size: 0.7em; font-weight: bold; color: var(--cinza-texto); margin-right: 10px; opacity: 0.6; }
+        
+        #compare-modal { position: fixed; bottom: -100%; left: 0; width: 100%; background: white; z-index: 6000; border-radius: 20px 20px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.2); transition: 0.4s; padding: 20px; box-sizing: border-box; max-height: 80vh; overflow-y: auto; color: #333; }
+        #compare-modal.active { bottom: 0; }
+        .compare-item { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .compare-ver { font-weight: bold; color: var(--verde-escuro); font-size: 0.8rem; }
+        
+        .cap-btn { display: inline-block; width: 32px; height: 32px; line-height: 32px; text-align: center; background: #fff; border: 1px solid #ddd; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 0.85rem; font-weight: bold; color: var(--verde-escuro); }
+        .btn-tool { background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 10px; border-radius: 5px; font-size: 0.75rem; font-weight: bold; }
+        
+        .theme-sepia { --bg-leitor: #f4ecd8; --texto-leitor: #5b4636; }
+        .theme-dark { --bg-leitor: #1a1a1a; --texto-leitor: #e0e0e0; }
 
-        .user-card { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 2px solid transparent; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: left; }
+        /* SPLASH E OUTROS */
+        #splash-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease; }
+        #splash-screen img { width: 160px; max-width: 70%; border-radius: 28px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        #splash-screen.hide { opacity: 0; pointer-events: none; }
+        
+        .user-card { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 2px solid transparent; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .user-card.meu-perfil { border-color: var(--azul-link); background: #f0f7ff; }
-        .card-label { font-size: 0.65rem; font-weight: bold; color: var(--cinza-texto); margin-bottom: 3px; display: block; text-transform: uppercase;}
         .mini-bar-bg { width: 100%; background: #eee; height: 6px; border-radius: 3px; overflow: hidden; }
         .mini-bar-fill { height: 100%; background: var(--verde-sucesso); transition: 1s; }
         .mini-bar-fill.total { background: var(--azul-link); }
+        .trimestre-box { background: white; border-radius: 15px; margin-bottom: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .tri-header { width: 100%; padding: 18px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; }
+        .tri-header.lendo { background: var(--amarelo); color: #333; }
+        .tri-progress-bg { width: 100%; background: rgba(0,0,0,0.1); border-radius: 5px; height: 8px; margin-top: 10px; overflow: hidden; }
+        .tri-bar-fill { height: 100%; width: 0%; background: var(--verde-sucesso); transition: 0.3s; }
+        .reading-list { display: none; padding: 5px; max-height: 400px; overflow-y: auto; background: #fff; }
+        .row { display: flex; align-items: center; padding: 14px; border-bottom: 1px solid #f9f9f9; }
+        .check-btn { width: 26px; height: 26px; border: 2px solid #ddd; border-radius: 8px; margin-right: 15px; cursor: pointer; flex-shrink: 0; display:flex; align-items:center; justify-content:center; }
+        .check-btn.done { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
+        .check-btn.done::after { content: '✓'; font-weight: bold; }
+        .info { display: flex; flex-direction: column; }
+        .info-date { font-size: 11px; color: #95a5a6; text-transform: uppercase; font-weight: bold; }
+        .info-book { font-size: 14px; font-weight: 600; color: #2c3e50; }
         .actions-row { display: flex; gap: 5px; margin-top: 12px; }
         .btn-action { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: bold; font-size: 0.65rem; cursor: pointer; color: white; text-transform: uppercase; }
         .btn-entrar { background: var(--azul-link); }
         .btn-editar { background: var(--amarelo); color: #333; }
         .btn-deletar { background: var(--vermelho); }
-        .trimestre-box { background: white; border-radius: 15px; margin-bottom: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .tri-header { width: 100%; padding: 18px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; }
-        .tri-header.lendo { background: var(--amarelo); color: #333; }
-        .tri-header.espera { background: #ecf0f1; color: #95a5a6; }
-        .tri-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: bold; }
-        .tri-progress-bg { width: 100%; background: rgba(0,0,0,0.1); border-radius: 5px; height: 8px; margin-top: 10px; overflow: hidden; }
-        .tri-bar-fill { height: 100%; width: 0%; background: var(--verde-sucesso); transition: 0.3s; }
-        .reading-list { display: none; padding: 5px; max-height: 400px; overflow-y: auto; background: #fff; }
-        .row { display: flex; align-items: center; padding: 14px; border-bottom: 1px solid #f9f9f9; }
-        .check-btn { width: 26px; height: 26px; border: 2px solid #ddd; border-radius: 8px; margin-right: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .check-btn.done { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
-        .check-btn.done::after { content: '✓'; font-weight: bold; font-size: 14px; }
-        .info { display: flex; flex-direction: column; }
-        .info-date { font-size: 11px; color: #95a5a6; text-transform: uppercase; font-weight: bold; }
-        .info-book { font-size: 14px; font-weight: 600; color: #2c3e50; }
-
-        /* TELA DE LEITURA (OVERLAY) */
-        #reader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 5000; display: none; flex-direction: column; }
-        .reader-header { padding: 15px; background: #1a4731; color: white; display: flex; justify-content: space-between; align-items: center; }
-        .reader-content { flex: 1; overflow-y: auto; padding: 20px; font-size: 1.2rem; line-height: 1.6; color: #2d3436; }
-        .verse-row { margin-bottom: 12px; display: flex; align-items: flex-start; }
-        .verse-num { font-size: 0.7rem; font-weight: bold; color: var(--cinza-texto); margin-right: 10px; margin-top: 5px; min-width: 20px; }
-        .reader-footer { padding: 15px; border-top: 1px solid #eee; background: #f9f9f9; display: flex; justify-content: space-between; gap: 10px; }
-        .btn-nav { flex: 1; padding: 12px; border: none; border-radius: 8px; background: var(--azul-link); color: white; font-weight: bold; cursor: pointer; }
-        .btn-nav:disabled { background: #ccc; }
-        .btn-finish { background: var(--verde-sucesso); }
-        .cap-btn { display: inline-block; width: 30px; height: 30px; line-height: 30px; text-align: center; background: #edf2f7; border-radius: 6px; margin-left: 5px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
-
-        #splash-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease; }
-        #splash-screen img { width: 160px; max-width: 70%; border-radius: 28px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        #splash-screen h1 { font-size: 1rem; font-weight: 800; color: #2d3436; text-align: center; margin: 0; text-transform: uppercase; }
-        #splash-screen p { font-size: 0.85rem; color: var(--cinza-texto); margin-top: 6px; }
-        #splash-screen.hide { opacity: 0; pointer-events: none; }
     </style>
 </head>
+
 <body>
 
 <div id="splash-screen">
     <img src="assets/icone.png" alt="Logo">
-    <h1>Plano Bienal de Leitura da Bíblia</h1>
+    <h1>Plano Bienal de Leitura</h1>
     <p>2026 • 2027</p>
 </div>
 
 <div id="reader-overlay">
     <div class="reader-header">
-        <span id="reader-title">Gênesis 1</span>
+        <span id="reader-title" style="font-weight:bold;">Gênesis 1</span>
         <button onclick="fecharLeitor()" style="background:none; border:none; color:white; font-size:1.5rem;">✕</button>
+    </div>
+    <div class="reader-toolbar">
+        <select id="select-versao" onchange="trocarVersao(this.value)" style="background:var(--verde-escuro); color:white; border:none; border-radius:5px; padding:4px;">
+            <option value="acf">ACF (Fiel)</option>
+            <option value="nvi">NVI (Moderna)</option>
+            <option value="ntlh">NTLH (Simples)</option>
+            <option value="kja">KJA (King James)</option>
+        </select>
+        <button class="btn-tool" onclick="mudarFonte(-0.1)">A-</button>
+        <button class="btn-tool" onclick="mudarFonte(0.1)">A+</button>
+        <button class="btn-tool" style="background:#f4ecd8; color:#5b4636" onclick="setTema('sepia')">S</button>
+        <button class="btn-tool" style="background:#1a1a1a; color:#fff" onclick="setTema('dark')">N</button>
+        <button class="btn-tool" style="background:#fff; color:#333" onclick="setTema('light')">C</button>
     </div>
     <div id="reader-text" class="reader-content"></div>
     <div class="reader-footer">
-        <button id="btn-prev" class="btn-nav" onclick="mudarCapitulo(-1)">← Anterior</button>
-        <button id="btn-next" class="btn-nav" onclick="mudarCapitulo(1)">Próximo →</button>
-        <button id="btn-finish" class="btn-nav btn-finish" style="display:none;" onclick="concluirLeitura()">CONCLUIR</button>
+        <button id="btn-prev" class="btn-nav" onclick="mudarCapitulo(-1)" style="flex:0.3; background:#eee; color:#333;">←</button>
+        <button id="btn-next" class="btn-nav" onclick="mudarCapitulo(1)">PRÓXIMO CAPÍTULO →</button>
+        <button id="btn-finish" class="btn-nav btn-finish" style="display:none;" onclick="concluirLeitura()">CONCLUIR LEITURA</button>
     </div>
 </div>
 
-<div id="install-banner">
-    <div class="install-text">Adicione à Tela Inicial Para Usar Como Aplicativo</div>
-    <button class="btn-install-now" onclick="alert('No iPhone: Compartilhar > Adicionar à Tela de Início\nNo Android: 3 Pontinhos > Instalar Aplicativo')">COMO INSTALAR</button>
-    <span class="btn-close-banner" onclick="this.parentElement.style.display='none'">Fechar Aviso</span>
+<div id="compare-modal">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <h3 style="margin:0; font-size:1rem;">Comparar Versões</h3>
+        <button onclick="fecharComparador()" style="border:none; background:#eee; border-radius:50%; width:30px; height:30px;">✕</button>
+    </div>
+    <div id="compare-content"></div>
 </div>
 
 <div id="access-overlay" class="access-overlay">
     <div class="access-box">
-        <img src="assets/icone.png" style="width: 85px; border-radius: 20px; margin-bottom: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
-        <h2 class="main-title">PLANO BIENAL DE LEITURA DA BÍBLIA [2026 e 2027]</h2>
+        <img src="assets/icone.png" style="width: 85px; border-radius: 20px; margin-bottom: 15px;">
+        <h2 class="main-title">PLANO BIENAL 2026-2027</h2>
         <div class="input-container">
             <input type="text" id="newName" class="input-name" placeholder="Digite seu nome...">
         </div>
@@ -123,17 +139,14 @@
 </div>
 
 <div class="header" id="header-main" style="display:none;">
-    <h2 class="main-title">PLANO BIENAL DE LEITURA DA BÍBLIA [2026 e 2027]</h2>
     <div class="header-controls">
         <div id="userNameDisplay" class="display-name"></div>
-        <button class="btn-exit" onclick="saveAndExit()">SALVAR E SAIR</button>
+        <button class="btn-exit" onclick="saveAndExit()">SAIR / TROCAR PERFIL</button>
     </div>
 </div>
 
 <div id="progress-main" style="display:none; width:100%; max-width:500px; text-align:center; margin-bottom:20px;">
-    <div style="width: 100%; background: #e0e0e0; border-radius: 10px; height: 14px; overflow: hidden; margin-bottom: 5px;">
-        <div id="main-bar" style="height: 100%; width: 0%; background: var(--verde-sucesso); transition: 0.6s ease;"></div>
-    </div>
+    <div class="mini-bar-bg" style="height:14px;"><div id="main-bar" class="mini-bar-fill" style="width:0%;"></div></div>
     <div id="main-percent" style="font-size: 11px; font-weight: bold; color: var(--cinza-texto);">0% Concluído Geral</div>
 </div>
 
@@ -145,13 +158,11 @@
     const db = firebase.database();
     let currentUser = "";
     const KEY_MY_PROFILES = "meus_perfis_locais";
-    let leitorContexto = { livro: "", capAtual: 0, capInicio: 0, capFim: 0, tIdx: 0, dIdx: 0 };
+    let leitorContexto = { livro: "", capAtual: 0, capInicio: 0, capFim: 0, tIdx: 0, dIdx: 0, versao: "acf" };
+    let fontSizeAtual = 1.2;
 
     const BIBLE_BOOKS = [{n: "Gênesis", c: 50}, {n: "Êxodo", c: 40}, {n: "Levítico", c: 27}, {n: "Números", c: 36}, {n: "Deuteronômio", c: 34}, {n: "Josué", c: 24}, {n: "Juízes", c: 21}, {n: "Rute", c: 4}, {n: "1 Samuel", c: 31}, {n: "2 Samuel", c: 24}, {n: "1 Reis", c: 22}, {n: "2 Reis", c: 25}, {n: "1 Crônicas", c: 29}, {n: "2 Crônicas", c: 36}, {n: "Esdras", c: 10}, {n: "Neemias", c: 13}, {n: "Ester", c: 10}, {n: "Jó", c: 42}, {n: "Salmos", c: 150}, {n: "Provérbios", c: 31}, {n: "Eclesiastes", c: 12}, {n: "Cantares", c: 8}, {n: "Isaías", c: 66}, {n: "Jeremias", c: 52}, {n: "Lamentações", c: 5}, {n: "Ezequiel", c: 48}, {n: "Daniel", c: 12}, {n: "Oseias", c: 14}, {n: "Joel", c: 3}, {n: "Amós", c: 9}, {n: "Obadias", c: 1}, {n: "Jonas", c: 4}, {n: "Miqueias", c: 7}, {n: "Naum", c: 3}, {n: "Habacuque", c: 3}, {n: "Sofonias", c: 3}, {n: "Ageu", c: 2}, {n: "Zacarias", c: 14}, {n: "Malaquias", c: 4}, {n: "Mateus", c: 28}, {n: "Marcos", c: 16}, {n: "Lucas", c: 24}, {n: "João", c: 21}, {n: "Atos", c: 28}, {n: "Romanos", c: 16}, {n: "1 Coríntios", c: 16}, {n: "2 Coríntios", c: 13}, {n: "Gálatas", c: 6}, {n: "Efésios", c: 6}, {n: "Filipenses", c: 4}, {n: "Colossenses", c: 4}, {n: "1 Tessalonicenses", c: 5}, {n: "2 Tessalonicenses", c: 3}, {n: "1 Timóteo", c: 6}, {n: "2 Timóteo", c: 4}, {n: "Tito", c: 3}, {n: "Filemom", c: 1}, {n: "Hebreus", c: 13}, {n: "Tiago", c: 5}, {n: "1 Pedro", c: 5}, {n: "2 Pedro", c: 3}, {n: "1 João", c: 5}, {n: "2 João", c: 1}, {n: "3 João", c: 1}, {n: "Judas", c: 1}, {n: "Apocalipse", c: 22}];
     const CONFIG = [{ ano: 2026, tri: "1º Trimestre: Pentateuco", start: "2026-01-05", end: "2026-03-31", booksIdx: [0, 4] }, { ano: 2026, tri: "2º Trimestre: Históricos Parte 1", start: "2026-04-01", end: "2026-06-30", booksIdx: [5, 9] }, { ano: 2026, tri: "3º Trimestre: Históricos Parte 2", start: "2026-07-01", end: "2026-09-30", booksIdx: [10, 13] }, { ano: 2026, tri: "4º Trimestre: Históricos Parte 3 / Jó", start: "2026-10-01", end: "2026-12-18", booksIdx: [14, 17] }, { ano: 2027, tri: "1º Trimestre: Poéticos", start: "2027-01-04", end: "2027-03-31", booksIdx: [18, 21] }, { ano: 2027, tri: "2º Trimestre: Profetas Maiores", start: "2027-04-01", end: "2027-06-30", booksIdx: [22, 26] }, { ano: 2027, tri: "3º Trimestre: Profetas Menores + N.T. Parte 1", start: "2027-07-01", end: "2027-09-30", booksIdx: [26, 43] }, { ano: 2027, tri: "4º Trimestre: Novo Testamento Parte 2", start: "2027-10-01", end: "2027-12-17", booksIdx: [44, 65] }];
-
-    function isAppInstalled() { return (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true); }
-    if (!isAppInstalled()) { setTimeout(() => { const banner = document.getElementById('install-banner'); if (banner) banner.style.display = 'block'; }, 4000); }
 
     db.ref('users').on('value', (snap) => renderCommunity(snap.val()));
 
@@ -159,111 +170,121 @@
     function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) { dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); } curr.setDate(curr.getDate() + 1); } return dates; }
     
     function renderCommunity(data) { 
-        const container = document.getElementById('users-container'); container.innerHTML = ""; if(!data) return; 
-        const myProfiles = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); 
-        const currentTri = getCurrentTriIdx(); 
-        let usersArray = Object.keys(data).map(name => ({ name, ...data[name], percent: calculateTotalPercent(data[name].progress) })); 
-        let mine = usersArray.filter(u => myProfiles.includes(u.name)); 
-        let others = usersArray.filter(u => !myProfiles.includes(u.name)).sort((a, b) => b.percent - a.percent); 
-        [...mine, ...others].forEach(user => { 
-            const isMine = myProfiles.includes(user.name); 
-            const triPercent = calculateTriPercent(user.progress, currentTri); 
-            const card = document.createElement('div'); card.className = `user-card ${isMine ? 'meu-perfil' : ''}`; 
-            card.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px"><span class="user-card-name">${user.name}</span><span class="user-card-percent">${user.percent}% Total</span></div><div class="mini-bar-container"><span class="card-label">Trimestre Atual: ${triPercent}%</span><div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${triPercent}%"></div></div></div><div class="mini-bar-container"><span class="card-label">Progresso Geral</span><div class="mini-bar-bg"><div class="mini-bar-fill total" style="width:${user.percent}%"></div></div></div>${isMine ? `<div class="actions-row"><button class="btn-action btn-entrar" onclick="loginUser('${user.name}')">ENTRAR</button><button class="btn-action btn-editar" onclick="editUser('${user.name}')">EDITAR</button><button class="btn-action btn-deletar" onclick="deleteUser('${user.name}')">APAGAR</button></div>` : ''}`; container.appendChild(card); 
-        }); 
+        const container = document.getElementById('users-container'); container.innerHTML = ""; if(!data) return;
+        const myProfiles = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
+        const currentTri = getCurrentTriIdx();
+        let usersArray = Object.keys(data).map(name => ({ name, ...data[name], percent: calculateTotalPercent(data[name].progress) }));
+        let mine = usersArray.filter(u => myProfiles.includes(u.name));
+        let others = usersArray.filter(u => !myProfiles.includes(u.name)).sort((a, b) => b.percent - a.percent);
+        [...mine, ...others].forEach(user => {
+            const isMine = myProfiles.includes(user.name);
+            const triPercent = calculateTriPercent(user.progress, currentTri);
+            const card = document.createElement('div'); card.className = `user-card ${isMine ? 'meu-perfil' : ''}`;
+            card.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px"><span style="font-weight:bold">${user.name}</span><span>${user.percent}% Total</span></div><div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${triPercent}%"></div></div>${isMine ? `<div class="actions-row"><button class="btn-action btn-entrar" onclick="loginUser('${user.name}')">ENTRAR</button><button class="btn-action btn-editar" onclick="editUser('${user.name}')">EDITAR</button><button class="btn-action btn-deletar" onclick="deleteUser('${user.name}')">APAGAR</button></div>` : ''}`;
+            container.appendChild(card);
+        });
     }
 
     function calculateTriPercent(progress, triIdx) { if(!progress) return 0; let checked = 0; Object.keys(progress).forEach(k => { if(k.startsWith('t'+triIdx) && progress[k] === true) checked++; }); let total = getWeekdays(CONFIG[triIdx].start, CONFIG[triIdx].end).length; return total > 0 ? Math.round((checked / total) * 100) : 0; }
     function calculateTotalPercent(progress) { if(!progress) return 0; let checked = Object.values(progress).filter(v => v === true).length; let total = 0; CONFIG.forEach(t => total += getWeekdays(t.start, t.end).length); return Math.round((checked / total) * 100); }
     
     function registerUser() { 
-        const ni = document.getElementById('newName'); const n = ni.value.trim(); if(!n) return alert("Digite o nome!"); 
-        let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); if(!mp.includes(n)) { mp.push(n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); } 
-        db.ref('users/'+n).update({name:n}); ni.value=""; loginUser(n); 
+        const n = document.getElementById('newName').value.trim(); if(!n) return alert("Digite o nome!");
+        let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); if(!mp.includes(n)) { mp.push(n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); }
+        db.ref('users/'+n).update({name:n}); loginUser(n);
     }
 
-    function loginUser(name) { 
-        currentUser = name; document.getElementById('access-overlay').style.display = 'none'; 
-        document.getElementById('header-main').style.display = "block"; document.getElementById('progress-main').style.display = "block"; 
-        document.getElementById('plan-container').style.display = "block"; document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); 
+    function loginUser(name) { currentUser = name; document.getElementById('access-overlay').style.display = 'none'; document.getElementById('header-main').style.display = "block"; document.getElementById('progress-main').style.display = "block"; document.getElementById('plan-container').style.display = "block"; document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); }
+    function saveAndExit() { location.reload(); }
+    function distributeChaptersBalanced(range, days) { 
+        let chaps = []; for (let i = range[0]; i <= range[1]; i++) { for (let c = 1; c <= BIBLE_BOOKS[i].c; c++) { chaps.push({ b: BIBLE_BOOKS[i].n, c: c }); } }
+        let res = Array.from({ length: days }, () => []); let ratio = chaps.length / days;
+        for (let i = 0; i < chaps.length; i++) { let dIdx = Math.min(Math.floor(i / ratio), days - 1); res[dIdx].push(chaps[i]); }
+        return res.map(day => { if(!day.length) return ""; let f = day[0], l = day[day.length-1]; return f.b === l.b ? `${f.b} ${f.c}-${l.c}` : `${f.b} ${f.c} a ${l.b} ${l.c}`; });
     }
 
-    function saveAndExit() { document.getElementById('access-overlay').style.display = 'flex'; document.getElementById('header-main').style.display = "none"; document.getElementById('progress-main').style.display = "none"; document.getElementById('plan-container').style.display = "none"; window.scrollTo(0,0); }
-    function editUser(old) { const n = prompt("Novo nome:", old); if(!n || n === old) return; let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES)); mp[mp.indexOf(old)] = n; localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); db.ref('users/'+old).once('value', s => { db.ref('users/'+n).set(s.val()); db.ref('users/'+old).remove(); }); }
-    function deleteUser(name) { if(confirm("Apagar "+name+"?")) { let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES)); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp.filter(n => n !== name))); db.ref('users/'+name).remove(); } }
-    
-    function distributeChaptersBalanced(booksRange, daysCount) { 
-        let chapters = []; for (let i = booksRange[0]; i <= booksRange[1]; i++) { for (let c = 1; c <= BIBLE_BOOKS[i].c; c++) { chapters.push({ book: BIBLE_BOOKS[i].n, cap: c }); } } 
-        let result = Array.from({ length: daysCount }, () => []); let ratio = chapters.length / daysCount; for (let i = 0; i < chapters.length; i++) { let dayIndex = Math.min(Math.floor(i / ratio), daysCount - 1); result[dayIndex].push(chapters[i]); } 
-        return result.map(dayList => { if (!dayList.length) return ""; if (dayList.length === 1) return `${dayList[0].book} ${dayList[0].cap}`; let first = dayList[0], last = dayList[dayList.length - 1]; return first.book === last.book ? `${first.book} ${first.cap}-${last.cap}` : `${first.book} ${first.cap} a ${last.book} ${last.cap}`; }); 
+    function renderPlan() {
+        const area = document.getElementById('plan-container'); area.innerHTML = "";
+        db.ref('users/'+currentUser+'/progress').once('value', snap => {
+            const prog = snap.val() || {}; let curYear = 0;
+            CONFIG.forEach((t, tIdx) => {
+                if (t.ano !== curYear) { curYear = t.ano; const y = document.createElement('div'); y.style.cssText="font-weight:bold; margin:15px 5px;"; y.innerText=`📅 ANO ${curYear}`; area.appendChild(y); }
+                const days = getWeekdays(t.start, t.end); const readings = distributeChaptersBalanced(t.booksIdx, days.length);
+                const isCur = tIdx === getCurrentTriIdx();
+                const box = document.createElement('div'); box.className = "trimestre-box";
+                box.innerHTML = `<button class="tri-header ${isCur?'lendo':''}" onclick="toggleTri(${tIdx})"><div class="tri-title-row"><span>${t.tri}</span><span id="tri-perc-${tIdx}">0%</span></div></button><div class="reading-list" id="list-${tIdx}" style="${isCur?'display:block':''}">${days.map((d, dIdx) => {
+                    const rText = readings[dIdx]; const p = rText.split(' '); const livro = p[0]; const caps = (p[1]||"").split('-');
+                    const cIn = parseInt(caps[0]||1); const cFim = caps[1]?parseInt(caps[1]):cIn;
+                    let btns = ""; for(let c=cIn; c<=cFim; c++) btns += `<span class="cap-btn" onclick="abrirLeitor('${livro}', ${c}, ${cIn}, ${cFim}, ${tIdx}, ${dIdx})">${c}</span>`;
+                    return `<div class="row"><div class="check-btn ${prog['t'+tIdx+'_d'+dIdx]?'done':''}" id="check-${tIdx}-${dIdx}" onclick="toggleCheck(this, ${tIdx}, ${dIdx})"></div><div class="info"><span class="info-date">${d.label}</span><span class="info-book">${livro} ${p[1]||""} ${btns}</span></div></div>`;
+                }).join('')}</div>`; area.appendChild(box);
+            }); updateProgress();
+        });
     }
 
-    function renderPlan() { 
-        const area = document.getElementById('plan-container'); area.innerHTML = ""; 
-        db.ref('users/'+currentUser+'/progress').once('value', (snap) => { 
-            const remoteProgress = snap.val() || {}; let currentYear = 0; 
-            CONFIG.forEach((t, tIdx) => { 
-                if (t.ano !== currentYear) { currentYear = t.ano; const y = document.createElement('div'); y.style.cssText="font-size:1.1rem; font-weight:bold; margin:20px 0 10px 5px;"; y.innerText=`📅 ANO LETIVO ${currentYear}`; area.appendChild(y); } 
-                const days = getWeekdays(t.start, t.end); let readings = distributeChaptersBalanced(t.booksIdx, days.length); 
-                const box = document.createElement('div'); box.className = "trimestre-box"; 
-                box.innerHTML = `<button class="tri-header ${(tIdx===getCurrentTriIdx())?'lendo':'espera'}" onclick="toggleTri(${tIdx})"><div class="tri-title-row"><span>${t.tri}</span><span id="tri-perc-${tIdx}">0%</span></div><div class="tri-progress-bg"><div id="tri-bar-${tIdx}" class="tri-bar-fill"></div></div></button><div class="reading-list" id="list-${tIdx}">${days.map((d, dIdx) => {
-                    const rText = readings[dIdx]; const partes = rText.split(' '); const livroNome = partes[0]; const capsRange = (partes[1] || "").split('-');
-                    const cInicio = parseInt(capsRange[0] || 1); const cFim = capsRange[1] ? parseInt(capsRange[1]) : cInicio;
-                    let botoesCaps = ""; for(let c = cInicio; c <= cFim; c++) { botoesCaps += `<span class="cap-btn" onclick="abrirLeitor('${livroNome}', ${c}, ${cInicio}, ${cFim}, ${tIdx}, ${dIdx})">${c}</span>`; }
-                    return `<div class="row"><div class="check-btn ${remoteProgress['t'+tIdx+'_d'+dIdx] ? 'done' : ''}" id="check-${tIdx}-${dIdx}" onclick="toggleCheck(this, ${tIdx}, ${dIdx})"></div><div class="info"><span class="info-date">${d.label}</span><span class="info-book">${livroNome} ${partes[1]} ${botoesCaps}</span></div></div>`;
-                }).join('')}</div>`; area.appendChild(box); 
-            }); updateProgress(); 
-        }); 
-    }
-
-    async function abrirLeitor(livro, cap, inicio, fim, tIdx, dIdx) {
-        leitorContexto = { livro, capAtual: cap, capInicio: inicio, capFim: fim, tIdx, dIdx };
-        document.getElementById('reader-overlay').style.display = 'flex';
-        carregarTextoBiblico();
+    async function abrirLeitor(livro, cap, ini, fim, t, d) {
+        leitorContexto = { ...leitorContexto, livro, capAtual: cap, capInicio: ini, capFim: fim, tIdx: t, dIdx: d };
+        document.getElementById('reader-overlay').style.display = 'flex'; carregarTextoBiblico();
     }
 
     async function carregarTextoBiblico() {
         try {
-            const response = await fetch('acf.json'); const data = await response.json();
-            const livroData = data.livros.find(l => l.nome === leitorContexto.livro);
-            const versiculos = livroData.capitulos[leitorContexto.capAtual - 1];
+            const res = await fetch(`${leitorContexto.versao}.json`); const data = await res.json();
+            const lData = data.livros.find(l => l.nome === leitorContexto.livro);
+            const versos = lData.capitulos[leitorContexto.capAtual - 1];
             document.getElementById('reader-title').innerText = `${leitorContexto.livro} ${leitorContexto.capAtual}`;
-            const container = document.getElementById('reader-text');
-            container.innerHTML = versiculos.map((v, i) => `<div class="verse-row"><span class="verse-num">${i+1}</span><span>${v}</span></div>`).join('');
-            container.scrollTop = 0;
+            const cont = document.getElementById('reader-text');
+            cont.innerHTML = versos.map((v, i) => `<div class="verse-row" onclick="compararVerso(${i})"><span class="verse-num">${i+1}</span><span>${v}</span></div>`).join('');
+            cont.scrollTop = 0;
             document.getElementById('btn-prev').disabled = leitorContexto.capAtual <= leitorContexto.capInicio;
-            const isUltimo = leitorContexto.capAtual >= leitorContexto.capFim;
-            document.getElementById('btn-next').style.display = isUltimo ? 'none' : 'inline-block';
-            document.getElementById('btn-finish').style.display = isUltimo ? 'inline-block' : 'none';
-        } catch(e) { alert("Erro ao carregar Bíblia. Verifique o arquivo acf.json"); }
+            const ult = leitorContexto.capAtual >= leitorContexto.capFim;
+            document.getElementById('btn-next').style.display = ult ? 'none' : 'block';
+            document.getElementById('btn-finish').style.display = ult ? 'block' : 'none';
+        } catch(e) { alert("Capítulo não disponível nesta versão."); }
     }
 
-    function mudarCapitulo(dir) { leitorContexto.capAtual += dir; carregarTextoBiblico(); }
-    function fecharLeitor() { document.getElementById('reader-overlay').style.display = 'none'; }
+    async function compararVerso(vIdx) {
+        const versoes = ['acf', 'nvi', 'ntlh', 'kja']; let html = "";
+        document.getElementById('compare-modal').classList.add('active');
+        for (let v of versoes) {
+            try {
+                const res = await fetch(`${v}.json`); const data = await res.json();
+                const lData = data.livros.find(l => l.nome === leitorContexto.livro);
+                const txt = lData.capitulos[leitorContexto.capAtual - 1][vIdx];
+                html += `<div class="compare-item"><span class="compare-ver">${data.versao}</span><p>${txt}</p></div>`;
+            } catch(e) {}
+        }
+        document.getElementById('compare-content').innerHTML = html;
+    }
+
+    function trocarVersao(v) { leitorContexto.versao = v; carregarTextoBiblico(); }
+    function mudarFonte(d) { fontSizeAtual += d; document.documentElement.style.setProperty('--font-size-leitura', fontSizeAtual + 'rem'); }
+    function setTema(t) { const o = document.getElementById('reader-overlay'); o.className = ''; if(t!=='light') o.classList.add('theme-'+t); }
+    function fecharComparador() { document.getElementById('compare-modal').classList.remove('active'); }
+    function fecharLeitor() { document.getElementById('reader-overlay').style.display = 'none'; fecharComparador(); }
+    function mudarCapitulo(d) { leitorContexto.capAtual += d; carregarTextoBiblico(); }
     function concluirLeitura() {
-        const btnCheck = document.getElementById(`check-${leitorContexto.tIdx}-${leitorContexto.dIdx}`);
-        if(!btnCheck.classList.contains('done')) { toggleCheck(btnCheck, leitorContexto.tIdx, leitorContexto.dIdx); }
+        const btn = document.getElementById(`check-${leitorContexto.tIdx}-${leitorContexto.dIdx}`);
+        if(!btn.classList.contains('done')) toggleCheck(btn, leitorContexto.tIdx, leitorContexto.dIdx);
         fecharLeitor();
     }
 
-    function toggleCheck(el, tIdx, dIdx) { el.classList.toggle('done'); const status = el.classList.contains('done'); db.ref('users/'+currentUser+'/progress/t'+tIdx+'_d'+dIdx).set(status); updateProgress(); }
-    function toggleTri(idx) { const el = document.getElementById(`list-${idx}`); const show = el.style.display === "block"; document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none'); el.style.display = show ? "none" : "block"; }
-    
-    function updateProgress() { 
-        let tItems = 0, tDone = 0; CONFIG.forEach((t, tIdx) => { 
-            const boxes = document.querySelectorAll(`#list-${tIdx} .check-btn`), done = document.querySelectorAll(`#list-${tIdx} .check-btn.done`); 
-            const p = boxes.length ? Math.round((done.length / boxes.length) * 100) : 0; 
-            if(document.getElementById(`tri-bar-${tIdx}`)) document.getElementById(`tri-bar-${tIdx}`).style.width = p + "%"; 
-            if(document.getElementById(`tri-perc-${tIdx}`)) document.getElementById(`tri-perc-${tIdx}`).innerText = p + "%"; 
-            tItems += boxes.length; tDone += done.length; 
-        }); 
-        const mainP = tItems ? Math.round((tDone / tItems) * 100) : 0; if(document.getElementById('main-bar')) document.getElementById('main-bar').style.width = mainP + "%"; if(document.getElementById('main-percent')) document.getElementById('main-percent').innerText = mainP + "% Concluído Geral"; 
+    function toggleCheck(el, t, d) { el.classList.toggle('done'); db.ref(`users/${currentUser}/progress/t${t}_d${d}`).set(el.classList.contains('done')); updateProgress(); }
+    function toggleTri(i) { const el = document.getElementById(`list-${i}`); const s = el.style.display === "block"; document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none'); el.style.display = s ? "none" : "block"; }
+    function updateProgress() {
+        let tI = 0, tD = 0; CONFIG.forEach((t, i) => {
+            const boxes = document.querySelectorAll(`#list-${i} .check-btn`), done = document.querySelectorAll(`#list-${i} .check-btn.done`);
+            const p = boxes.length ? Math.round((done.length / boxes.length) * 100) : 0;
+            if(document.getElementById(`tri-perc-${i}`)) document.getElementById(`tri-perc-${i}`).innerText = p + "%";
+            tI += boxes.length; tD += done.length;
+        });
+        const mP = tI ? Math.round((tD / tI) * 100) : 0;
+        document.getElementById('main-bar').style.width = mP + "%";
+        document.getElementById('main-percent').innerText = mP + "% Concluído Geral";
     }
 
     window.addEventListener("load", () => {
-        if (sessionStorage.getItem("splashShown")) { const splash = document.getElementById("splash-screen"); if (splash) splash.remove(); return; }
-        sessionStorage.setItem("splashShown", "true");
-        setTimeout(() => { const splash = document.getElementById("splash-screen"); if (splash) { splash.classList.add("hide"); setTimeout(() => splash.remove(), 400); } }, 2500);
+        setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2000);
     });
 </script>
 </body>
