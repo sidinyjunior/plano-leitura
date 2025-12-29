@@ -3,8 +3,8 @@
   "short_name": "Plano Biblico [2026-2027]",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#f4f7f6",
-  "theme_color": "#1a4731",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "icons": [
     {
       "src": "assets/icone.png",
