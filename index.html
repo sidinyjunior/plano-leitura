@@ -21,110 +21,112 @@
             --amarelo: #f1c40f; --verde-sucesso: #2ecc71; --bg: #f4f7f6; --azul-link: #3498db; --vermelho: #e74c3c;
             --font-size-leitura: 1.2rem; --bg-leitor: #ffffff; --texto-leitor: #2d3436;
         }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
         
         /* IDENTIDADE VISUAL */
-        .app-branding { text-align: center; margin-bottom: 15px; width: 100%; max-width: 500px; }
-        .app-logo { width: 85px; border-radius: 22px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin-bottom: 10px; }
-        .main-title { font-size: clamp(0.75rem, 4vw, 0.95rem); font-weight: 800; color: #2d3436; text-transform: uppercase; letter-spacing: -0.01em; margin: 0; }
+        .app-branding { text-align: center; margin-bottom: 20px; width: 100%; max-width: 500px; }
+        .app-logo { width: 85px; border-radius: 22px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin-bottom: 12px; }
+        .main-title { font-size: clamp(0.75rem, 4.2vw, 1rem); font-weight: 800; color: #2d3436; text-transform: uppercase; letter-spacing: -0.01em; margin: 0; }
 
         /* HEADER DO USUÁRIO */
-        .header { width: 100%; max-width: 500px; background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; position: sticky; top: 10px; z-index: 1000; box-sizing: border-box; }
-        .display-name { font-weight: bold; font-size: 1rem; color: #2d3436; border-bottom: 2px solid var(--verde-whatsapp); padding: 5px 0; text-align: center; margin-bottom: 12px; text-transform: uppercase; }
-        .btn-exit { width: 100%; padding: 14px; border: none; border-radius: 12px; background: var(--verde-whatsapp); color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; text-transform: uppercase; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2); }
+        .header { width: 100%; max-width: 500px; background: white; padding: 18px; border-radius: 22px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; position: sticky; top: 10px; z-index: 1000; box-sizing: border-box; }
+        .display-name { font-weight: 800; font-size: 1rem; color: #2d3436; border-bottom: 2px solid var(--verde-whatsapp); padding-bottom: 8px; text-align: center; margin-bottom: 15px; text-transform: uppercase; }
+        .btn-exit { width: 100%; padding: 15px; border: none; border-radius: 14px; background: var(--verde-whatsapp); color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; text-transform: uppercase; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2); transition: 0.2s; }
+        .btn-exit:active { transform: scale(0.98); }
 
-        /* BARRA GERAL */
-        .progress-container { width: 100%; max-width: 500px; text-align: center; margin-bottom: 25px; }
-        .progress-bar-bg { width: 100%; background: #e0e0e0; border-radius: 10px; height: 12px; overflow: hidden; margin-bottom: 6px; }
-        .progress-bar-fill { height: 100%; background: var(--verde-sucesso); transition: 0.8s ease; width: 0%; }
+        /* PROGRESSO GERAL */
+        .progress-container { width: 100%; max-width: 500px; text-align: center; margin-bottom: 30px; padding: 0 5px; }
+        .progress-bar-bg { width: 100%; background: #e0e0e0; border-radius: 10px; height: 12px; overflow: hidden; margin-bottom: 8px; }
+        .progress-bar-fill { height: 100%; background: var(--verde-sucesso); transition: 0.8s cubic-bezier(0.1, 0.7, 0.1, 1); width: 0%; }
+        .progress-text { font-size: 11px; font-weight: 800; color: var(--cinza-texto); text-transform: uppercase; letter-spacing: 0.5px; }
 
         /* BLOCOS TRIMESTRAIS */
-        .trimestre-box { background: #e2e8f0; border-radius: 18px; margin-bottom: 18px; overflow: hidden; border: 1px solid #cbd5e0; }
-        .tri-header { width: 100%; padding: 18px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; background: transparent; }
-        .trimestre-box.atual { background: var(--amarelo); border: 2px solid #d4ac0d; box-shadow: 0 10px 20px rgba(0,0,0,0.1); transform: scale(1.01); }
+        .trimestre-box { background: #e2e8f0; border-radius: 20px; margin-bottom: 20px; overflow: hidden; border: 1px solid #cbd5e0; width: 100%; max-width: 500px; transition: all 0.3s ease; }
+        .tri-header { width: 100%; padding: 20px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; background: transparent; position: relative; z-index: 2; }
+        .trimestre-box.atual { background: var(--amarelo); border: 2px solid #d4ac0d; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
         .trimestre-box.atual .tri-title { font-weight: 900; color: #000; }
         
         .tri-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 12px; }
-        .tri-title { font-size: 0.9rem; color: #4a5568; font-weight: 700; }
-        .tri-perc-label { font-weight: 800; font-size: 0.9rem; color: #1a202c; background: rgba(255,255,255,0.4); padding: 2px 8px; border-radius: 6px; }
-        .tri-progress-bg { width: 100%; background: rgba(0,0,0,0.06); border-radius: 5px; height: 7px; overflow: hidden; }
-        .tri-bar-fill { height: 100%; background: var(--verde-sucesso); width: 0%; transition: 0.5s; }
+        .tri-title { font-size: 0.95rem; color: #4a5568; font-weight: 700; }
+        .tri-perc-label { font-weight: 900; font-size: 0.9rem; color: #1a202c; background: rgba(255,255,255,0.5); padding: 4px 10px; border-radius: 8px; }
+        .tri-progress-bg { width: 100%; background: rgba(0,0,0,0.07); border-radius: 5px; height: 8px; overflow: hidden; }
+        .tri-bar-fill { height: 100%; background: var(--verde-sucesso); width: 0%; transition: 0.6s ease; }
 
-        /* CALENDÁRIO */
-        .year-label { display: flex; align-items: center; font-size: 1.1rem; font-weight: 800; margin: 30px 0 15px 5px; color: #1a202c; }
-        .cal-icon { width: 30px; height: 32px; background: white; border: 2px solid #2d3436; border-radius: 7px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 12px; overflow: hidden; }
-        .cal-top { background: #e74c3c; width: 100%; height: 9px; position: absolute; top: 0; }
-        .cal-day { font-size: 11px; font-weight: 900; margin-top: 7px; color: #2d3436; }
+        /* CALENDÁRIO FIX */
+        .year-label { display: flex; align-items: center; font-size: 1.15rem; font-weight: 800; margin: 35px 0 15px 5px; color: #1a202c; width: 100%; max-width: 500px; }
+        .cal-icon { width: 32px; height: 34px; background: white; border: 2px solid #2d3436; border-radius: 8px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0; box-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
+        .cal-top { background: #e74c3c; width: 100%; height: 10px; position: absolute; top: 0; border-bottom: 1px solid #2d3436; }
+        .cal-day { font-size: 11px; font-weight: 900; margin-top: 8px; color: #2d3436; }
 
-        /* LEITOR DESIGN FINAL */
-        #reader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-leitor); z-index: 5000; display: none; flex-direction: column; color: var(--texto-leitor); }
-        .reader-header { padding: 12px 15px; background: #1a4731; color: white; display: flex; justify-content: space-between; align-items: center; }
-        .reader-toolbar { display: flex; background: #245e41; padding: 10px 15px; gap: 8px; align-items: center; overflow-x: auto; border-bottom: 1px solid rgba(0,0,0,0.1); }
-        .reader-content { flex: 1; overflow-y: auto; padding: 25px; font-size: var(--font-size-leitura); line-height: 1.7; }
-        .verse-row { margin-bottom: 18px; cursor: pointer; display: flex; }
-        .verse-num { font-size: 0.75em; font-weight: bold; color: var(--cinza-texto); margin-right: 12px; min-width: 24px; opacity: 0.7; }
-        
-        /* BOTÕES DE NAVEGAÇÃO LEITOR */
-        .reader-footer { padding: 15px; display: flex; gap: 12px; background: #f1f5f9; border-top: 1px solid #e2e8f0; }
-        .btn-nav-back { width: 50px; height: 50px; border-radius: 12px; border: none; background: #cbd5e0; color: #2d3436; font-weight: bold; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; }
-        .btn-nav-next { flex: 1; height: 50px; border-radius: 12px; border: none; background: var(--azul-link); color: white; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3); }
-        .btn-nav-finish { flex: 1; height: 50px; border-radius: 12px; border: none; background: var(--verde-sucesso); color: white; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3); display: none; }
-        .btn-nav-back:disabled { opacity: 0.5; cursor: default; }
-
-        .cap-btn { display: inline-block; width: 36px; height: 36px; line-height: 36px; text-align: center; background: #fff; border: 1px solid #e2e8f0; border-radius: 9px; margin: 4px; cursor: pointer; font-size: 0.9rem; font-weight: bold; color: var(--verde-escuro); box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
-        .reading-list { display: none; padding: 12px; background: #fff; border-radius: 0 0 18px 18px; }
-        .row { display: flex; align-items: center; padding: 16px; border-bottom: 1px solid #f1f5f9; }
-        .check-btn { width: 28px; height: 28px; border: 2px solid #cbd5e0; border-radius: 9px; margin-right: 15px; cursor: pointer; flex-shrink: 0; display:flex; align-items:center; justify-content:center; }
+        /* LISTA DE LEITURA */
+        .reading-list { display: none; padding: 10px; background: #fff; border-top: 1px solid rgba(0,0,0,0.05); }
+        .row { display: flex; align-items: flex-start; padding: 18px; border-bottom: 1px solid #f1f5f9; }
+        .check-btn { width: 30px; height: 30px; border: 2px solid #cbd5e0; border-radius: 10px; margin-right: 18px; cursor: pointer; flex-shrink: 0; display:flex; align-items:center; justify-content:center; transition: 0.2s; }
         .check-btn.done { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
-        .check-btn.done::after { content: '✓'; font-weight: 900; }
-        
-        #compare-modal { position: fixed; bottom: -100%; left: 0; width: 100%; background: white; z-index: 6000; border-radius: 24px 24px 0 0; box-shadow: 0 -8px 30px rgba(0,0,0,0.2); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 25px; max-height: 85vh; overflow-y: auto; color: #1a202c; }
-        #compare-modal.active { bottom: 0; }
+        .check-btn.done::after { content: '✓'; font-weight: 900; font-size: 1.1rem; }
+        .info { flex: 1; }
+        .info-date { font-size: 11px; color: #95a5a6; text-transform: uppercase; font-weight: 800; margin-bottom: 4px; display: block; }
+        .info-book { font-size: 0.95rem; font-weight: 700; color: #2c3e50; line-height: 1.3; }
 
-        .access-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; flex-direction: column; align-items: center; z-index: 2000; padding: 30px; overflow-y: auto; }
-        #splash-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s ease; }
-        #splash-screen.hide { opacity: 0; pointer-events: none; }
+        /* LEITOR E RODAPÉ */
+        #reader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-leitor); z-index: 5000; display: none; flex-direction: column; color: var(--texto-leitor); }
+        .reader-header { padding: 15px; background: #1a4731; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .reader-toolbar { display: flex; background: #245e41; padding: 10px 15px; gap: 10px; align-items: center; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .reader-content { flex: 1; overflow-y: auto; padding: 25px; font-size: var(--font-size-leitura); line-height: 1.8; }
+        .verse-row { margin-bottom: 20px; cursor: pointer; padding: 8px; border-radius: 10px; transition: 0.2s; }
+        .verse-row:active { background: rgba(0,0,0,0.05); }
+        .verse-num { font-size: 0.75em; font-weight: 900; color: var(--cinza-texto); margin-right: 15px; min-width: 28px; opacity: 0.6; }
         
-        .theme-sepia { --bg-leitor: #f4ecd8; --texto-leitor: #5b4636; }
-        .theme-dark { --bg-leitor: #1a1a1a; --texto-leitor: #e2e8f0; }
+        .reader-footer { padding: 15px 20px; display: flex; gap: 12px; background: #f8fafc; border-top: 1px solid #e2e8f0; height: 85px; align-items: center; box-sizing: border-box; }
+        .btn-nav-back { width: 55px; height: 55px; border-radius: 14px; border: none; background: #cbd5e0; color: #2d3436; font-size: 1.4rem; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .btn-nav-next { flex: 1; height: 55px; border-radius: 14px; border: none; background: var(--azul-link); color: white; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2); }
+        .btn-nav-finish { flex: 1; height: 55px; border-radius: 14px; border: none; background: var(--verde-sucesso); color: white; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2); display: none; }
+        .btn-nav-back:disabled { opacity: 0.4; }
+
+        .cap-btn { display: inline-block; width: 38px; height: 38px; line-height: 38px; text-align: center; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; margin: 4px; cursor: pointer; font-size: 0.95rem; font-weight: 800; color: var(--verde-escuro); box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+
+        /* ACCESS OVERLAY */
+        .access-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; flex-direction: column; align-items: center; z-index: 2000; padding: 40px 20px; overflow-y: auto; }
+        .input-name { width: 100%; padding: 18px; border-radius: 16px; border: 2px solid #e2e8f0; font-size: 1rem; outline: none; margin-bottom: 15px; }
+        .btn-add { width: 100%; padding: 18px; border: none; border-radius: 16px; background: linear-gradient(135deg, var(--verde-whatsapp), var(--verde-escuro)); color: white; font-weight: 800; font-size: 1rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 6px 15px rgba(18, 140, 126, 0.2); }
     </style>
 </head>
 
 <body>
 
 <div id="splash-screen">
-    <img src="assets/icone.png" alt="Logo" style="width:160px; border-radius:30px; margin-bottom:25px; box-shadow:0 10px 30px rgba(0,0,0,0.15);">
-    <h1 style="font-size:1.1rem; text-transform:uppercase; letter-spacing:1px;">Plano Bienal de Leitura</h1>
-    <p style="color:var(--cinza-texto); font-weight:bold;">2026 • 2027</p>
+    <img src="assets/icone.png" alt="Logo">
+    <h1 style="font-size:1.1rem; text-transform:uppercase; letter-spacing:1px; margin: 0;">Plano Bienal de Leitura</h1>
+    <p style="color:var(--cinza-texto); font-weight:bold; margin-top: 5px;">2026 • 2027</p>
 </div>
 
 <div id="reader-overlay">
     <div class="reader-header">
         <span id="reader-title" style="font-weight:800; font-size:1rem; text-transform:uppercase;">Gênesis 1</span>
-        <button onclick="fecharLeitor()" style="background:none; border:none; color:white; font-size:1.8rem; line-height:1;">✕</button>
+        <button onclick="fecharLeitor()" style="background:none; border:none; color:white; font-size:1.8rem; line-height:1; cursor:pointer;">✕</button>
     </div>
     <div class="reader-toolbar">
-        <select id="select-versao" onchange="trocarVersao(this.value)" style="background:var(--verde-escuro); color:white; border:none; border-radius:6px; padding:6px 10px; font-weight:bold; font-size:0.8rem;">
+        <select id="select-versao" onchange="trocarVersao(this.value)" style="background:var(--verde-escuro); color:white; border:none; border-radius:8px; padding:8px 12px; font-weight:bold; font-size:0.85rem;">
             <option value="acf">ACF</option><option value="nvi">NVI</option><option value="ntlh">NTLH</option><option value="kja">KJA</option>
         </select>
-        <button onclick="mudarFonte(-0.1)" style="color:white; background:rgba(255,255,255,0.2); border:none; border-radius:6px; padding:6px 12px; font-weight:bold;">A-</button>
-        <button onclick="mudarFonte(0.1)" style="color:white; background:rgba(255,255,255,0.2); border:none; border-radius:6px; padding:6px 12px; font-weight:bold;">A+</button>
-        <button onclick="setTema('sepia')" style="background:#f4ecd8; color:#5b4636; border:none; border-radius:6px; padding:6px 12px; font-weight:bold;">S</button>
-        <button onclick="setTema('dark')" style="background:#1a1a1a; color:white; border:none; border-radius:6px; padding:6px 12px; font-weight:bold;">N</button>
-        <button onclick="setTema('light')" style="background:white; color:#333; border:1px solid #ccc; border-radius:6px; padding:6px 12px; font-weight:bold;">C</button>
+        <button onclick="mudarFonte(-0.1)" style="color:white; background:rgba(255,255,255,0.2); border:none; border-radius:8px; padding:8px 14px; font-weight:bold;">A-</button>
+        <button onclick="mudarFonte(0.1)" style="color:white; background:rgba(255,255,255,0.2); border:none; border-radius:8px; padding:8px 14px; font-weight:bold;">A+</button>
+        <button onclick="setTema('sepia')" style="background:#f4ecd8; color:#5b4636; border:none; border-radius:8px; padding:8px 14px; font-weight:bold;">S</button>
+        <button onclick="setTema('dark')" style="background:#1a1a1a; color:white; border:none; border-radius:8px; padding:8px 14px; font-weight:bold;">N</button>
+        <button onclick="setTema('light')" style="background:white; color:#333; border:1px solid #ccc; border-radius:8px; padding:8px 14px; font-weight:bold;">C</button>
     </div>
     <div id="reader-text" class="reader-content"></div>
     <div class="reader-footer">
         <button id="btn-prev" class="btn-nav-back" onclick="mudarCapitulo(-1)">←</button>
-        <button id="btn-next" class="btn-nav-next" onclick="mudarCapitulo(1)">Próximo Capítulo →</button>
-        <button id="btn-finish" class="btn-nav-finish" onclick="concluirLeitura()">Concluir Leitura Hoje</button>
+        <button id="btn-next" class="btn-nav-next" onclick="mudarCapitulo(1)">Próximo Capítulo</button>
+        <button id="btn-finish" class="btn-nav-finish" onclick="concluirLeitura()">Concluir Hoje</button>
     </div>
 </div>
 
 <div id="compare-modal">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid #f1f5f9; padding-bottom:12px;">
-        <h3 style="margin:0; font-size:1.1rem; font-weight:800;">Comparativo de Versões</h3>
-        <button onclick="fecharComparador()" style="border:none; background:#f1f5f9; border-radius:50%; width:34px; height:34px; font-weight:bold;">✕</button>
+        <h3 style="margin:0; font-size:1.1rem; font-weight:900;">Comparativo</h3>
+        <button onclick="fecharComparador()" style="border:none; background:#f1f5f9; border-radius:50%; width:34px; height:34px; font-weight:bold; cursor:pointer;">✕</button>
     </div>
     <div id="compare-content"></div>
 </div>
@@ -133,25 +135,25 @@
     <img src="assets/icone.png" class="app-logo">
     <h2 class="main-title">PLANO BIENAL 2026-2027</h2>
     <div class="input-container" style="width:100%; max-width:400px; margin-top:40px;">
-        <input type="text" id="newName" class="input-name" placeholder="Digite seu nome completo..." style="padding:16px; border-radius:14px; border:2px solid #e2e8f0;">
-        <button class="btn-add" onclick="registerUser()" style="margin-top:15px; padding:18px; border-radius:14px; background:linear-gradient(to right, var(--verde-whatsapp), var(--verde-escuro));">ENTRAR NO MEU PLANO</button>
+        <input type="text" id="newName" class="input-name" placeholder="Seu nome completo...">
+        <button class="btn-add" onclick="registerUser()">Entrar no Plano</button>
     </div>
-    <div id="users-container" style="width:100%; max-width:450px; margin-top:35px;"></div>
+    <div id="users-container" style="width:100%; max-width:450px; margin-top:40px;"></div>
 </div>
 
-<div class="app-branding" id="app-branding-main" style="display:none; margin-top:10px;">
+<div class="app-branding" id="app-branding-main" style="display:none; margin-top:20px;">
     <img src="assets/icone.png" class="app-logo" style="width:65px;">
     <h2 class="main-title">PLANO BIENAL 2026-2027</h2>
 </div>
 
 <div class="header" id="header-main" style="display:none;">
     <div id="userNameDisplay" class="display-name"></div>
-    <button class="btn-exit" onclick="saveAndExit()">SAIR / TROCAR PERFIL</button>
+    <button class="btn-exit" onclick="saveAndExit()">Sair do Perfil</button>
 </div>
 
 <div class="progress-container" id="progress-main" style="display:none;">
     <div class="progress-bar-bg"><div id="main-bar" class="progress-bar-fill"></div></div>
-    <div id="main-percent" style="font-size: 11px; font-weight: 800; color: var(--cinza-texto); text-transform: uppercase;">0% Concluído Geral</div>
+    <div id="main-percent" class="progress-text">0% Concluído</div>
 </div>
 
 <div id="plan-container" style="width:100%; max-width:500px; display:none;"></div>
@@ -218,13 +220,13 @@
         [...mine, ...others].forEach(user => {
             const isMine = myProfiles.includes(user.name);
             const card = document.createElement('div'); card.className = `user-card ${isMine ? 'meu-perfil' : ''}`;
-            card.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:0.9rem;"><span style="font-weight:bold">${user.name}</span><span style="font-weight:800;">${user.percent}%</span></div><div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${user.percent}%"></div></div>${isMine ? `<div class="actions-row"><button class="btn-action btn-entrar" onclick="loginUser('${user.name}')">ENTRAR</button><button class="btn-action btn-editar" onclick="editUser('${user.name}')">EDITAR</button><button class="btn-action btn-deletar" onclick="deleteUser('${user.name}')">APAGAR</button></div>` : ''}`;
+            card.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;"><span style="font-weight:bold; font-size:0.95rem;">${user.name}</span><span style="font-weight:900; color:var(--verde-escuro);">${user.percent}%</span></div><div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${user.percent}%"></div></div>${isMine ? `<div class="actions-row"><button class="btn-action btn-entrar" onclick="loginUser('${user.name}')">Entrar</button><button class="btn-action btn-editar" onclick="editUser('${user.name}')">Editar</button><button class="btn-action btn-deletar" onclick="deleteUser('${user.name}')">Apagar</button></div>` : ''}`;
             container.appendChild(card);
         });
     }
 
     function registerUser() { 
-        const n = document.getElementById('newName').value.trim(); if(!n) return alert("Digite seu nome!");
+        const n = document.getElementById('newName').value.trim(); if(!n) return alert("Seu nome, por favor!");
         let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); if(!mp.includes(n)) { mp.push(n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); }
         db.ref('users/'+n).update({name:n}); loginUser(n);
     }
@@ -285,7 +287,7 @@
             dayChaps.forEach(c => { btns += `<span class="cap-btn" onclick="abrirLeitor('${c.b}', ${c.c}, ${first.c}, ${last.c}, ${tIdx}, ${dIdx})">${c.c}</span>`; });
             return `<div class="row">
                 <div class="check-btn ${prog['t'+tIdx+'_d'+dIdx]?'done':''}" id="check-${tIdx}-${dIdx}" onclick="toggleCheck(this, ${tIdx}, ${dIdx})"></div>
-                <div class="info"><span class="info-date">${d.label}</span><span class="info-book">${rText}</span><div style="margin-top:8px;">${btns}</div></div>
+                <div class="info"><span class="info-date">${d.label}</span><span class="info-book">${rText}</span><div style="margin-top:10px;">${btns}</div></div>
             </div>`;
         }).join('');
     }
@@ -306,8 +308,8 @@
             cont.scrollTop = 0;
             document.getElementById('btn-prev').disabled = leitorContexto.capAtual <= leitorContexto.capInicio;
             const ult = leitorContexto.capAtual >= leitorContexto.capFim;
-            document.getElementById('btn-next').style.display = ult ? 'none' : 'block';
-            document.getElementById('btn-finish').style.display = ult ? 'block' : 'none';
+            document.getElementById('btn-next').style.display = ult ? 'none' : 'flex';
+            document.getElementById('btn-finish').style.display = ult ? 'flex' : 'none';
         } catch(e) { alert("Capítulo não disponível."); }
     }
 
@@ -319,7 +321,7 @@
                 const res = await fetch(`${v}.json`); const data = await res.json();
                 const lData = data.livros.find(l => l.nome === leitorContexto.livro);
                 const txt = lData.capitulos[leitorContexto.capAtual - 1][vIdx];
-                html += `<div style="margin-bottom:18px; border-bottom:1px solid #f1f5f9; padding-bottom:10px;"><span style="font-weight:900; color:var(--verde-escuro); font-size:11px; text-transform:uppercase;">${data.versao}</span><p style="margin:6px 0; font-size:1rem; line-height:1.5;">${txt}</p></div>`;
+                html += `<div style="margin-bottom:18px; border-bottom:1px solid #f1f5f9; padding-bottom:12px;"><span style="font-weight:900; color:var(--verde-escuro); font-size:11px; text-transform:uppercase; letter-spacing:1px;">${data.versao}</span><p style="margin:8px 0; font-size:1.05rem; line-height:1.6;">${txt}</p></div>`;
             } catch(e) {}
         }
         document.getElementById('compare-content').innerHTML = html;
@@ -360,3 +362,5 @@
 </script>
 </body>
 </html>
+
+
