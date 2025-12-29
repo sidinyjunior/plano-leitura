@@ -1,6 +1,6 @@
 {
-  "name": "PLANO BIENAL DE LEITURA DA BÍBLIA [2026 e 2027]",
-  "short_name": "Plano Biblico [2026-2027]",
+  "name": " ",
+  "short_name": "tt",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -10,7 +10,7 @@
       "src": "assets/icone.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "assets/icone.png",
