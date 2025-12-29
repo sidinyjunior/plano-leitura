@@ -1,0 +1,34 @@
+{
+  "versao": "ACF",
+  "estilo": "Almeida Corrigida Fiel",
+  "livros": [
+    {
+      "nome": "Gênesis",
+      "abrev": "gn",
+      "capitulos": [
+        [
+          "No princípio criou Deus os céus e a terra.",
+          "E a terra era sem forma e vazia; e havia trevas sobre a face do abismo; e o Espírito de Deus se movia sobre a face das águas.",
+          "E disse Deus: Haja luz; e houve luz.",
+          "E viu Deus que era boa a luz; e fez Deus separação entre a luz e as trevas.",
+          "E Deus chamou à luz Dia; e às trevas chamou Noite. E foi a tarde e a manhã, o dia primeiro."
+        ],
+        [
+          "Assim os céus, a terra e todo o seu exército foram acabados.",
+          "E havendo Deus acabado no dia sétimo a obra que fizera, descansou no sétimo dia de toda a sua obra, que tinha feito.",
+          "E abençoou Deus o dia sétimo, e o santificou; porque nele descansou de toda a sua obra que Deus criara e fizera."
+        ],
+        [
+          "Ora, a serpente era mais astuta que todas as alimárias do campo que o Senhor Deus tinha feito.",
+          "E esta disse à mulher: É assim que Deus disse: Não comereis de toda a árvore do jardim?",
+          "E disse a mulher à serpente: Do fruto das árvores do jardim comeremos..."
+        ],
+        [
+          "E conheceu Adão a Eva, sua mulher, e ela concebeu e deu à luz a Caim, e disse: Alcancei do Senhor um homem.",
+          "E deu à luz mais a seu irmão Abel; e Abel foi pastor de ovelhas, e Caim foi lavrador da terra.",
+          "E aconteceu ao cabo de dias que Caim trouxe do fruto da terra uma oferta ao Senhor."
+        ]
+      ]
+    }
+  ]
+}
