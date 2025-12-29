@@ -5,13 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PLANO BÍBLICO 26-27</title>
     
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Plano Bíblico 26–27">
-    <link rel="apple-touch-icon" href="assets/icone.png">
-    <link rel="icon" type="image/png" href="assets/icone.png">
-    <link rel="manifest" href="manifest.json">
-
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
@@ -21,139 +14,115 @@
             --amarelo: #f1c40f; --verde-sucesso: #2ecc71; --bg: #f4f7f6; --azul-link: #3498db; --vermelho: #e74c3c;
             --font-size-leitura: 1.2rem; --bg-leitor: #ffffff; --texto-leitor: #2d3436;
         }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         
-        /* IDENTIDADE VISUAL */
-        .app-branding { text-align: center; margin-bottom: 20px; width: 100%; max-width: 500px; }
-        .app-logo { width: 85px; border-radius: 22px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin-bottom: 12px; }
-        .main-title { font-size: clamp(0.75rem, 4.2vw, 1rem); font-weight: 800; color: #2d3436; text-transform: uppercase; letter-spacing: -0.01em; margin: 0; }
+        /* CABEÇALHO PADRÃO */
+        .header-branding { text-align: center; margin-bottom: 20px; width: 100%; max-width: 500px; }
+        .logo-img { width: 85px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin-bottom: 10px; }
+        .main-title { font-size: 0.85rem; font-weight: 800; color: #2d3436; text-transform: uppercase; margin: 0; }
 
-        /* HEADER DO USUÁRIO */
-        .header { width: 100%; max-width: 500px; background: white; padding: 18px; border-radius: 22px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; position: sticky; top: 10px; z-index: 1000; box-sizing: border-box; }
-        .display-name { font-weight: 800; font-size: 1rem; color: #2d3436; border-bottom: 2px solid var(--verde-whatsapp); padding-bottom: 8px; text-align: center; margin-bottom: 15px; text-transform: uppercase; }
-        .btn-exit { width: 100%; padding: 15px; border: none; border-radius: 14px; background: var(--verde-whatsapp); color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; text-transform: uppercase; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2); transition: 0.2s; }
-        .btn-exit:active { transform: scale(0.98); }
+        .header { width: 100%; max-width: 500px; background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; position: sticky; top: 10px; z-index: 1000; box-sizing: border-box; }
+        .display-name { font-weight: bold; font-size: 1rem; color: #2d3436; border-bottom: 2px solid var(--verde-whatsapp); padding: 5px 0; text-align: center; margin-bottom: 10px; text-transform: uppercase; }
+        .btn-exit { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--verde-whatsapp); color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; text-transform: uppercase; }
 
-        /* PROGRESSO GERAL */
-        .progress-container { width: 100%; max-width: 500px; text-align: center; margin-bottom: 30px; padding: 0 5px; }
-        .progress-bar-bg { width: 100%; background: #e0e0e0; border-radius: 10px; height: 12px; overflow: hidden; margin-bottom: 8px; }
-        .progress-bar-fill { height: 100%; background: var(--verde-sucesso); transition: 0.8s cubic-bezier(0.1, 0.7, 0.1, 1); width: 0%; }
-        .progress-text { font-size: 11px; font-weight: 800; color: var(--cinza-texto); text-transform: uppercase; letter-spacing: 0.5px; }
+        /* PROGRESSO */
+        .progress-box { width: 100%; max-width: 500px; text-align: center; margin-bottom: 20px; }
+        .bar-bg { width: 100%; background: #e0e0e0; border-radius: 10px; height: 14px; overflow: hidden; margin-bottom: 5px; }
+        .bar-fill { height: 100%; background: var(--verde-sucesso); transition: 0.8s ease; width: 0%; }
 
-        /* BLOCOS TRIMESTRAIS */
-        .trimestre-box { background: #e2e8f0; border-radius: 20px; margin-bottom: 20px; overflow: hidden; border: 1px solid #cbd5e0; width: 100%; max-width: 500px; transition: all 0.3s ease; }
-        .tri-header { width: 100%; padding: 20px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; background: transparent; position: relative; z-index: 2; }
-        .trimestre-box.atual { background: var(--amarelo); border: 2px solid #d4ac0d; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
-        .trimestre-box.atual .tri-title { font-weight: 900; color: #000; }
-        
-        .tri-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 12px; }
-        .tri-title { font-size: 0.95rem; color: #4a5568; font-weight: 700; }
-        .tri-perc-label { font-weight: 900; font-size: 0.9rem; color: #1a202c; background: rgba(255,255,255,0.5); padding: 4px 10px; border-radius: 8px; }
-        .tri-progress-bg { width: 100%; background: rgba(0,0,0,0.07); border-radius: 5px; height: 8px; overflow: hidden; }
-        .tri-bar-fill { height: 100%; background: var(--verde-sucesso); width: 0%; transition: 0.6s ease; }
+        /* BLOCOS */
+        .trimestre-box { background: #cbd5e0; border-radius: 15px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #a0aec0; }
+        .trimestre-box.atual { background: var(--amarelo); font-weight: bold; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 2px solid #d4ac0d; }
+        .tri-header { width: 100%; padding: 18px; border: none; cursor: pointer; text-align: left; background: transparent; }
+        .tri-title-row { display: flex; justify-content: space-between; align-items: center; }
+        .tri-perc { font-weight: 800; font-size: 0.9rem; }
 
-        /* CALENDÁRIO FIX */
-        .year-label { display: flex; align-items: center; font-size: 1.15rem; font-weight: 800; margin: 35px 0 15px 5px; color: #1a202c; width: 100%; max-width: 500px; }
-        .cal-icon { width: 32px; height: 34px; background: white; border: 2px solid #2d3436; border-radius: 8px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0; box-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
-        .cal-top { background: #e74c3c; width: 100%; height: 10px; position: absolute; top: 0; border-bottom: 1px solid #2d3436; }
-        .cal-day { font-size: 11px; font-weight: 900; margin-top: 8px; color: #2d3436; }
-
-        /* LISTA DE LEITURA */
-        .reading-list { display: none; padding: 10px; background: #fff; border-top: 1px solid rgba(0,0,0,0.05); }
-        .row { display: flex; align-items: flex-start; padding: 18px; border-bottom: 1px solid #f1f5f9; }
-        .check-btn { width: 30px; height: 30px; border: 2px solid #cbd5e0; border-radius: 10px; margin-right: 18px; cursor: pointer; flex-shrink: 0; display:flex; align-items:center; justify-content:center; transition: 0.2s; }
+        /* LISTA E LINHAS */
+        .reading-list { display: none; padding: 5px; background: #fff; }
+        .row { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #f9f9f9; }
+        .check-btn { width: 26px; height: 26px; border: 2px solid #ddd; border-radius: 8px; margin-right: 12px; cursor: pointer; flex-shrink: 0; display:flex; align-items:center; justify-content:center; }
         .check-btn.done { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
-        .check-btn.done::after { content: '✓'; font-weight: 900; font-size: 1.1rem; }
-        .info { flex: 1; }
-        .info-date { font-size: 11px; color: #95a5a6; text-transform: uppercase; font-weight: 800; margin-bottom: 4px; display: block; }
-        .info-book { font-size: 0.95rem; font-weight: 700; color: #2c3e50; line-height: 1.3; }
+        .check-btn.done::after { content: '✓'; font-weight: bold; }
+        .info { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .info-date { font-size: 11px; color: #95a5a6; font-weight: bold; text-transform: uppercase; }
+        .info-book { font-size: 14px; font-weight: 600; color: #2c3e50; }
 
-        /* LEITOR E RODAPÉ */
-        #reader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-leitor); z-index: 5000; display: none; flex-direction: column; color: var(--texto-leitor); }
-        .reader-header { padding: 15px; background: #1a4731; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .reader-toolbar { display: flex; background: #245e41; padding: 10px 15px; gap: 10px; align-items: center; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .reader-content { flex: 1; overflow-y: auto; padding: 25px; font-size: var(--font-size-leitura); line-height: 1.8; }
-        .verse-row { margin-bottom: 20px; cursor: pointer; padding: 8px; border-radius: 10px; transition: 0.2s; }
-        .verse-row:active { background: rgba(0,0,0,0.05); }
-        .verse-num { font-size: 0.75em; font-weight: 900; color: var(--cinza-texto); margin-right: 15px; min-width: 28px; opacity: 0.6; }
+        /* CALENDARIO */
+        .year-label { display: flex; align-items: center; font-weight: 800; margin: 25px 0 10px 5px; }
+        .cal-icon { width: 28px; height: 30px; background: white; border: 2px solid #2d3436; border-radius: 6px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 12px; overflow: hidden; }
+        .cal-top { background: #e74c3c; width: 100%; height: 8px; position: absolute; top: 0; }
+        .cal-day { font-size: 10px; font-weight: 900; margin-top: 6px; }
+
+        /* LEITOR */
+        #reader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-leitor); z-index: 5000; display: none; flex-direction: column; }
+        .reader-header { padding: 15px; background: #1a4731; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .reader-content { flex: 1; overflow-y: auto; padding: 20px; font-size: var(--font-size-leitura); line-height: 1.6; }
+        .reader-footer { padding: 15px; display: flex; gap: 10px; background: #f9f9f9; border-top: 1px solid #eee; }
+        .btn-nav { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; }
+        .cap-btn { background: #edf2f7; padding: 4px 8px; border-radius: 5px; font-size: 0.8rem; margin-left: 4px; cursor: pointer; color: var(--verde-escuro); font-weight: 800; }
+
+        /* LOGIN / CARDS */
+        .access-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; flex-direction: column; align-items: center; z-index: 2000; padding: 20px; }
+        .user-card { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 2px solid transparent; box-shadow: 0 4px 10px rgba(0,0,0,0.05); width: 100%; max-width: 450px; }
+        .user-card.meu-perfil { border-color: var(--azul-link); background: #f0f7ff; }
         
-        .reader-footer { padding: 15px 20px; display: flex; gap: 12px; background: #f8fafc; border-top: 1px solid #e2e8f0; height: 85px; align-items: center; box-sizing: border-box; }
-        .btn-nav-back { width: 55px; height: 55px; border-radius: 14px; border: none; background: #cbd5e0; color: #2d3436; font-size: 1.4rem; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-        .btn-nav-next { flex: 1; height: 55px; border-radius: 14px; border: none; background: var(--azul-link); color: white; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2); }
-        .btn-nav-finish { flex: 1; height: 55px; border-radius: 14px; border: none; background: var(--verde-sucesso); color: white; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2); display: none; }
-        .btn-nav-back:disabled { opacity: 0.4; }
-
-        .cap-btn { display: inline-block; width: 38px; height: 38px; line-height: 38px; text-align: center; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; margin: 4px; cursor: pointer; font-size: 0.95rem; font-weight: 800; color: var(--verde-escuro); box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-
-        /* ACCESS OVERLAY */
-        .access-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; flex-direction: column; align-items: center; z-index: 2000; padding: 40px 20px; overflow-y: auto; }
-        .input-name { width: 100%; padding: 18px; border-radius: 16px; border: 2px solid #e2e8f0; font-size: 1rem; outline: none; margin-bottom: 15px; }
-        .btn-add { width: 100%; padding: 18px; border: none; border-radius: 16px; background: linear-gradient(135deg, var(--verde-whatsapp), var(--verde-escuro)); color: white; font-weight: 800; font-size: 1rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 6px 15px rgba(18, 140, 126, 0.2); }
+        #splash-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
+        #splash-screen.hide { opacity: 0; pointer-events: none; transition: 0.5s; }
+        .theme-sepia { --bg-leitor: #f4ecd8; --texto-leitor: #5b4636; }
+        .theme-dark { --bg-leitor: #1a1a1a; --texto-leitor: #e0e0e0; }
     </style>
 </head>
-
 <body>
 
 <div id="splash-screen">
-    <img src="assets/icone.png" alt="Logo">
-    <h1 style="font-size:1.1rem; text-transform:uppercase; letter-spacing:1px; margin: 0;">Plano Bienal de Leitura</h1>
-    <p style="color:var(--cinza-texto); font-weight:bold; margin-top: 5px;">2026 • 2027</p>
+    <img src="assets/icone.png" alt="Logo" style="width:120px; border-radius:20px; margin-bottom:15px;">
+    <h1 style="font-size:0.9rem; text-transform:uppercase;">Plano Bienal de Leitura</h1>
 </div>
 
 <div id="reader-overlay">
     <div class="reader-header">
-        <span id="reader-title" style="font-weight:800; font-size:1rem; text-transform:uppercase;">Gênesis 1</span>
-        <button onclick="fecharLeitor()" style="background:none; border:none; color:white; font-size:1.8rem; line-height:1; cursor:pointer;">✕</button>
+        <span id="reader-title" style="font-weight:bold;">Gênesis 1</span>
+        <button onclick="fecharLeitor()" style="background:none; border:none; color:white; font-size:1.5rem;">✕</button>
     </div>
-    <div class="reader-toolbar">
-        <select id="select-versao" onchange="trocarVersao(this.value)" style="background:var(--verde-escuro); color:white; border:none; border-radius:8px; padding:8px 12px; font-weight:bold; font-size:0.85rem;">
+    <div style="background:#245e41; padding:8px 15px; display:flex; gap:10px; align-items:center;">
+        <select onchange="trocarVersao(this.value)" style="background:var(--verde-escuro); color:white; border:none; border-radius:5px; padding:4px;">
             <option value="acf">ACF</option><option value="nvi">NVI</option><option value="ntlh">NTLH</option><option value="kja">KJA</option>
         </select>
-        <button onclick="mudarFonte(-0.1)" style="color:white; background:rgba(255,255,255,0.2); border:none; border-radius:8px; padding:8px 14px; font-weight:bold;">A-</button>
-        <button onclick="mudarFonte(0.1)" style="color:white; background:rgba(255,255,255,0.2); border:none; border-radius:8px; padding:8px 14px; font-weight:bold;">A+</button>
-        <button onclick="setTema('sepia')" style="background:#f4ecd8; color:#5b4636; border:none; border-radius:8px; padding:8px 14px; font-weight:bold;">S</button>
-        <button onclick="setTema('dark')" style="background:#1a1a1a; color:white; border:none; border-radius:8px; padding:8px 14px; font-weight:bold;">N</button>
-        <button onclick="setTema('light')" style="background:white; color:#333; border:1px solid #ccc; border-radius:8px; padding:8px 14px; font-weight:bold;">C</button>
+        <button onclick="mudarFonte(0.1)" style="color:white; background:rgba(255,255,255,0.2); border:none; padding:4px 8px; border-radius:4px;">A+</button>
+        <button onclick="setTema('sepia')" style="background:#f4ecd8; border:none; padding:4px 8px; border-radius:4px;">S</button>
+        <button onclick="setTema('dark')" style="background:#1a1a1a; color:white; border:none; padding:4px 8px; border-radius:4px;">N</button>
     </div>
     <div id="reader-text" class="reader-content"></div>
     <div class="reader-footer">
-        <button id="btn-prev" class="btn-nav-back" onclick="mudarCapitulo(-1)">←</button>
-        <button id="btn-next" class="btn-nav-next" onclick="mudarCapitulo(1)">Próximo Capítulo</button>
-        <button id="btn-finish" class="btn-nav-finish" onclick="concluirLeitura()">Concluir Hoje</button>
+        <button id="btn-prev" class="btn-nav" style="background:#ddd;" onclick="mudarCapitulo(-1)">←</button>
+        <button id="btn-next" class="btn-nav" style="background:var(--azul-link); color:white;" onclick="mudarCapitulo(1)">PRÓXIMO</button>
+        <button id="btn-finish" class="btn-nav" style="background:var(--verde-sucesso); color:white; display:none;" onclick="concluirLeitura()">CONCLUIR HOJE</button>
     </div>
-</div>
-
-<div id="compare-modal">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid #f1f5f9; padding-bottom:12px;">
-        <h3 style="margin:0; font-size:1.1rem; font-weight:900;">Comparativo</h3>
-        <button onclick="fecharComparador()" style="border:none; background:#f1f5f9; border-radius:50%; width:34px; height:34px; font-weight:bold; cursor:pointer;">✕</button>
-    </div>
-    <div id="compare-content"></div>
 </div>
 
 <div id="access-overlay" class="access-overlay">
-    <img src="assets/icone.png" class="app-logo">
-    <h2 class="main-title">PLANO BIENAL 2026-2027</h2>
-    <div class="input-container" style="width:100%; max-width:400px; margin-top:40px;">
-        <input type="text" id="newName" class="input-name" placeholder="Seu nome completo...">
-        <button class="btn-add" onclick="registerUser()">Entrar no Plano</button>
+    <div class="header-branding">
+        <img src="assets/icone.png" class="logo-img">
+        <h2 class="main-title">PLANO BIENAL 2026-2027</h2>
     </div>
-    <div id="users-container" style="width:100%; max-width:450px; margin-top:40px;"></div>
+    <input type="text" id="newName" placeholder="Nome completo..." style="width:100%; max-width:400px; padding:15px; border-radius:12px; border:1px solid #ddd; margin-bottom:10px;">
+    <button onclick="registerUser()" style="width:100%; max-width:400px; padding:15px; border-radius:12px; background:var(--verde-whatsapp); color:white; font-weight:bold; border:none;">ENTRAR</button>
+    <div id="users-container" style="width:100%; margin-top:20px;"></div>
 </div>
 
-<div class="app-branding" id="app-branding-main" style="display:none; margin-top:20px;">
-    <img src="assets/icone.png" class="app-logo" style="width:65px;">
+<div class="header-branding" id="inner-branding" style="display:none; margin-top:10px;">
+    <img src="assets/icone.png" class="logo-img" style="width:60px;">
     <h2 class="main-title">PLANO BIENAL 2026-2027</h2>
 </div>
 
 <div class="header" id="header-main" style="display:none;">
     <div id="userNameDisplay" class="display-name"></div>
-    <button class="btn-exit" onclick="saveAndExit()">Sair do Perfil</button>
+    <button class="btn-exit" onclick="saveAndExit()">TROCAR PERFIL</button>
 </div>
 
-<div class="progress-container" id="progress-main" style="display:none;">
-    <div class="progress-bar-bg"><div id="main-bar" class="progress-bar-fill"></div></div>
-    <div id="main-percent" class="progress-text">0% Concluído</div>
+<div class="progress-box" id="progress-main" style="display:none;">
+    <div class="bar-bg"><div id="main-bar" class="bar-fill"></div></div>
+    <div id="main-percent" style="font-size:11px; font-weight:bold; color:var(--cinza-texto);">0% GERAL</div>
 </div>
 
 <div id="plan-container" style="width:100%; max-width:500px; display:none;"></div>
@@ -165,15 +134,14 @@
     let currentUser = "";
     const KEY_MY_PROFILES = "meus_perfis_locais";
     let leitorContexto = { livro: "", capAtual: 0, capInicio: 0, capFim: 0, tIdx: 0, dIdx: 0, versao: "acf" };
-    let fontSizeAtual = 1.2;
 
     const BIBLE_BOOKS = [{n: "Gênesis", c: 50}, {n: "Êxodo", c: 40}, {n: "Levítico", c: 27}, {n: "Números", c: 36}, {n: "Deuteronômio", c: 34}, {n: "Josué", c: 24}, {n: "Juízes", c: 21}, {n: "Rute", c: 4}, {n: "1 Samuel", c: 31}, {n: "2 Samuel", c: 24}, {n: "1 Reis", c: 22}, {n: "2 Reis", c: 25}, {n: "1 Crônicas", c: 29}, {n: "2 Crônicas", c: 36}, {n: "Esdras", c: 10}, {n: "Neemias", c: 13}, {n: "Ester", c: 10}, {n: "Jó", c: 42}, {n: "Salmos", c: 150}, {n: "Provérbios", c: 31}, {n: "Eclesiastes", c: 12}, {n: "Cantares", c: 8}, {n: "Isaías", c: 66}, {n: "Jeremias", c: 52}, {n: "Lamentações", c: 5}, {n: "Ezequiel", c: 48}, {n: "Daniel", c: 12}, {n: "Oseias", c: 14}, {n: "Joel", c: 3}, {n: "Amós", c: 9}, {n: "Obadias", c: 1}, {n: "Jonas", c: 4}, {n: "Miqueias", c: 7}, {n: "Naum", c: 3}, {n: "Habacuque", c: 3}, {n: "Sofonias", c: 3}, {n: "Ageu", c: 2}, {n: "Zacarias", c: 14}, {n: "Malaquias", c: 4}, {n: "Mateus", c: 28}, {n: "Marcos", c: 16}, {n: "Lucas", c: 24}, {n: "João", c: 21}, {n: "Atos", c: 28}, {n: "Romanos", c: 16}, {n: "1 Coríntios", c: 16}, {n: "2 Coríntios", c: 13}, {n: "Gálatas", c: 6}, {n: "Efésios", c: 6}, {n: "Filipenses", c: 4}, {n: "Colossenses", c: 4}, {n: "1 Tessalonicenses", c: 5}, {n: "2 Tessalonicenses", c: 3}, {n: "1 Timóteo", c: 6}, {n: "2 Timóteo", c: 4}, {n: "Tito", c: 3}, {n: "Filemom", c: 1}, {n: "Hebreus", c: 13}, {n: "Tiago", c: 5}, {n: "1 Pedro", c: 5}, {n: "2 Pedro", c: 3}, {n: "1 João", c: 5}, {n: "2 João", c: 1}, {n: "3 João", c: 1}, {n: "Judas", c: 1}, {n: "Apocalipse", c: 22}];
     const CONFIG = [
-        { ano: 2026, tri: "1º Trimestre: Pentateuco", start: "2026-01-05", end: "2026-03-31", booksIdx: [0, 4], calDay: "05", calMonth: "JAN" },
+        { ano: 2026, tri: "1º Trimestre: Pentateuco", start: "2026-01-05", end: "2026-03-31", booksIdx: [0, 4], cal: "05 JAN" },
         { ano: 2026, tri: "2º Trimestre: Históricos P1", start: "2026-04-01", end: "2026-06-30", booksIdx: [5, 9] },
         { ano: 2026, tri: "3º Trimestre: Históricos P2", start: "2026-07-01", end: "2026-09-30", booksIdx: [10, 13] },
         { ano: 2026, tri: "4º Trimestre: Históricos P3 / Jó", start: "2026-10-01", end: "2026-12-18", booksIdx: [14, 17] },
-        { ano: 2027, tri: "1º Trimestre: Poéticos", start: "2027-01-04", end: "2027-03-31", booksIdx: [18, 21], calDay: "04", calMonth: "JAN" },
+        { ano: 2027, tri: "1º Trimestre: Poéticos", start: "2027-01-04", end: "2027-03-31", booksIdx: [18, 21], cal: "04 JAN" },
         { ano: 2027, tri: "2º Trimestre: Profetas Maiores", start: "2027-04-01", end: "2027-06-30", booksIdx: [22, 26] },
         { ano: 2027, tri: "3º Trimestre: Profetas Menores + NT", start: "2027-07-01", end: "2027-09-30", booksIdx: [27, 43] },
         { ano: 2027, tri: "4º Trimestre: Novo Testamento P2", start: "2027-10-01", end: "2027-12-17", booksIdx: [44, 65] }
@@ -181,17 +149,26 @@
 
     db.ref('users').on('value', (snap) => renderCommunity(snap.val()));
 
-    function getCurrentTriIdx() { const today = new Date(); for(let i=0; i<CONFIG.length; i++) { if(today >= new Date(CONFIG[i].start) && today <= new Date(CONFIG[i].end)) return i; } return 0; }
-    function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) { dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); } curr.setDate(curr.getDate() + 1); } return dates; }
-    
+    function renderCommunity(data) {
+        const container = document.getElementById('users-container'); container.innerHTML = ""; if(!data) return;
+        const myProfiles = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
+        Object.keys(data).forEach(name => {
+            const isMine = myProfiles.includes(name);
+            const stats = calculateStats(data[name].progress);
+            const card = document.createElement('div'); card.className = `user-card ${isMine ? 'meu-perfil' : ''}`;
+            card.innerHTML = `<div style="display:flex; justify-content:space-between;"><b>${name}</b><span>${stats.geral}%</span></div><div class="bar-bg" style="height:6px; margin-top:5px;"><div class="bar-fill" style="width:${stats.geral}%"></div></div>${isMine ? `<button onclick="loginUser('${name}')" style="margin-top:10px; width:100%; padding:8px; border:none; border-radius:8px; background:var(--azul-link); color:white; font-weight:bold;">ENTRAR</button>` : ''}`;
+            container.appendChild(card);
+        });
+    }
+
     function calculateStats(progress, triIdx = null) {
-        let lidosTotal = 0, totalBiblia = 1189, capsNoTri = 0, lidosNoTri = 0;
+        let lTotal = 0, tTotal = 1189, cTri = 0, lTri = 0;
         CONFIG.forEach((t, i) => {
             let chaps = [];
             for (let b = t.booksIdx[0]; b <= t.booksIdx[1]; b++) {
                 for (let c = 1; c <= BIBLE_BOOKS[b].c; c++) chaps.push({b: BIBLE_BOOKS[b].n, c: c});
             }
-            if (i === triIdx) capsNoTri = chaps.length;
+            if (i === triIdx) cTri = chaps.length;
             let days = getWeekdays(t.start, t.end);
             let ratio = chaps.length / days.length;
             days.forEach((d, dIdx) => {
@@ -200,69 +177,34 @@
                     let end = Math.floor((dIdx + 1) * ratio);
                     if (dIdx === days.length - 1) end = chaps.length;
                     let count = end - start;
-                    lidosTotal += count;
-                    if (i === triIdx) lidosNoTri += count;
+                    lTotal += count; if (i === triIdx) lTri += count;
                 }
             });
         });
-        return { geral: Math.round((lidosTotal / totalBiblia) * 100), tri: capsNoTri > 0 ? Math.round((lidosNoTri / capsNoTri) * 100) : 0 };
+        return { geral: Math.round((lTotal / tTotal) * 100), tri: cTri > 0 ? Math.round((lTri / cTri) * 100) : 0 };
     }
 
-    function renderCommunity(data) { 
-        const container = document.getElementById('users-container'); container.innerHTML = ""; if(!data) return;
-        const myProfiles = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
-        let usersArray = Object.keys(data).map(name => {
-            let stats = calculateStats(data[name].progress);
-            return { name, ...data[name], percent: stats.geral };
-        });
-        let mine = usersArray.filter(u => myProfiles.includes(u.name));
-        let others = usersArray.filter(u => !myProfiles.includes(u.name)).sort((a, b) => b.percent - a.percent);
-        [...mine, ...others].forEach(user => {
-            const isMine = myProfiles.includes(user.name);
-            const card = document.createElement('div'); card.className = `user-card ${isMine ? 'meu-perfil' : ''}`;
-            card.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;"><span style="font-weight:bold; font-size:0.95rem;">${user.name}</span><span style="font-weight:900; color:var(--verde-escuro);">${user.percent}%</span></div><div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${user.percent}%"></div></div>${isMine ? `<div class="actions-row"><button class="btn-action btn-entrar" onclick="loginUser('${user.name}')">Entrar</button><button class="btn-action btn-editar" onclick="editUser('${user.name}')">Editar</button><button class="btn-action btn-deletar" onclick="deleteUser('${user.name}')">Apagar</button></div>` : ''}`;
-            container.appendChild(card);
-        });
-    }
+    function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) { dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); } curr.setDate(curr.getDate() + 1); } return dates; }
 
-    function registerUser() { 
-        const n = document.getElementById('newName').value.trim(); if(!n) return alert("Seu nome, por favor!");
-        let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); if(!mp.includes(n)) { mp.push(n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); }
-        db.ref('users/'+n).update({name:n}); loginUser(n);
-    }
+    function registerUser() { const n = document.getElementById('newName').value.trim(); if(!n) return; let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); if(!mp.includes(n)) { mp.push(n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); } db.ref('users/'+n).update({name:n}); loginUser(n); }
 
-    function loginUser(name) { 
-        currentUser = name; document.getElementById('access-overlay').style.display = 'none'; 
-        document.getElementById('app-branding-main').style.display = "block";
-        document.getElementById('header-main').style.display = "block"; document.getElementById('progress-main').style.display = "block"; 
-        document.getElementById('plan-container').style.display = "block"; document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); 
-    }
+    function loginUser(name) { currentUser = name; document.getElementById('access-overlay').style.display='none'; document.getElementById('inner-branding').style.display='block'; document.getElementById('header-main').style.display='block'; document.getElementById('progress-main').style.display='block'; document.getElementById('plan-container').style.display='block'; document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); }
 
     function saveAndExit() { location.reload(); }
-    
+
     function renderPlan() {
         const area = document.getElementById('plan-container'); area.innerHTML = "";
         db.ref('users/'+currentUser+'/progress').once('value', snap => {
-            const prog = snap.val() || {}; let curYear = 0;
-            const currentTriIdx = getCurrentTriIdx();
+            const prog = snap.val() || {}; let curYear = 0; const currentTriIdx = getCurrentTriIdx();
             CONFIG.forEach((t, tIdx) => {
                 if (t.ano !== curYear) { 
                     curYear = t.ano; const y = document.createElement('div'); y.className = "year-label";
-                    y.innerHTML = `<div class="cal-icon"><div class="cal-top"></div><span class="cal-day">${t.calDay || "01"}</span><span style="font-size:7px; font-weight:900;">${t.calMonth || "JAN"}</span></div> ANO ${curYear}`;
+                    y.innerHTML = `<div class="cal-icon"><div class="cal-top"></div><span class="cal-day">${t.cal ? t.cal.split(' ')[0] : '01'}</span><span style="font-size:7px;">${t.cal ? t.cal.split(' ')[1] : 'JAN'}</span></div> ANO ${curYear}`;
                     area.appendChild(y); 
                 }
-                const stats = calculateStats(prog, tIdx);
-                const isAtual = tIdx === currentTriIdx;
+                const stats = calculateStats(prog, tIdx); const isAtual = tIdx === currentTriIdx;
                 const box = document.createElement('div'); box.className = `trimestre-box ${isAtual ? 'atual' : ''}`;
-                box.innerHTML = `
-                    <button class="tri-header" onclick="toggleTri(${tIdx})">
-                        <div class="tri-title-row">
-                            <span class="tri-title">${t.tri}</span>
-                            <span class="tri-perc-label" id="tri-perc-${tIdx}">${stats.tri}%</span>
-                        </div>
-                        <div class="tri-progress-bg"><div id="tri-bar-${tIdx}" class="tri-bar-fill" style="width:${stats.tri}%"></div></div>
-                    </button>
-                    <div class="reading-list" id="list-${tIdx}" style="${isAtual ? 'display:block' : ''}">${generateDaysHtml(t, tIdx, prog)}</div>`;
+                box.innerHTML = `<button class="tri-header" onclick="toggleTri(${tIdx})"><div class="tri-title-row"><span>${t.tri}</span><span class="tri-perc">${stats.tri}%</span></div><div class="bar-bg" style="height:6px; margin-top:8px;"><div class="bar-fill" style="width:${stats.tri}%"></div></div></button><div class="reading-list" id="list-${tIdx}" style="${isAtual ? 'display:block' : ''}">${generateDaysHtml(t, tIdx, prog)}</div>`;
                 area.appendChild(box);
             });
             updateProgress();
@@ -270,33 +212,19 @@
     }
 
     function generateDaysHtml(t, tIdx, prog) {
-        const days = getWeekdays(t.start, t.end);
-        let chaps = [];
-        for (let b = t.booksIdx[0]; b <= t.booksIdx[1]; b++) {
-            for (let c = 1; c <= BIBLE_BOOKS[b].c; c++) chaps.push({b: BIBLE_BOOKS[b].n, c: c});
-        }
+        const days = getWeekdays(t.start, t.end); let chaps = [];
+        for (let b = t.booksIdx[0]; b <= t.booksIdx[1]; b++) { for (let c = 1; c <= BIBLE_BOOKS[b].c; c++) chaps.push({b: BIBLE_BOOKS[b].n, c: c}); }
         let ratio = chaps.length / days.length;
         return days.map((d, dIdx) => {
-            let start = Math.floor(dIdx * ratio);
-            let end = Math.floor((dIdx + 1) * ratio);
-            if (dIdx === days.length - 1) end = chaps.length;
-            const dayChaps = chaps.slice(start, end);
-            const first = dayChaps[0], last = dayChaps[dayChaps.length - 1];
-            const rText = first.b === last.b ? `${first.b} ${first.c}-${last.c}` : `${first.b} ${first.c} a ${last.b} ${last.c}`;
-            let btns = "";
-            dayChaps.forEach(c => { btns += `<span class="cap-btn" onclick="abrirLeitor('${c.b}', ${c.c}, ${first.c}, ${last.c}, ${tIdx}, ${dIdx})">${c.c}</span>`; });
-            return `<div class="row">
-                <div class="check-btn ${prog['t'+tIdx+'_d'+dIdx]?'done':''}" id="check-${tIdx}-${dIdx}" onclick="toggleCheck(this, ${tIdx}, ${dIdx})"></div>
-                <div class="info"><span class="info-date">${d.label}</span><span class="info-book">${rText}</span><div style="margin-top:10px;">${btns}</div></div>
-            </div>`;
+            let start = Math.floor(dIdx * ratio), end = Math.floor((dIdx + 1) * ratio); if (dIdx === days.length - 1) end = chaps.length;
+            const dChaps = chaps.slice(start, end); const first = dChaps[0], last = dChaps[dChaps.length - 1];
+            let btns = ""; dChaps.forEach(c => { btns += `<span class="cap-btn" onclick="abrirLeitor('${c.b}', ${c.c}, ${first.c}, ${last.c}, ${tIdx}, ${dIdx})">${c.c}</span>`; });
+            return `<div class="row"><div class="check-btn ${prog['t'+tIdx+'_d'+dIdx]?'done':''}" onclick="toggleCheck(this, ${tIdx}, ${dIdx})"></div><div class="info"><span class="info-date">${d.label}</span><span class="info-book">${first.b} ${first.c}${last.c!==first.c?'-'+last.c:''} ${btns}</span></div></div>`;
         }).join('');
     }
 
-    async function abrirLeitor(livro, cap, ini, fim, t, d) {
-        leitorContexto = { ...leitorContexto, livro, capAtual: cap, capInicio: ini, capFim: fim, tIdx: t, dIdx: d };
-        document.getElementById('reader-overlay').style.display = 'flex'; carregarTextoBiblico();
-    }
-
+    async function abrirLeitor(livro, cap, ini, fim, t, d) { leitorContexto = { ...leitorContexto, livro, capAtual: cap, capInicio: ini, capFim: fim, tIdx: t, dIdx: d }; document.getElementById('reader-overlay').style.display = 'flex'; carregarTextoBiblico(); }
+    
     async function carregarTextoBiblico() {
         try {
             const res = await fetch(`${leitorContexto.versao}.json`); const data = await res.json();
@@ -304,63 +232,29 @@
             const versos = lData.capitulos[leitorContexto.capAtual - 1];
             document.getElementById('reader-title').innerText = `${leitorContexto.livro} ${leitorContexto.capAtual}`;
             const cont = document.getElementById('reader-text');
-            cont.innerHTML = versos.map((v, i) => `<div class="verse-row" onclick="compararVerso(${i})"><span class="verse-num">${i+1}</span><span>${v}</span></div>`).join('');
+            cont.innerHTML = versos.map((v, i) => `<div style="margin-bottom:15px;" onclick="compararVerso(${i})"><span style="font-size:0.7em; font-weight:bold; color:gray; margin-right:8px;">${i+1}</span>${v}</div>`).join('');
             cont.scrollTop = 0;
             document.getElementById('btn-prev').disabled = leitorContexto.capAtual <= leitorContexto.capInicio;
             const ult = leitorContexto.capAtual >= leitorContexto.capFim;
-            document.getElementById('btn-next').style.display = ult ? 'none' : 'flex';
-            document.getElementById('btn-finish').style.display = ult ? 'flex' : 'none';
+            document.getElementById('btn-next').style.display = ult ? 'none' : 'block';
+            document.getElementById('btn-finish').style.display = ult ? 'block' : 'none';
         } catch(e) { alert("Capítulo não disponível."); }
     }
 
-    async function compararVerso(vIdx) {
-        const versoes = ['acf', 'nvi', 'ntlh', 'kja']; let html = "";
-        document.getElementById('compare-modal').classList.add('active');
-        for (let v of versoes) {
-            try {
-                const res = await fetch(`${v}.json`); const data = await res.json();
-                const lData = data.livros.find(l => l.nome === leitorContexto.livro);
-                const txt = lData.capitulos[leitorContexto.capAtual - 1][vIdx];
-                html += `<div style="margin-bottom:18px; border-bottom:1px solid #f1f5f9; padding-bottom:12px;"><span style="font-weight:900; color:var(--verde-escuro); font-size:11px; text-transform:uppercase; letter-spacing:1px;">${data.versao}</span><p style="margin:8px 0; font-size:1.05rem; line-height:1.6;">${txt}</p></div>`;
-            } catch(e) {}
-        }
-        document.getElementById('compare-content').innerHTML = html;
-    }
-
-    function trocarVersao(v) { leitorContexto.versao = v; carregarTextoBiblico(); }
-    function mudarFonte(d) { fontSizeAtual += d; document.documentElement.style.setProperty('--font-size-leitura', fontSizeAtual + 'rem'); }
-    function setTema(t) { const o = document.getElementById('reader-overlay'); o.className = ''; if(t!=='light') o.classList.add('theme-'+t); }
-    function fecharComparador() { document.getElementById('compare-modal').classList.remove('active'); }
-    function fecharLeitor() { document.getElementById('reader-overlay').style.display = 'none'; fecharComparador(); }
     function mudarCapitulo(d) { leitorContexto.capAtual += d; carregarTextoBiblico(); }
-    
-    function concluirLeitura() {
-        const btn = document.getElementById(`check-${leitorContexto.tIdx}-${leitorContexto.dIdx}`);
-        if(!btn.classList.contains('done')) toggleCheck(btn, leitorContexto.tIdx, leitorContexto.dIdx);
-        fecharLeitor();
-    }
-
-    function toggleCheck(el, t, d) { 
-        el.classList.toggle('done'); 
-        db.ref(`users/${currentUser}/progress/t${t}_d${d}`).set(el.classList.contains('done'));
-        renderPlan();
-    }
-    
+    function concluirLeitura() { fecharLeitor(); }
+    function fecharLeitor() { document.getElementById('reader-overlay').style.display = 'none'; }
+    function trocarVersao(v) { leitorContexto.versao = v; carregarTextoBiblico(); }
+    function setTema(t) { const o = document.getElementById('reader-overlay'); o.className = ''; if(t!=='light') o.classList.add('theme-'+t); }
+    function mudarFonte(d) { fontSizeAtual += d; document.documentElement.style.setProperty('--font-size-leitura', fontSizeAtual + 'rem'); }
     function toggleTri(i) { const el = document.getElementById(`list-${i}`); const s = el.style.display === "block"; document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none'); el.style.display = s ? "none" : "block"; }
-    
-    function updateProgress() {
-        db.ref('users/'+currentUser+'/progress').once('value', snap => {
-            const stats = calculateStats(snap.val());
-            document.getElementById('main-bar').style.width = stats.geral + "%";
-            document.getElementById('main-percent').innerText = stats.geral + "% Concluído Geral";
-        });
-    }
-
-    window.addEventListener("load", () => {
-        setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2000);
-    });
+    function toggleCheck(el, t, d) { el.classList.toggle('done'); db.ref(`users/${currentUser}/progress/t${t}_d${d}`).set(el.classList.contains('done')); renderPlan(); }
+    function updateProgress() { db.ref('users/'+currentUser+'/progress').once('value', snap => { const stats = calculateStats(snap.val()); document.getElementById('main-bar').style.width = stats.geral + "%"; document.getElementById('main-percent').innerText = stats.geral + "% GERAL"; }); }
+    function getCurrentTriIdx() { const today = new Date(); for(let i=0; i<CONFIG.length; i++) { if(today >= new Date(CONFIG[i].start) && today <= new Date(CONFIG[i].end)) return i; } return 0; }
+    window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2000); });
 </script>
 </body>
 </html>
+
 
 
