@@ -35,8 +35,32 @@
         .btn-add { width: 100%; padding: 16px; border: none; border-radius: 15px; background: linear-gradient(135deg, var(--verde-whatsapp), var(--verde-escuro)); color: white; font-weight: bold; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3); }
 
         /* BANNER DE INSTALAÇÃO AJUSTADO */
-        #install-banner { position: fixed; bottom: 20px; width: 90%; max-width: 400px; background: transparent; padding: 10px; z-index: 3000; display: none; text-align: center; }
-        .install-text { font-weight: bold; font-size: 0.9rem; color: #2d3436; margin-bottom: 12px; }
+
+        #install-banner {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 420px;
+
+  background: #1f2933;           /* FUNDO ESCURO */
+  padding: 16px;
+  border-radius: 18px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  z-index: 3000;
+  display: none;
+  text-align: center;
+}
+
+.install-text {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #ffffff;               /* TEXTO BRANCO */
+  margin-bottom: 14px;
+}
+
         .btn-install-now { display: inline-block; padding: 10px 20px; border: none; border-radius: 10px; background: var(--azul-link); color: white; font-weight: bold; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .btn-close-banner { font-size: 0.75rem; margin-top: 15px; text-decoration: underline; cursor: pointer; color: var(--cinza-texto); display: block; }
 
@@ -213,6 +237,8 @@
 </body>
 
 </html>
+
+
 
 
 
