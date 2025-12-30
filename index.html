@@ -123,7 +123,6 @@
         <select id="select-versao" onchange="trocarVersao(this.value)" style="background:var(--verde-escuro); color:white; border:none; border-radius:5px; padding:4px;">
             <option value="acf">ACF (Fiel)</option>
             <option value="nvi">NVI (Moderna)</option>
-            <option value="ntlh">NTLH (Simples)</option>
             <option value="kja">KJA (King James)</option>
         </select>
         <button class="btn-tool" onclick="mudarFonte(-0.1)">A-</button>
@@ -396,10 +395,11 @@
         });
     }
 
-    window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2000); });
+    window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2500); });
 </script>
 </body>
 </html>
+
 
 
 
