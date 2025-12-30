@@ -23,35 +23,37 @@
             --font-size-leitura: 1.2rem; --bg-leitor: #ffffff; --texto-leitor: #2d3436;
         }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        
+        /* SPLASH SCREEN (LOGO CORRIGIDA) */
+        #splash-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease; }
+        #splash-screen img { width: 160px; max-width: 70%; border-radius: 28px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        #splash-screen.hide { opacity: 0; pointer-events: none; }
+
         .main-title { font-size: clamp(0.7rem, 3.8vw, 0.9rem); font-weight: 800; color: #2d3436; margin: 0 0 10px 0; text-transform: uppercase; white-space: nowrap; letter-spacing: -0.02em; }
         
-        /* CABEÇALHO */
+        /* CABEÇALHO E BRANDING */
         .header { width: 100%; max-width: 500px; background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; position: sticky; top: 10px; z-index: 1000; box-sizing: border-box; }
         .display-name { font-weight: bold; font-size: clamp(0.85rem, 4vw, 1.1rem); color: #2d3436; border-bottom: 2px solid var(--verde-whatsapp); padding: 5px 0; text-align: center; text-transform: capitalize; width: 100%; margin-bottom: 10px; }
         .btn-exit { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--verde-whatsapp); color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; text-transform: uppercase; }
         
-        /* PROGRESSO GERAL (Letra A - Fundo Arredondado Suave) */
+        /* PROGRESSO GERAL */
         #progress-main { display: none; width: 100%; max-width: 500px; text-align: center; margin-bottom: 20px; padding: 15px; box-sizing: border-box; background: #e2e8f0; border-radius: 20px; }
         .mini-bar-bg { width: 100%; background: #eee; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; }
         .mini-bar-fill { height: 100%; background: var(--verde-sucesso); transition: 0.5s; width: 0%; }
 
-        /* BLOCOS DE TRIMESTRE (Cores Dinâmicas) */
+        /* BLOCOS DE TRIMESTRE */
         .trimestre-box { background: #cbd5e0; border-radius: 15px; margin-bottom: 20px; overflow: hidden; border: 1px solid #a0aec0; transition: 0.3s ease; }
         .tri-header { width: 100%; padding: 18px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; background: transparent; }
-        
         .trimestre-box.atual .tri-header { background: var(--cor-ferrugem); color: #fff; }
-        .trimestre-box.atual .tri-title-row { font-weight: 900; color: #fff; }
         .trimestre-box.concluido .tri-header { background: #d0e7ff; color: #2c3e50; }
-        
         .tri-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: bold; color: #495057; font-size: 0.9rem; }
         .reading-list { display: none; padding: 5px; max-height: 400px; overflow-y: auto; background: #fff; }
 
-        /* LINHA DE LEITURA (Alinhamento Horizontal) */
+        /* LINHA DE LEITURA HORIZONTAL */
         .row { display: flex; align-items: center; padding: 12px 14px; border-bottom: 1px solid #f2f2f2; }
         .check-btn { width: 26px; height: 26px; border: 2px solid #ddd; border-radius: 8px; margin-right: 12px; cursor: pointer; flex-shrink: 0; display:flex; align-items:center; justify-content:center; }
         .check-btn.done { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
         .check-btn.done::after { content: '✓'; font-weight: bold; }
-        
         .info { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; flex: 1; }
         .info-text-group { display: flex; flex-direction: column; margin-right: 8px; min-width: 90px; }
         .info-date { font-size: 10px; color: #95a5a6; text-transform: uppercase; font-weight: bold; }
@@ -61,17 +63,16 @@
         .cap-btn { display: inline-block; width: 32px; height: 32px; line-height: 32px; text-align: center; background: #fff; border: 1px solid #ddd; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 0.85rem; font-weight: bold; color: var(--verde-escuro); }
         .cap-btn.lido { background: var(--verde-sucesso); color: white; border-color: var(--verde-sucesso); }
 
-        /* BOTÕES DE USUÁRIO - CORES CORRIGIDAS */
+        /* BOTÕES DE USUÁRIO - CORES ORIGINAIS */
         .user-card { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 2px solid transparent; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .user-card.meu-perfil { border-color: var(--azul-link); background: #f0f7ff; }
         .actions-row { display: flex; gap: 5px; margin-top: 12px; }
         .btn-action { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: bold; font-size: 0.65rem; cursor: pointer; color: white; text-transform: uppercase; }
-        
-        .btn-entrar { background: var(--azul-link); } /* Azul */
-        .btn-editar { background: var(--amarelo); color: #333; } /* Amarelo */
-        .btn-deletar { background: var(--vermelho); } /* Vermelho */
+        .btn-entrar { background: var(--azul-link); } 
+        .btn-editar { background: var(--amarelo); color: #333; } 
+        .btn-deletar { background: var(--vermelho); } 
 
-        /* LEITOR E RODAPÉ */
+        /* LEITOR E RODAPÉ DINÂMICO */
         #reader-overlay { position: fixed; inset: 0; background: var(--bg-leitor); z-index: 5000; display: none; flex-direction: column; color: var(--texto-leitor); transition: 0.3s; }
         .theme-sepia { --bg-leitor: #f4ecd8 !important; --texto-leitor: #5b4636 !important; }
         .theme-dark { --bg-leitor: #1a1a1a !important; --texto-leitor: #e0e0e0 !important; }
@@ -82,8 +83,6 @@
         
         .access-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; z-index: 2000; padding: 20px; overflow-y: auto; }
         .access-box { background: white; padding: 30px 25px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 450px; }
-        #splash-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease; }
-        #splash-screen.hide { opacity: 0; pointer-events: none; }
     </style>
 </head>
 
@@ -254,6 +253,7 @@
     function setTema(tema) { const overlay = document.getElementById('reader-overlay'); overlay.classList.remove('theme-sepia', 'theme-dark'); if (tema !== 'light') overlay.classList.add('theme-' + tema); }
     function trocarVersao(v) { leitorContexto.versao = v; carregarTextoBiblico(); }
     function fecharLeitor() { document.getElementById('reader-overlay').style.display = 'none'; }
+    function registerUser() { const n = document.getElementById('newName').value.trim(); if(!n) return; let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); if(!mp.includes(n)) mp.push(n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); db.ref('users/'+n).update({name:n}); loginUser(n); }
     function toggleTri(i) { const el = document.getElementById(`list-${i}`); const isOpen = el.style.display === "block"; document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none'); el.style.display = isOpen ? "none" : "block"; }
     
     function updateProgress() {
