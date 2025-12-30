@@ -75,6 +75,25 @@
         .cap-btn { display: inline-block; width: 32px; height: 32px; line-height: 32px; text-align: center; background: #fff; border: 1px solid #ddd; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 0.85rem; font-weight: bold; color: var(--verde-escuro); }
         .cap-btn.lido { background: var(--verde-sucesso); color: white; border-color: var(--verde-sucesso); }
 
+/* Botão de Leitura Física */
+.btn-fisica {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    background: #fff;
+    border: 2px solid #e67e22; /* Laranja */
+    border-radius: 8px;
+    margin: 3px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: 0.3s;
+}
+.btn-fisica:hover {
+    background: #fef5e7;
+}
+
         /* BOTÕES DE USUÁRIO */
         .user-card { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 2px solid transparent; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .user-card.meu-perfil { border-color: var(--azul-link); background: #f0f7ff; }
@@ -275,6 +294,11 @@
                             const dayChaps = readingsByDay[dIdx]; if(!dayChaps.length) return "";
                             let btns = ""; let allDone = true;
                             dayChaps.forEach(ch => { const key = `${ch.b}_c${ch.c}`; const isDone = prog[key] === true; if(!isDone) allDone = false; btns += `<span class="cap-btn ${isDone?'lido':''}" onclick="abrirLeitor('${ch.b}', ${ch.c}, ${tIdx}, ${dIdx}, '${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}')">${ch.c}</span>`; });
+
+// Adiciona o botão da Bíblia Física após os capítulos do dia
+btns += `<span class="btn-fisica" title="Marcar leitura física" onclick="confirmarLeituraFisica('${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}', '${d.label}')">📖</span>`;
+
+
                             const first = dayChaps[0], last = dayChaps[dayChaps.length-1]; const labelBook = first.b === last.b ? `${first.b} ${first.c}-${last.c}` : `${first.b} ${first.c} a ${last.b} ${last.c}`;
                             return `<div class="row"><div class="check-btn ${allDone ? 'done' : ''}"></div><div class="info"><div class="info-text-group"><span class="info-date">${d.label}</span><span class="info-book">${labelBook}</span></div><div class="caps-container">${btns}</div></div></div>`;
                         }).join('')}
@@ -405,7 +429,32 @@
         });
     }
 
-    window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2500); });
+
+function confirmarLeituraFisica(diaCapsStr, dataRotulo) {
+    const caps = JSON.parse(diaCapsStr);
+    if (confirm(`FIZ A LEITURA DE ${dataRotulo} EM BÍBLIA FÍSICA?`)) {
+        marcarLeituraFisicaMassa(caps);
+    }
+}
+
+function marcarLeituraFisicaMassa(caps) {
+    const updates = {};
+    caps.forEach(ch => {
+        const key = `${ch.b}_c${ch.c}`;
+        updates[key] = true;
+    });
+
+    // Envia todas as marcações de uma vez para o Firebase
+    db.ref(`users/${currentUser}/progress`).update(updates).then(() => {
+        renderPlan(); // Atualiza a interface (checks e barras)
+    }).catch(err => {
+        alert("Erro ao salvar progresso: " + err.message);
+    });
+}
+
+
+window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2500); });
+
 </script>
 </body>
 </html>
