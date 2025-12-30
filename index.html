@@ -24,22 +24,35 @@
         }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         
-        /* SPLASH SCREEN (LOGO CORRIGIDA) */
+        /* SPLASH SCREEN */
         #splash-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease; }
         #splash-screen img { width: 160px; max-width: 70%; border-radius: 28px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         #splash-screen.hide { opacity: 0; pointer-events: none; }
 
         .main-title { font-size: clamp(0.7rem, 3.8vw, 0.9rem); font-weight: 800; color: #2d3436; margin: 0 0 10px 0; text-transform: uppercase; white-space: nowrap; letter-spacing: -0.02em; }
         
-        /* CABEÇALHO E BRANDING */
+        /* CABEÇALHO */
         .header { width: 100%; max-width: 500px; background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; position: sticky; top: 10px; z-index: 1000; box-sizing: border-box; }
         .display-name { font-weight: bold; font-size: clamp(0.85rem, 4vw, 1.1rem); color: #2d3436; border-bottom: 2px solid var(--verde-whatsapp); padding: 5px 0; text-align: center; text-transform: capitalize; width: 100%; margin-bottom: 10px; }
         .btn-exit { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--verde-whatsapp); color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; text-transform: uppercase; }
         
-        /* PROGRESSO GERAL */
-        #progress-main { display: none; width: 100%; max-width: 500px; text-align: center; margin-bottom: 20px; padding: 15px; box-sizing: border-box; background: #e2e8f0; border-radius: 20px; }
-        .mini-bar-bg { width: 100%; background: #eee; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; }
-        .mini-bar-fill { height: 100%; background: var(--verde-sucesso); transition: 0.5s; width: 0%; }
+        /* PROGRESSO GERAL - COR ALTERADA PARA #9370DB */
+        #progress-main { 
+            display: none; 
+            width: 100%; 
+            max-width: 500px; 
+            text-align: center; 
+            margin-bottom: 20px; 
+            padding: 15px; 
+            box-sizing: border-box; 
+            background: #9370DB; /* Cor solicitada: Roxo Médio */
+            border-radius: 20px; 
+        }
+        /* Ajuste no texto para melhor leitura sobre o fundo roxo */
+        #main-percent { font-size: 12px; font-weight: bold; color: white !important; margin-bottom: 5px; }
+
+        .mini-bar-bg { width: 100%; background: rgba(255,255,255,0.3); height: 12px; border-radius: 6px; overflow: hidden; margin-top: 5px; }
+        .mini-bar-fill { height: 100%; background: white; transition: 0.5s; width: 0%; }
 
         /* BLOCOS DE TRIMESTRE */
         .trimestre-box { background: #cbd5e0; border-radius: 15px; margin-bottom: 20px; overflow: hidden; border: 1px solid #a0aec0; transition: 0.3s ease; }
@@ -49,7 +62,7 @@
         .tri-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: bold; color: #495057; font-size: 0.9rem; }
         .reading-list { display: none; padding: 5px; max-height: 400px; overflow-y: auto; background: #fff; }
 
-        /* LINHA DE LEITURA HORIZONTAL */
+        /* LINHA DE LEITURA */
         .row { display: flex; align-items: center; padding: 12px 14px; border-bottom: 1px solid #f2f2f2; }
         .check-btn { width: 26px; height: 26px; border: 2px solid #ddd; border-radius: 8px; margin-right: 12px; cursor: pointer; flex-shrink: 0; display:flex; align-items:center; justify-content:center; }
         .check-btn.done { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
@@ -59,11 +72,10 @@
         .info-date { font-size: 10px; color: #95a5a6; text-transform: uppercase; font-weight: bold; }
         .info-book { font-size: 14px; font-weight: 600; color: #2c3e50; white-space: nowrap; }
         
-        /* BOTÕES DE CAPÍTULO */
         .cap-btn { display: inline-block; width: 32px; height: 32px; line-height: 32px; text-align: center; background: #fff; border: 1px solid #ddd; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 0.85rem; font-weight: bold; color: var(--verde-escuro); }
         .cap-btn.lido { background: var(--verde-sucesso); color: white; border-color: var(--verde-sucesso); }
 
-        /* BOTÕES DE USUÁRIO - CORES ORIGINAIS */
+        /* BOTÕES DE USUÁRIO */
         .user-card { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 2px solid transparent; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .user-card.meu-perfil { border-color: var(--azul-link); background: #f0f7ff; }
         .actions-row { display: flex; gap: 5px; margin-top: 12px; }
@@ -72,7 +84,7 @@
         .btn-editar { background: var(--amarelo); color: #333; } 
         .btn-deletar { background: var(--vermelho); } 
 
-        /* LEITOR E RODAPÉ DINÂMICO */
+        /* LEITOR */
         #reader-overlay { position: fixed; inset: 0; background: var(--bg-leitor); z-index: 5000; display: none; flex-direction: column; color: var(--texto-leitor); transition: 0.3s; }
         .theme-sepia { --bg-leitor: #f4ecd8 !important; --texto-leitor: #5b4636 !important; }
         .theme-dark { --bg-leitor: #1a1a1a !important; --texto-leitor: #e0e0e0 !important; }
@@ -137,8 +149,8 @@
 </div>
 
 <div id="progress-main">
-    <div id="main-percent" style="font-size: 12px; font-weight: bold; color: var(--cinza-texto); margin-bottom: 5px;">0% Concluído Geral</div>
-    <div class="mini-bar-bg" style="height:14px;"><div id="main-bar" class="mini-bar-fill" style="width:0%; background: var(--azul-link);"></div></div>
+    <div id="main-percent">0% Concluído Geral</div>
+    <div class="mini-bar-bg"><div id="main-bar" class="mini-bar-fill"></div></div>
 </div>
 
 <div id="plan-container" style="width:100%; max-width:500px; display:none;"></div>
@@ -161,12 +173,11 @@
     function renderCommunity(data) { 
         const container = document.getElementById('users-container'); container.innerHTML = ""; if(!data) return;
         const myProfiles = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
-        let usersArray = Object.keys(data).map(name => ({ name, ...data[name] }));
-        usersArray.forEach(user => {
-            const isMine = myProfiles.includes(user.name);
+        Object.keys(data).forEach(name => {
+            const user = data[name]; const isMine = myProfiles.includes(name);
             const totalPercent = calculatePercentByChapters(user.progress);
             const card = document.createElement('div'); card.className = `user-card ${isMine ? 'meu-perfil' : ''}`;
-            card.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px"><span style="font-weight:bold">${user.name}</span><span>${totalPercent}% Total</span></div><div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${totalPercent}%"></div></div>${isMine ? `<div class="actions-row"><button class="btn-action btn-entrar" onclick="loginUser('${user.name}')">ENTRAR</button><button class="btn-action btn-editar" onclick="editUser('${user.name}')">EDITAR</button><button class="btn-action btn-deletar" onclick="deleteUser('${user.name}')">APAGAR</button></div>` : ''}`;
+            card.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px"><span style="font-weight:bold">${name}</span><span>${totalPercent}% Total</span></div><div class="mini-bar-bg" style="background:#eee; height:8px;"><div class="mini-bar-fill" style="width:${totalPercent}%; background:var(--verde-sucesso);"></div></div>${isMine ? `<div class="actions-row"><button class="btn-action btn-entrar" onclick="loginUser('${name}')">ENTRAR</button><button class="btn-action btn-editar" onclick="editUser('${name}')">EDITAR</button><button class="btn-action btn-deletar" onclick="deleteUser('${name}')">APAGAR</button></div>` : ''}`;
             container.appendChild(card);
         });
     }
@@ -192,7 +203,7 @@
                 box.innerHTML = `
                     <button class="tri-header" onclick="toggleTri(${tIdx})">
                         <div class="tri-title-row"><span>${t.tri}</span><span id="tri-perc-label-${tIdx}">${pTri}%</span></div>
-                        <div class="mini-bar-bg"><div id="tri-bar-${tIdx}" class="mini-bar-fill" style="width:${pTri}%"></div></div>
+                        <div class="mini-bar-bg" style="background:#eee;"><div id="tri-bar-${tIdx}" class="mini-bar-fill" style="width:${pTri}%; background:var(--verde-sucesso);"></div></div>
                     </button>
                     <div class="reading-list" id="list-${tIdx}" style="${isCur?'display:block' : ''}">
                         ${days.map((d, dIdx) => {
@@ -264,7 +275,9 @@
                 let lidosTri = 0; for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) { const bookName = BIBLE_BOOKS[bIdx].n; for(let c = 1; c <= BIBLE_BOOKS[bIdx].c; c++) { if(prog[`${bookName}_c${c}`] === true) { lidosTri++; totalLidosGeral++; } } }
                 const pTri = Math.round((lidosTri / totalChapsTri) * 100); if(document.getElementById(`tri-perc-label-${i}`)) { document.getElementById(`tri-perc-label-${i}`).innerText = pTri + "%"; document.getElementById(`tri-bar-${i}`).style.width = pTri + "%"; }
             });
-            const pGeral = Math.round((totalLidosGeral / TOTAL_BIBLE_CHAPTERS) * 100); document.getElementById('main-bar').style.width = pGeral + "%"; document.getElementById('main-percent').innerText = pGeral + "% Concluído Geral";
+            const pGeral = Math.round((totalLidosGeral / TOTAL_BIBLE_CHAPTERS) * 100);
+            document.getElementById('main-bar').style.width = pGeral + "%";
+            document.getElementById('main-percent').innerText = pGeral + "% Concluído Geral";
         });
     }
 
@@ -272,6 +285,7 @@
 </script>
 </body>
 </html>
+
 
 
 
