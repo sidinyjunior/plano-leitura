@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PLANO BÍBLICO 26-27</title>
     
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Plano Bíblico 26–27">
+    <link rel="apple-touch-icon" href="assets/icone.png">
+    <link rel="icon" type="image/png" href="assets/icone.png">
+    <link rel="manifest" href="manifest.json">
+
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
@@ -12,66 +19,77 @@
         :root {
             --cinza-claro: #d1d8e0; --verde-whatsapp: #25D366; --verde-escuro: #128C7E; --cinza-texto: #7f8c8d; 
             --amarelo: #f1c40f; --verde-sucesso: #2ecc71; --bg: #f4f7f6; --azul-link: #3498db; --vermelho: #e74c3c;
+            /* Variáveis de Leitura */
             --font-size-leitura: 1.2rem; --bg-leitor: #ffffff; --texto-leitor: #2d3436;
         }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
-        
-        /* BANNER INSTALAÇÃO */
-        #install-banner { position: fixed; bottom: 20px; width: 90%; max-width: 400px; background: #1f2933; color: white; padding: 15px; border-radius: 15px; z-index: 3000; display: none; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-
-        /* BRANDING E LOGIN */
-        .header-branding { text-align: center; margin-bottom: 20px; width: 100%; max-width: 500px; }
-        .logo-img { width: 85px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin-bottom: 10px; }
-        .main-title { font-size: 0.85rem; font-weight: 800; color: #2d3436; text-transform: uppercase; margin: 0; }
-
+        .main-title { font-size: clamp(0.7rem, 3.8vw, 0.9rem); font-weight: 800; color: #2d3436; margin: 0 0 10px 0; text-transform: uppercase; white-space: nowrap; letter-spacing: -0.02em; }
         .header { width: 100%; max-width: 500px; background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; position: sticky; top: 10px; z-index: 1000; box-sizing: border-box; }
-        .display-name { font-weight: bold; font-size: 1rem; color: #2d3436; border-bottom: 2px solid var(--verde-whatsapp); padding: 5px 0; text-align: center; margin-bottom: 10px; text-transform: uppercase; }
+        .header-controls { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+        .display-name { font-weight: bold; font-size: clamp(0.85rem, 4vw, 1.1rem); color: #2d3436; border-bottom: 2px solid var(--verde-whatsapp); padding: 5px 0; text-align: center; text-transform: capitalize; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .btn-exit { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--verde-whatsapp); color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; text-transform: uppercase; }
+        .access-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; z-index: 2000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .access-box { background: white; padding: 30px 25px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 450px; }
+        .input-container { margin: 20px 0; text-align: left; }
+        .input-name { width: 100%; padding: 15px; border: 2px solid #edf2f7; border-radius: 15px; outline: none; font-size: 1rem; box-sizing: border-box; background: #f8fafc; color: #2d3436; }
+        .btn-add { width: 100%; padding: 16px; border: none; border-radius: 15px; background: linear-gradient(135deg, var(--verde-whatsapp), var(--verde-escuro)); color: white; font-weight: bold; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3); }
 
-        /* BLOCOS E CARDS */
-        .user-card { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 2px solid transparent; box-shadow: 0 4px 10px rgba(0,0,0,0.05); width: 100%; max-width: 450px; }
-        .user-card.meu-perfil { border-color: var(--azul-link); background: #f0f7ff; }
-        .bar-bg { width: 100%; background: #eee; height: 8px; border-radius: 4px; overflow: hidden; }
-        .bar-fill { height: 100%; background: var(--verde-sucesso); transition: 0.8s; width: 0%; }
+        /* LEITOR */
+        #reader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-leitor); z-index: 5000; display: none; flex-direction: column; color: var(--texto-leitor); transition: 0.3s; }
+        .reader-header { padding: 10px 15px; background: #1a4731; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .reader-toolbar { display: flex; background: #245e41; padding: 8px 15px; gap: 10px; align-items: center; overflow-x: auto; white-space: nowrap; }
+        .reader-content { flex: 1; overflow-y: auto; padding: 20px; font-size: var(--font-size-leitura); line-height: 1.6; }
+        .verse-row { margin-bottom: 15px; cursor: pointer; border-radius: 8px; padding: 5px; }
+        .verse-num { font-size: 0.7em; font-weight: bold; color: var(--cinza-texto); margin-right: 10px; opacity: 0.6; }
         
-        .trimestre-box { background: #cbd5e0; border-radius: 15px; margin-bottom: 15px; overflow: hidden; border: 1px solid #a0aec0; width: 100%; max-width: 500px; }
-        .trimestre-box.atual { background: var(--amarelo); border: 2px solid #d4ac0d; font-weight: bold; }
-        .tri-header { width: 100%; padding: 18px; border: none; cursor: pointer; text-align: left; background: transparent; }
-
-        /* LEITOR DESIGN */
-        #reader-overlay { position: fixed; inset: 0; background: var(--bg-leitor); color: var(--texto-leitor); z-index: 5000; display: none; flex-direction: column; }
-        .reader-header { padding: 15px; background: #1a4731; color: white; display: flex; justify-content: space-between; align-items: center; }
-        .reader-toolbar { background: #245e41; padding: 10px; display: flex; gap: 8px; align-items: center; justify-content: center; }
-        .reader-content { flex: 1; overflow-y: auto; padding: 25px; font-size: var(--font-size-leitura); line-height: 1.7; }
-        .reader-footer { padding: 15px; display: flex; gap: 10px; background: #f1f5f9; border-top: 1px solid #ddd; }
-        .btn-nav { flex: 1; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; }
+        #compare-modal { position: fixed; bottom: -100%; left: 0; width: 100%; background: white; z-index: 6000; border-radius: 20px 20px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.2); transition: 0.4s; padding: 20px; box-sizing: border-box; max-height: 80vh; overflow-y: auto; color: #333; }
+        #compare-modal.active { bottom: 0; }
+        .compare-item { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .compare-ver { font-weight: bold; color: var(--verde-escuro); font-size: 0.8rem; }
         
-        /* LINHAS E TEXTO */
-        .row { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #f9f9f9; }
-        .info { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .info-date { font-size: 11px; color: #95a5a6; font-weight: bold; }
-        .cap-btn { background: #edf2f7; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; margin: 2px; cursor: pointer; color: var(--verde-escuro); font-weight: bold; border: 1px solid #d1d8e0; }
-
-        .cal-icon { width: 28px; height: 30px; background: white; border: 2px solid #2d3436; border-radius: 6px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 12px; overflow: hidden; }
-        .cal-top { background: #e74c3c; width: 100%; height: 8px; position: absolute; top: 0; }
+        .cap-btn { display: inline-block; width: 32px; height: 32px; line-height: 32px; text-align: center; background: #fff; border: 1px solid #ddd; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 0.85rem; font-weight: bold; color: var(--verde-escuro); }
+        .btn-tool { background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 10px; border-radius: 5px; font-size: 0.75rem; font-weight: bold; }
         
-        #splash-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: 0.5s; }
-        #splash-screen.hide { opacity: 0; pointer-events: none; }
         .theme-sepia { --bg-leitor: #f4ecd8; --texto-leitor: #5b4636; }
         .theme-dark { --bg-leitor: #1a1a1a; --texto-leitor: #e0e0e0; }
+
+        /* SPLASH E OUTROS */
+        #splash-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease; }
+        #splash-screen img { width: 160px; max-width: 70%; border-radius: 28px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        #splash-screen.hide { opacity: 0; pointer-events: none; }
+        
+        .user-card { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 2px solid transparent; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .user-card.meu-perfil { border-color: var(--azul-link); background: #f0f7ff; }
+        .mini-bar-bg { width: 100%; background: #eee; height: 6px; border-radius: 3px; overflow: hidden; }
+        .mini-bar-fill { height: 100%; background: var(--verde-sucesso); transition: 1s; }
+        .mini-bar-fill.total { background: var(--azul-link); }
+        .trimestre-box { background: white; border-radius: 15px; margin-bottom: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .tri-header { width: 100%; padding: 18px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; }
+        .tri-header.lendo { background: var(--amarelo); color: #333; }
+        .tri-progress-bg { width: 100%; background: rgba(0,0,0,0.1); border-radius: 5px; height: 8px; margin-top: 10px; overflow: hidden; }
+        .tri-bar-fill { height: 100%; width: 0%; background: var(--verde-sucesso); transition: 0.3s; }
+        .reading-list { display: none; padding: 5px; max-height: 400px; overflow-y: auto; background: #fff; }
+        .row { display: flex; align-items: center; padding: 14px; border-bottom: 1px solid #f9f9f9; }
+        .check-btn { width: 26px; height: 26px; border: 2px solid #ddd; border-radius: 8px; margin-right: 15px; cursor: pointer; flex-shrink: 0; display:flex; align-items:center; justify-content:center; }
+        .check-btn.done { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
+        .check-btn.done::after { content: '✓'; font-weight: bold; }
+        .info { display: flex; flex-direction: column; }
+        .info-date { font-size: 11px; color: #95a5a6; text-transform: uppercase; font-weight: bold; }
+        .info-book { font-size: 14px; font-weight: 600; color: #2c3e50; }
+        .actions-row { display: flex; gap: 5px; margin-top: 12px; }
+        .btn-action { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: bold; font-size: 0.65rem; cursor: pointer; color: white; text-transform: uppercase; }
+        .btn-entrar { background: var(--azul-link); }
+        .btn-editar { background: var(--amarelo); color: #333; }
+        .btn-deletar { background: var(--vermelho); }
     </style>
 </head>
+
 <body>
 
 <div id="splash-screen">
-    <img src="assets/icone.png" alt="Logo" style="width:120px; border-radius:20px; margin-bottom:15px;">
-    <h1 style="font-size:0.9rem; text-transform:uppercase;">Plano Bienal de Leitura</h1>
-</div>
-
-<div id="install-banner">
-    <div style="font-size: 0.9rem; font-weight: bold; margin-bottom: 10px;">Adicione à Tela Inicial</div>
-    <button onclick="alert('No iPhone: Compartilhar > Adicionar à Tela de Início\nNo Android: 3 Pontinhos > Instalar')" style="padding: 8px 15px; background: var(--azul-link); border: none; color: white; border-radius: 8px; font-weight: bold;">COMO INSTALAR</button>
-    <div onclick="this.parentElement.style.display='none'" style="font-size: 0.7rem; margin-top: 10px; text-decoration: underline; cursor: pointer;">Fechar</div>
+    <img src="assets/icone.png" alt="Logo">
+    <h1>Plano Bienal de Leitura</h1>
+    <p>2026 • 2027</p>
 </div>
 
 <div id="reader-overlay">
@@ -80,46 +98,61 @@
         <button onclick="fecharLeitor()" style="background:none; border:none; color:white; font-size:1.5rem;">✕</button>
     </div>
     <div class="reader-toolbar">
-        <select id="reader-versao" onchange="trocarVersao(this.value)" style="background:var(--verde-escuro); color:white; border:none; border-radius:5px; padding:5px;">
-            <option value="acf">ACF</option><option value="nvi">NVI</option><option value="ntlh">NTLH</option><option value="kja">KJA</option>
+        <select id="select-versao" onchange="trocarVersao(this.value)" style="background:var(--verde-escuro); color:white; border:none; border-radius:5px; padding:4px;">
+            <option value="acf">ACF (Fiel)</option>
+            <option value="nvi">NVI (Moderna)</option>
+            <option value="ntlh">NTLH (Simples)</option>
+            <option value="kja">KJA (King James)</option>
         </select>
-        <button onclick="mudarFonte(-0.1)" style="color:white; background:rgba(255,255,255,0.2); border:none; padding:5px 10px; border-radius:5px; font-weight:bold;">A-</button>
-        <button onclick="mudarFonte(0.1)" style="color:white; background:rgba(255,255,255,0.2); border:none; padding:5px 10px; border-radius:5px; font-weight:bold;">A+</button>
-        <button onclick="setTema('sepia')" style="background:#f4ecd8; border:none; padding:5px 10px; border-radius:5px;">S</button>
-        <button onclick="setTema('dark')" style="background:#1a1a1a; color:white; border:none; padding:5px 10px; border-radius:5px;">N</button>
-        <button onclick="setTema('light')" style="background:white; border:1px solid #ccc; padding:5px 10px; border-radius:5px;">C</button>
+        <button class="btn-tool" onclick="mudarFonte(-0.1)">A-</button>
+        <button class="btn-tool" onclick="mudarFonte(0.1)">A+</button>
+        <button class="btn-tool" style="background:#f4ecd8; color:#5b4636" onclick="setTema('sepia')">S</button>
+        <button class="btn-tool" style="background:#1a1a1a; color:#fff" onclick="setTema('dark')">N</button>
+        <button class="btn-tool" style="background:#fff; color:#333" onclick="setTema('light')">C</button>
     </div>
     <div id="reader-text" class="reader-content"></div>
     <div class="reader-footer">
-        <button id="btn-prev" class="btn-nav" style="background:#cbd5e0;" onclick="mudarCapitulo(-1)">← VOLTAR</button>
-        <button id="btn-next" class="btn-nav" style="background:var(--azul-link); color:white;" onclick="mudarCapitulo(1)">PRÓXIMO CAP</button>
-        <button id="btn-finish" class="btn-nav" style="background:var(--verde-sucesso); color:white; display:none;" onclick="concluirLeitura()">CONCLUIR E SALVAR</button>
+        <button id="btn-prev" class="btn-nav" onclick="mudarCapitulo(-1)" style="flex:0.3; background:#eee; color:#333;">←</button>
+        <button id="btn-next" class="btn-nav" onclick="mudarCapitulo(1)">PRÓXIMO CAPÍTULO →</button>
+        <button id="btn-finish" class="btn-nav btn-finish" style="display:none;" onclick="concluirLeitura()">CONCLUIR LEITURA</button>
     </div>
+</div>
+
+<div id="compare-modal">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <h3 style="margin:0; font-size:1rem;">Comparar Versões</h3>
+        <button onclick="fecharComparador()" style="border:none; background:#eee; border-radius:50%; width:30px; height:30px;">✕</button>
+    </div>
+    <div id="compare-content"></div>
 </div>
 
 <div id="access-overlay" class="access-overlay">
-    <div class="header-branding">
-        <img src="assets/icone.png" class="logo-img">
+    <div class="access-box">
+        <img src="assets/icone.png" style="width: 85px; border-radius: 20px; margin-bottom: 15px;">
         <h2 class="main-title">PLANO BIENAL 2026-2027</h2>
+        <div class="input-container">
+            <input type="text" id="newName" class="input-name" placeholder="Digite seu nome...">
+        </div>
+        <button class="btn-add" onclick="registerUser()">CADASTRAR E ENTRAR</button>
+        <div id="users-container" style="width:100%; margin-top:25px;"></div>
     </div>
-    <input type="text" id="newName" placeholder="Seu nome..." style="width:100%; max-width:400px; padding:15px; border-radius:12px; border:1px solid #ddd; margin-bottom:10px;">
-    <button onclick="registerUser()" style="width:100%; max-width:400px; padding:15px; border-radius:12px; background:var(--verde-whatsapp); color:white; font-weight:bold; border:none;">CADASTRAR E ENTRAR</button>
-    <div id="users-container" style="width:100%; margin-top:20px;"></div>
 </div>
 
-<div class="header-branding" id="inner-branding" style="display:none; margin-top:10px;">
-    <img src="assets/icone.png" class="logo-img" style="width:60px;">
-    <h2 class="main-title">PLANO BIENAL 2026-2027</h2>
+<div class="header-branding" id="inner-branding" style="display:none; margin-top:10px; text-align: center;">
+    <img src="assets/icone.png" class="logo-img" style="width:85px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin-bottom: 10px;">
+    <h2 class="main-title" style="font-size: 0.85rem; font-weight: 800; color: #2d3436; text-transform: uppercase;">PLANO BIENAL 2026-2027</h2>
 </div>
 
 <div class="header" id="header-main" style="display:none;">
-    <div id="userNameDisplay" class="display-name"></div>
-    <button class="btn-exit" onclick="saveAndExit()">SALVAR E SAIR</button>
+    <div class="header-controls">
+        <div id="userNameDisplay" class="display-name"></div>
+        <button class="btn-exit" onclick="saveAndExit()">SALVAR E SAIR</button>
+    </div>
 </div>
 
-<div class="progress-box" id="progress-main" style="display:none; width:100%; max-width:500px; text-align:center;">
-    <div class="bar-bg" style="height:12px;"><div id="main-bar" class="bar-fill"></div></div>
-    <div id="main-percent" style="font-size:11px; font-weight:bold; color:var(--cinza-texto); margin-top:5px;">0% CONCLUÍDO GERAL</div>
+<div id="progress-main" style="display:none; width:100%; max-width:500px; text-align:center; margin-bottom:20px;">
+    <div class="mini-bar-bg" style="height:14px;"><div id="main-bar" class="mini-bar-fill" style="width:0%;"></div></div>
+    <div id="main-percent" style="font-size: 11px; font-weight: bold; color: var(--cinza-texto);">0% Concluído Geral</div>
 </div>
 
 <div id="plan-container" style="width:100%; max-width:500px; display:none;"></div>
@@ -130,137 +163,160 @@
     const db = firebase.database();
     let currentUser = "";
     const KEY_MY_PROFILES = "meus_perfis_locais";
-    let leitorCtx = { livro: "", cap: 0, ini: 0, fim: 0, t: 0, d: 0, ver: "acf" };
-    let fontSize = 1.2;
+    let leitorContexto = { livro: "", capAtual: 0, capInicio: 0, capFim: 0, tIdx: 0, dIdx: 0, versao: "acf" };
+    let fontSizeAtual = 1.2;
 
     const BIBLE_BOOKS = [{n: "Gênesis", c: 50}, {n: "Êxodo", c: 40}, {n: "Levítico", c: 27}, {n: "Números", c: 36}, {n: "Deuteronômio", c: 34}, {n: "Josué", c: 24}, {n: "Juízes", c: 21}, {n: "Rute", c: 4}, {n: "1 Samuel", c: 31}, {n: "2 Samuel", c: 24}, {n: "1 Reis", c: 22}, {n: "2 Reis", c: 25}, {n: "1 Crônicas", c: 29}, {n: "2 Crônicas", c: 36}, {n: "Esdras", c: 10}, {n: "Neemias", c: 13}, {n: "Ester", c: 10}, {n: "Jó", c: 42}, {n: "Salmos", c: 150}, {n: "Provérbios", c: 31}, {n: "Eclesiastes", c: 12}, {n: "Cantares", c: 8}, {n: "Isaías", c: 66}, {n: "Jeremias", c: 52}, {n: "Lamentações", c: 5}, {n: "Ezequiel", c: 48}, {n: "Daniel", c: 12}, {n: "Oseias", c: 14}, {n: "Joel", c: 3}, {n: "Amós", c: 9}, {n: "Obadias", c: 1}, {n: "Jonas", c: 4}, {n: "Miqueias", c: 7}, {n: "Naum", c: 3}, {n: "Habacuque", c: 3}, {n: "Sofonias", c: 3}, {n: "Ageu", c: 2}, {n: "Zacarias", c: 14}, {n: "Malaquias", c: 4}, {n: "Mateus", c: 28}, {n: "Marcos", c: 16}, {n: "Lucas", c: 24}, {n: "João", c: 21}, {n: "Atos", c: 28}, {n: "Romanos", c: 16}, {n: "1 Coríntios", c: 16}, {n: "2 Coríntios", c: 13}, {n: "Gálatas", c: 6}, {n: "Efésios", c: 6}, {n: "Filipenses", c: 4}, {n: "Colossenses", c: 4}, {n: "1 Tessalonicenses", c: 5}, {n: "2 Tessalonicenses", c: 3}, {n: "1 Timóteo", c: 6}, {n: "2 Timóteo", c: 4}, {n: "Tito", c: 3}, {n: "Filemom", c: 1}, {n: "Hebreus", c: 13}, {n: "Tiago", c: 5}, {n: "1 Pedro", c: 5}, {n: "2 Pedro", c: 3}, {n: "1 João", c: 5}, {n: "2 João", c: 1}, {n: "3 João", c: 1}, {n: "Judas", c: 1}, {n: "Apocalipse", c: 22}];
-    const CONFIG = [{ ano: 2026, tri: "1º Trimestre: Pentateuco", start: "2026-01-05", end: "2026-03-31", booksIdx: [0, 4], cal: "05 JAN" }, { ano: 2026, tri: "2º Trimestre: Históricos P1", start: "2026-04-01", end: "2026-06-30", booksIdx: [5, 9] }, { ano: 2026, tri: "3º Trimestre: Históricos P2", start: "2026-07-01", end: "2026-09-30", booksIdx: [10, 13] }, { ano: 2026, tri: "4º Trimestre: Históricos P3 / Jó", start: "2026-10-01", end: "2026-12-18", booksIdx: [14, 17] }, { ano: 2027, tri: "1º Trimestre: Poéticos", start: "2027-01-04", end: "2027-03-31", booksIdx: [18, 21], cal: "04 JAN" }, { ano: 2027, tri: "2º Trimestre: Profetas Maiores", start: "2027-04-01", end: "2027-06-30", booksIdx: [22, 26] }, { ano: 2027, tri: "3º Trimestre: Profetas Menores + NT", start: "2027-07-01", end: "2027-09-30", booksIdx: [27, 43] }, { ano: 2027, tri: "4º Trimestre: Novo Testamento P2", start: "2027-10-01", end: "2027-12-17", booksIdx: [44, 65] }];
+    const CONFIG = [{ ano: 2026, tri: "1º Trimestre: Pentateuco", start: "2026-01-05", end: "2026-03-31", booksIdx: [0, 4] }, { ano: 2026, tri: "2º Trimestre: Históricos Parte 1", start: "2026-04-01", end: "2026-06-30", booksIdx: [5, 9] }, { ano: 2026, tri: "3º Trimestre: Históricos Parte 2", start: "2026-07-01", end: "2026-09-30", booksIdx: [10, 13] }, { ano: 2026, tri: "4º Trimestre: Históricos Parte 3 / Jó", start: "2026-10-01", end: "2026-12-18", booksIdx: [14, 17] }, { ano: 2027, tri: "1º Trimestre: Poéticos", start: "2027-01-04", end: "2027-03-31", booksIdx: [18, 21] }, { ano: 2027, tri: "2º Trimestre: Profetas Maiores", start: "2027-04-01", end: "2027-06-30", booksIdx: [22, 26] }, { ano: 2027, tri: "3º Trimestre: Profetas Menores + N.T. Parte 1", start: "2027-07-01", end: "2027-09-30", booksIdx: [26, 43] }, { ano: 2027, tri: "4º Trimestre: Novo Testamento Parte 2", start: "2027-10-01", end: "2027-12-17", booksIdx: [44, 65] }];
 
-    db.ref('users').on('value', snap => renderCommunity(snap.val()));
+    db.ref('users').on('value', (snap) => renderCommunity(snap.val()));
 
-    function renderCommunity(data) {
+    function getCurrentTriIdx() { const today = new Date(); for(let i=0; i<CONFIG.length; i++) { if(today >= new Date(CONFIG[i].start) && today <= new Date(CONFIG[i].end)) return i; } return 0; }
+    function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) { dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); } curr.setDate(curr.getDate() + 1); } return dates; }
+    
+    function renderCommunity(data) { 
         const container = document.getElementById('users-container'); container.innerHTML = ""; if(!data) return;
         const myProfiles = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
-        let users = Object.keys(data).map(name => ({ name, ...data[name], percent: calculateStats(data[name].progress).geral }));
-        let mine = users.filter(u => myProfiles.includes(u.name));
-        let others = users.filter(u => !myProfiles.includes(u.name)).sort((a,b) => b.percent - a.percent);
-        
-        [...mine, ...others].forEach(u => {
-            const isLocal = myProfiles.includes(u.name);
-            const card = document.createElement('div'); card.className = `user-card ${isLocal ? 'meu-perfil' : ''}`;
-            card.innerHTML = `
-                <div style="display:flex; justify-content:space-between"><b>${u.name}</b><span>${u.percent}%</span></div>
-                <div class="bar-bg" style="height:6px; margin-top:5px;"><div class="bar-fill" style="width:${u.percent}%"></div></div>
-                ${isLocal ? `
-                <div style="display:flex; gap:5px; margin-top:10px;">
-                    <button onclick="loginUser('${u.name}')" style="flex:1; background:var(--azul-link); color:white; border:none; padding:8px; border-radius:6px; font-weight:bold;">ENTRAR</button>
-                    <button onclick="editUser('${u.name}')" style="background:var(--amarelo); border:none; padding:8px; border-radius:6px;">✏️</button>
-                    <button onclick="deleteUser('${u.name}')" style="background:var(--vermelho); color:white; border:none; padding:8px; border-radius:6px;">🗑️</button>
-                </div>` : ''}`;
+        const currentTri = getCurrentTriIdx();
+        let usersArray = Object.keys(data).map(name => ({ name, ...data[name], percent: calculateTotalPercent(data[name].progress) }));
+        let mine = usersArray.filter(u => myProfiles.includes(u.name));
+        let others = usersArray.filter(u => !myProfiles.includes(u.name)).sort((a, b) => b.percent - a.percent);
+        [...mine, ...others].forEach(user => {
+            const isMine = myProfiles.includes(user.name);
+            const triPercent = calculateTriPercent(user.progress, currentTri);
+            const card = document.createElement('div'); card.className = `user-card ${isMine ? 'meu-perfil' : ''}`;
+            card.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px"><span style="font-weight:bold">${user.name}</span><span>${user.percent}% Total</span></div><div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${triPercent}%"></div></div>${isMine ? `<div class="actions-row"><button class="btn-action btn-entrar" onclick="loginUser('${user.name}')">ENTRAR</button><button class="btn-action btn-editar" onclick="editUser('${user.name}')">EDITAR</button><button class="btn-action btn-deletar" onclick="deleteUser('${user.name}')">APAGAR</button></div>` : ''}`;
             container.appendChild(card);
         });
     }
 
-    function calculateStats(progress, triIdx = null) {
-        let lTotal = 0, tTotal = 1189, cTri = 0, lTri = 0;
-        CONFIG.forEach((t, i) => {
-            let chaps = [];
-            for (let b = t.booksIdx[0]; b <= t.booksIdx[1]; b++) { for (let c = 1; c <= BIBLE_BOOKS[b].c; c++) chaps.push({b: BIBLE_BOOKS[b].n, c: c}); }
-            if (i === triIdx) cTri = chaps.length;
-            let days = getWeekdays(t.start, t.end); let ratio = chaps.length / days.length;
-            days.forEach((d, dIdx) => {
-                if (progress && progress[`t${i}_d${dIdx}`]) {
-                    let start = Math.floor(dIdx * ratio), end = (dIdx === days.length - 1) ? chaps.length : Math.floor((dIdx + 1) * ratio);
-                    lTotal += (end - start); if (i === triIdx) lTri += (end - start);
-                }
-            });
-        });
-        return { geral: Math.round((lTotal / tTotal) * 100), tri: cTri > 0 ? Math.round((lTri / cTri) * 100) : 0 };
+    function calculateTriPercent(progress, triIdx) { if(!progress) return 0; let checked = 0; Object.keys(progress).forEach(k => { if(k.startsWith('t'+triIdx) && progress[k] === true) checked++; }); let total = getWeekdays(CONFIG[triIdx].start, CONFIG[triIdx].end).length; return total > 0 ? Math.round((checked / total) * 100) : 0; }
+    function calculateTotalPercent(progress) { if(!progress) return 0; let checked = Object.values(progress).filter(v => v === true).length; let total = 0; CONFIG.forEach(t => total += getWeekdays(t.start, t.end).length); return Math.round((checked / total) * 100); }
+    
+    function registerUser() { 
+        const n = document.getElementById('newName').value.trim(); if(!n) return alert("Digite o nome!");
+        let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); if(!mp.includes(n)) { mp.push(n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); }
+        db.ref('users/'+n).update({name:n}); ni.value=""; loginUser(n);
     }
 
-    function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); curr.setDate(curr.getDate() + 1); } return dates; }
+    function loginUser(name) { 
+        currentUser = name; 
+        document.getElementById('access-overlay').style.display = 'none'; 
+        
+        // MOSTRA BRANDING INTERNO
+        document.getElementById('inner-branding').style.display = 'block'; 
+        
+        document.getElementById('header-main').style.display = "block"; 
+        document.getElementById('progress-main').style.display = "block"; 
+        document.getElementById('plan-container').style.display = "block"; 
+        document.getElementById('userNameDisplay').innerText = currentUser; 
+        renderPlan(); 
+    }
 
-    function registerUser() { const n = document.getElementById('newName').value.trim(); if(!n) return; let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); if(!mp.includes(n)) { mp.push(n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); } db.ref('users/'+n).update({name:n}); loginUser(n); }
-    function editUser(old) { const n = prompt("Novo nome:", old); if(!n || n === old) return; let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES)); mp[mp.indexOf(old)] = n; localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); db.ref('users/'+old).once('value', s => { db.ref('users/'+n).set(s.val()); db.ref('users/'+old).remove(); }); }
-    function deleteUser(name) { if(confirm("Apagar "+name+"?")) { let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES)); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp.filter(n => n !== name))); db.ref('users/'+name).remove(); } }
+    function saveAndExit() { 
+        // ESCONDE ÁREAS DO PLANO
+        document.getElementById('inner-branding').style.display = 'none';
+        document.getElementById('header-main').style.display = "none"; 
+        document.getElementById('progress-main').style.display = "none"; 
+        document.getElementById('plan-container').style.display = "none"; 
+        
+        // VOLTA PARA LISTA DE USUÁRIOS
+        document.getElementById('access-overlay').style.display = 'flex'; 
+        currentUser = "";
+        window.scrollTo(0,0); 
+    }
 
-    function loginUser(name) { currentUser = name; document.getElementById('access-overlay').style.display='none'; document.getElementById('inner-branding').style.display='block'; document.getElementById('header-main').style.display='block'; document.getElementById('progress-main').style.display='block'; document.getElementById('plan-container').style.display='block'; document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); }
-    function saveAndExit() { location.reload(); }
+    function distributeChaptersBalanced(range, days) { 
+        let chaps = []; for (let i = range[0]; i <= range[1]; i++) { for (let c = 1; c <= BIBLE_BOOKS[i].c; c++) { chaps.push({ b: BIBLE_BOOKS[i].n, c: c }); } }
+        let res = Array.from({ length: days }, () => []); let ratio = chaps.length / days;
+        for (let i = 0; i < chaps.length; i++) { let dIdx = Math.min(Math.floor(i / ratio), days - 1); res[dIdx].push(chaps[i]); }
+        return res.map(day => { if(!day.length) return ""; let f = day[0], l = day[day.length-1]; return f.b === l.b ? `${f.b} ${f.c}-${l.c}` : `${f.b} ${f.c} a ${l.b} ${l.c}`; });
+    }
 
     function renderPlan() {
         const area = document.getElementById('plan-container'); area.innerHTML = "";
         db.ref('users/'+currentUser+'/progress').once('value', snap => {
-            const prog = snap.val() || {}; let curYear = 0; const currentTriIdx = getCurrentTriIdx();
+            const prog = snap.val() || {}; let curYear = 0;
             CONFIG.forEach((t, tIdx) => {
-                if (t.ano !== curYear) { 
-                    curYear = t.ano; const y = document.createElement('div'); y.className = "year-label";
-                    y.innerHTML = `<div class="cal-icon"><div class="cal-top"></div><span class="cal-day">${t.cal ? t.cal.split(' ')[0] : '01'}</span><span style="font-size:7px;">${t.cal ? t.cal.split(' ')[1] : 'JAN'}</span></div> ANO ${curYear}`;
-                    area.appendChild(y); 
-                }
-                const stats = calculateStats(prog, tIdx); const isAtual = tIdx === currentTriIdx;
-                const box = document.createElement('div'); box.className = `trimestre-box ${isAtual ? 'atual' : ''}`;
-                box.innerHTML = `<button class="tri-header" onclick="toggleTri(${tIdx})"><div class="tri-title-row"><span>${t.tri}</span><span style="font-weight:900">${stats.tri}%</span></div><div class="bar-bg" style="height:6px; margin-top:8px;"><div class="bar-fill" style="width:${stats.tri}%"></div></div></button><div class="reading-list" id="list-${tIdx}" style="${isAtual ? 'display:block' : ''}">${generateDaysHtml(t, tIdx, prog)}</div>`;
-                area.appendChild(box);
-            });
-            updateProgress();
+                if (t.ano !== curYear) { curYear = t.ano; const y = document.createElement('div'); y.style.cssText="font-weight:bold; margin:15px 5px;"; y.innerText=`📅 ANO ${curYear}`; area.appendChild(y); }
+                const days = getWeekdays(t.start, t.end); const readings = distributeChaptersBalanced(t.booksIdx, days.length);
+                const isCur = tIdx === getCurrentTriIdx();
+                const box = document.createElement('div'); box.className = "trimestre-box";
+                box.innerHTML = `<button class="tri-header ${isCur?'lendo':''}" onclick="toggleTri(${tIdx})"><div class="tri-title-row"><span>${t.tri}</span><span id="tri-perc-${tIdx}">0%</span></div></button><div class="reading-list" id="list-${tIdx}" style="${isCur?'display:block' : ''}">${days.map((d, dIdx) => {
+                    const rText = readings[dIdx]; const p = rText.split(' '); const livro = p[0]; const caps = (p[1]||"").split('-');
+                    const cIn = parseInt(caps[0]||1); const cFim = caps[1]?parseInt(caps[1]):cIn;
+                    let btns = ""; for(let c=cIn; c<=cFim; c++) btns += `<span class="cap-btn" onclick="abrirLeitor('${livro}', ${c}, ${cIn}, ${cFim}, ${tIdx}, ${dIdx})">${c}</span>`;
+                    return `<div class="row"><div class="check-btn ${prog['t'+tIdx+'_d'+dIdx]?'done':''}" id="check-${tIdx}-${dIdx}" onclick="toggleCheck(this, ${tIdx}, ${dIdx})"></div><div class="info"><span class="info-date">${d.label}</span><span class="info-book">${livro} ${p[1]||""} ${btns}</span></div></div>`;
+                }).join('')}</div>`; area.appendChild(box);
+            }); updateProgress();
         });
     }
 
-    function generateDaysHtml(t, tIdx, prog) {
-        const days = getWeekdays(t.start, t.end); let chaps = [];
-        for (let b = t.booksIdx[0]; b <= t.booksIdx[1]; b++) { for (let c = 1; c <= BIBLE_BOOKS[b].c; c++) chaps.push({b: BIBLE_BOOKS[b].n, c: c}); }
-        let ratio = chaps.length / days.length;
-        return days.map((d, dIdx) => {
-            let start = Math.floor(dIdx * ratio), end = (dIdx === days.length - 1) ? chaps.length : Math.floor((dIdx + 1) * ratio);
-            const dChaps = chaps.slice(start, end); const first = dChaps[0], last = dChaps[dChaps.length - 1];
-            let btns = ""; dChaps.forEach(c => { btns += `<span class="cap-btn" onclick="abrirLeitor('${c.b}', ${c.c}, ${first.c}, ${last.c}, ${tIdx}, ${dIdx})">${c.c}</span>`; });
-            return `<div class="row"><div class="check-btn ${prog['t'+tIdx+'_d'+dIdx]?'done':''}" id="row-check-${tIdx}-${dIdx}" onclick="toggleCheck(this, ${tIdx}, ${dIdx})"></div><div class="info"><span class="info-date">${d.label}</span><span class="info-book">${first.b} ${first.c}${last.c!==first.c?'-'+last.c:''} ${btns}</span></div></div>`;
-        }).join('');
+    async function abrirLeitor(livro, cap, ini, fim, t, d) {
+        leitorContexto = { ...leitorContexto, livro, capAtual: cap, capInicio: ini, capFim: fim, tIdx: t, dIdx: d };
+        document.getElementById('reader-overlay').style.display = 'flex'; carregarTextoBiblico();
     }
 
-    async function abrirLeitor(livro, cap, ini, fim, t, d) { leitorCtx = { livro, cap, ini, fim, t, d, ver: "acf" }; document.getElementById('reader-overlay').style.display = 'flex'; carregarTexto(); }
-    
-    async function carregarTexto() {
+    async function carregarTextoBiblico() {
         try {
-            const res = await fetch(`${leitorCtx.ver}.json`); const data = await res.json();
-            const lData = data.livros.find(l => l.nome === leitorCtx.livro);
-            const versos = lData.capitulos[leitorCtx.cap - 1];
-            document.getElementById('reader-title').innerText = `${leitorCtx.livro} ${leitorCtx.cap}`;
+            const res = await fetch(`${leitorContexto.versao}.json`); const data = await res.json();
+            const lData = data.livros.find(l => l.nome === leitorContexto.livro);
+            const versos = lData.capitulos[leitorContexto.capAtual - 1];
+            document.getElementById('reader-title').innerText = `${leitorContexto.livro} ${leitorContexto.capAtual}`;
             const cont = document.getElementById('reader-text');
-            cont.innerHTML = versos.map((v, i) => `<div style="margin-bottom:15px;" onclick="compararVerso(${i})"><span style="font-size:0.7em; font-weight:bold; color:gray; margin-right:8px;">${i+1}</span>${v}</div>`).join('');
+            cont.innerHTML = versos.map((v, i) => `<div class="verse-row" onclick="compararVerso(${i})"><span class="verse-num">${i+1}</span><span>${v}</span></div>`).join('');
             cont.scrollTop = 0;
-            document.getElementById('btn-prev').disabled = leitorCtx.cap <= leitorCtx.ini;
-            const ult = leitorCtx.cap >= leitorCtx.fim;
+            document.getElementById('btn-prev').disabled = leitorContexto.capAtual <= leitorContexto.capInicio;
+            const ult = leitorContexto.capAtual >= leitorContexto.capFim;
             document.getElementById('btn-next').style.display = ult ? 'none' : 'block';
             document.getElementById('btn-finish').style.display = ult ? 'block' : 'none';
-        } catch(e) { alert("Texto não disponível."); }
+        } catch(e) { alert("Capítulo não disponível nesta versão."); }
     }
 
-    function mudarCapitulo(d) { leitorCtx.cap += d; carregarTexto(); }
-    function fecharLeitor() { document.getElementById('reader-overlay').style.display = 'none'; }
-    function trocarVersao(v) { leitorCtx.ver = v; carregarTexto(); }
-    function mudarFonte(d) { fontSize += d; document.documentElement.style.setProperty('--font-size-leitura', fontSize + 'rem'); }
+    async function compararVerso(vIdx) {
+        const versoes = ['acf', 'nvi', 'ntlh', 'kja']; let html = "";
+        document.getElementById('compare-modal').classList.add('active');
+        for (let v of versoes) {
+            try {
+                const res = await fetch(`${v}.json`); const data = await res.json();
+                const lData = data.livros.find(l => l.nome === leitorContexto.livro);
+                const txt = lData.capitulos[leitorContexto.capAtual - 1][vIdx];
+                html += `<div class="compare-item"><span class="compare-ver">${data.versao}</span><p>${txt}</p></div>`;
+            } catch(e) {}
+        }
+        document.getElementById('compare-content').innerHTML = html;
+    }
+
+    function trocarVersao(v) { leitorContexto.versao = v; carregarTextoBiblico(); }
+    function mudarFonte(d) { fontSizeAtual += d; document.documentElement.style.setProperty('--font-size-leitura', fontSizeAtual + 'rem'); }
     function setTema(t) { const o = document.getElementById('reader-overlay'); o.className = ''; if(t!=='light') o.classList.add('theme-'+t); }
-    function toggleTri(i) { const el = document.getElementById(`list-${i}`); const s = el.style.display === "block"; document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none'); el.style.display = s ? "none" : "block"; }
-    
-    function toggleCheck(el, t, d) { el.classList.toggle('done'); db.ref(`users/${currentUser}/progress/t${t}_d${d}`).set(el.classList.contains('done')); updateProgress(); }
-    function concluirLeitura() { 
-        const el = document.getElementById(`row-check-${leitorCtx.t}-${leitorCtx.d}`);
-        if(!el.classList.contains('done')) toggleCheck(el, leitorCtx.t, leitorCtx.d);
+    function fecharComparador() { document.getElementById('compare-modal').classList.remove('active'); }
+    function fecharLeitor() { document.getElementById('reader-overlay').style.display = 'none'; fecharComparador(); }
+    function mudarCapitulo(d) { leitorContexto.capAtual += d; carregarTextoBiblico(); }
+    function concluirLeitura() {
+        const btn = document.getElementById(`check-${leitorContexto.tIdx}-${leitorContexto.dIdx}`);
+        if(!btn.classList.contains('done')) toggleCheck(btn, leitorContexto.tIdx, leitorContexto.dIdx);
         fecharLeitor();
     }
+
+    function toggleCheck(el, t, d) { el.classList.toggle('done'); db.ref(`users/${currentUser}/progress/t${t}_d${d}`).set(el.classList.contains('done')); updateProgress(); }
+    function toggleTri(i) { const el = document.getElementById(`list-${i}`); const s = el.style.display === "block"; document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none'); el.style.display = s ? "none" : "block"; }
     
-    function updateProgress() { db.ref('users/'+currentUser+'/progress').once('value', snap => { const stats = calculateStats(snap.val()); document.getElementById('main-bar').style.width = stats.geral + "%"; document.getElementById('main-percent').innerText = stats.geral + "% CONCLUÍDO GERAL"; }); }
-    function getCurrentTriIdx() { const today = new Date(); for(let i=0; i<CONFIG.length; i++) if(today >= new Date(CONFIG[i].start) && today <= new Date(CONFIG[i].end)) return i; return 0; }
+    function updateProgress() {
+        let tI = 0, tD = 0; CONFIG.forEach((t, i) => {
+            const boxes = document.querySelectorAll(`#list-${i} .check-btn`), done = document.querySelectorAll(`#list-${i} .check-btn.done`);
+            const p = boxes.length ? Math.round((done.length / boxes.length) * 100) : 0;
+            if(document.getElementById(`tri-perc-${i}`)) document.getElementById(`tri-perc-${i}`).innerText = p + "%";
+            tI += boxes.length; tD += done.length;
+        });
+        const mP = tI ? Math.round((tD / tI) * 100) : 0;
+        document.getElementById('main-bar').style.width = mP + "%";
+        document.getElementById('main-percent').innerText = mP + "% Concluído Geral";
+    }
 
     window.addEventListener("load", () => {
-        setTimeout(() => document.getElementById("splash-screen").classList.add("hide"), 2000);
-        const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-        if(!isPWA) setTimeout(() => document.getElementById('install-banner').style.display='block', 4000);
+        setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2000);
     });
 </script>
 </body>
 </html>
-
-
-
