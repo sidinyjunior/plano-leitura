@@ -288,27 +288,37 @@
         document.getElementById('reader-overlay').style.display = 'flex'; carregarTextoBiblico();
     }
 
-  async function carregarTextoBiblico() {
+ async function carregarTextoBiblico() {
     try {
         const res = await fetch(`${leitorContexto.versao}.json`);
         const data = await res.json();
         
-        // 1. Padroniza a entrada (alguns JSONs são uma lista direta, outros têm o objeto .livros)
+        // 1. Padroniza a entrada: aceita lista direta [] (seus JSONs) ou objeto {livros: []}
         let listaLivros = Array.isArray(data) ? data : data.livros;
         
-        // 2. Tabela de tradução para os livros do seu plano (necessária para seus arquivos NVI/ACF)
+        // 2. MAPA COMPLETO DE ABREVIAÇÕES: Traduz o nome do plano para o "id" do seu JSON
         const mapaAbrev = {
             "Gênesis": "gn", "Êxodo": "ex", "Levítico": "lv", "Números": "nm", "Deuteronômio": "dt",
             "Josué": "js", "Juízes": "jz", "Rute": "rt", "1 Samuel": "1sm", "2 Samuel": "2sm",
             "1 Reis": "1rs", "2 Reis": "2rs", "1 Crônicas": "1cr", "2 Crônicas": "2cr",
-            "Esdras": "ez", "Neemias": "ne", "Ester": "et", "Jó": "jo", "Salmos": "sl"
-            // Adicione outros se necessário seguindo o padrão do seu JSON
+            "Esdras": "ez", "Neemias": "ne", "Ester": "et", "Jó": "jo", "Salmos": "sl",
+            "Provérbios": "pv", "Eclesiastes": "ec", "Cantares": "ct", "Isaías": "is",
+            "Jeremias": "jr", "Lamentações": "lm", "Ezequiel": "ez", "Daniel": "dn",
+            "Oseias": "os", "Joel": "jl", "Amós": "am", "Obadias": "ob", "Jonas": "jn",
+            "Miqueias": "mq", "Naum": "na", "Habacuque": "hc", "Sofonias": "sf",
+            "Ageu": "ag", "Zacarias": "zc", "Malaquias": "ml",
+            "Mateus": "mt", "Marcos": "mc", "Lucas": "lc", "João": "jo", "Atos": "at",
+            "Romanos": "rm", "1 Coríntios": "1co", "2 Coríntios": "2co", "Gálatas": "gl",
+            "Efésios": "ef", "Filipenses": "fp", "Colossenses": "cl", "1 Tessalonicenses": "1ts",
+            "2 Tessalonicenses": "2ts", "1 Timóteo": "1tm", "2 Timóteo": "2tm", "Tito": "tt",
+            "Filemom": "fm", "Hebreus": "hb", "Tiago": "tg", "1 Pedro": "1pe", "2 Pedro": "2pe",
+            "1 João": "1jo", "2 João": "2jo", "3 João": "3jo", "Judas": "jd", "Apocalipse": "ap"
         };
 
         const nomeBusca = leitorContexto.livro;
         const abrevBusca = mapaAbrev[nomeBusca];
 
-        // 3. Busca o livro no arquivo tentando Nome, Name ou Abreviação
+        // 3. Busca o livro tentando Nome, Name ou Abreviação (id/abbrev)
         const lData = listaLivros.find(l => 
             (l.nome === nomeBusca) || 
             (l.name === nomeBusca) || 
@@ -321,7 +331,7 @@
             return;
         }
 
-        // 4. Identifica se o arquivo usa 'chapters' ou 'capitulos'
+        // 4. Identifica se o arquivo usa 'chapters' (como seus arquivos) ou 'capitulos'
         const capítulos = lData.chapters || lData.capitulos;
         const versos = capítulos[leitorContexto.capAtual - 1];
 
@@ -330,7 +340,7 @@
             return;
         }
 
-        // 5. Exibe na tela
+        // 5. Exibe na tela mantendo seu padrão de design
         document.getElementById('reader-title').innerText = `${leitorContexto.livro} ${leitorContexto.capAtual}`;
         const cont = document.getElementById('reader-text');
         cont.innerHTML = versos.map((v, i) => `
@@ -345,7 +355,7 @@
 
     } catch(e) { 
         console.error("Erro detalhado:", e);
-        alert("Erro ao carregar o texto. Verifique se o arquivo " + leitorContexto.versao + ".json está no GitHub."); 
+        alert("Erro ao carregar o texto. Verifique se os arquivos JSON estão na raiz do seu GitHub."); 
     }
 }
 
