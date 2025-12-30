@@ -75,9 +75,12 @@
         .theme-sepia { --bg-leitor: #f4ecd8 !important; --texto-leitor: #5b4636 !important; }
         .theme-dark { --bg-leitor: #1a1a1a !important; --texto-leitor: #e0e0e0 !important; }
 
-        /* RODAPÉ LEITOR CORRIGIDO */
-        .reader-footer { padding: 15px; display: flex; gap: 10px; background: #f9f9f9; border-top: 1px solid #ddd; margin-bottom: env(safe-area-inset-bottom); }
-        .btn-nav-leitor { flex: 1; padding: 12px; border: none; border-radius: 10px; font-weight: bold; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; }
+        /* RODAPÉ LEITOR AJUSTADO (CONFORME SOLICITADO) */
+        .reader-footer { padding: 15px; display: flex; gap: 8px; background: #f9f9f9; border-top: 1px solid #ddd; margin-bottom: env(safe-area-inset-bottom); }
+        .btn-nav-leitor { padding: 12px; border: none; border-radius: 10px; font-weight: bold; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; white-space: nowrap; }
+        /* Lógica para o botão central expandir */
+        .btn-expand { flex: 2; }
+        .btn-side { flex: 0.8; }
 
         #splash-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease; }
         #splash-screen img { width: 160px; max-width: 70%; border-radius: 28px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
@@ -86,9 +89,6 @@
         .user-card.meu-perfil { border-color: var(--azul-link); background: #f0f7ff; }
         .actions-row { display: flex; gap: 5px; margin-top: 12px; }
         .btn-action { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: bold; font-size: 0.65rem; cursor: pointer; color: white; text-transform: uppercase; }
-        .btn-entrar { background: var(--azul-link); }
-        .btn-editar { background: var(--amarelo); color: #333; }
-        .btn-deletar { background: var(--vermelho); }
     </style>
 </head>
 
@@ -119,8 +119,7 @@
         <button class="btn-tool" style="background:#fff; color:#333" onclick="setTema('light')">C</button>
     </div>
     <div id="reader-text" class="reader-content"></div>
-    <div id="reader-footer-ctrl" class="reader-footer">
-        </div>
+    <div id="reader-footer-ctrl" class="reader-footer"></div>
 </div>
 
 <div id="access-overlay" class="access-overlay">
@@ -214,10 +213,7 @@
                         ${days.map((d, dIdx) => {
                             const dayChaps = readingsByDay[dIdx]; if(!dayChaps.length) return "";
                             let btns = ""; let allDone = true;
-                            dayChaps.forEach(ch => { 
-                                const key = `${ch.b}_c${ch.c}`; const isDone = prog[key] === true; if(!isDone) allDone = false; 
-                                btns += `<span class="cap-btn ${isDone?'lido':''}" data-book="${ch.b}" data-cap="${ch.c}" onclick="abrirLeitor('${ch.b}', ${ch.c}, ${tIdx}, ${dIdx}, '${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}')">${ch.c}</span>`; 
-                            });
+                            dayChaps.forEach(ch => { const key = `${ch.b}_c${ch.c}`; const isDone = prog[key] === true; if(!isDone) allDone = false; btns += `<span class="cap-btn ${isDone?'lido':''}" data-book="${ch.b}" data-cap="${ch.c}" onclick="abrirLeitor('${ch.b}', ${ch.c}, ${tIdx}, ${dIdx}, '${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}')">${ch.c}</span>`; });
                             const first = dayChaps[0], last = dayChaps[dayChaps.length-1]; const labelBook = first.b === last.b ? `${first.b} ${first.c}-${last.c}` : `${first.b} ${first.c} a ${last.b} ${last.c}`;
                             return `<div class="row"><div class="check-btn ${allDone ? 'done' : ''}"></div><div class="info"><div class="info-text-group"><span class="info-date">${d.label}</span><span class="info-book">${labelBook}</span></div><div class="caps-container">${btns}</div></div></div>`;
                         }).join('')}
@@ -225,8 +221,6 @@
             }); updateProgress();
         });
     }
-
-    // --- FUNÇÕES DO LEITOR ---
 
     async function abrirLeitor(livro, cap, t, d, diaCapsStr) {
         leitorContexto = { ...leitorContexto, livro, capAtual: cap, tIdx: t, dIdx: d, diaCaps: JSON.parse(diaCapsStr) };
@@ -257,24 +251,22 @@
 
         // Botão Voltar
         if (!isPrimeiro) {
-            const btnVoltar = criarBotaoLeitor("Voltar", "#eee", "#333", () => navegarNoDia(-1));
-            footer.appendChild(btnVoltar);
+            footer.appendChild(criarBotaoLeitor("Voltar", "#eee", "#333", () => navegarNoDia(-1), true));
         }
 
-        // Botão Concluir e Sair (Sempre presente, exceto no último onde vira Concluir)
-        const btnConcluirSair = criarBotaoLeitor(isUltimo ? "Concluir" : "Concluir e Sair", "var(--verde-sucesso)", "white", () => concluirEFechar(isUltimo));
-        footer.appendChild(btnConcluirSair);
+        // Botão Central: Concluir e Sair / Concluir
+        const labelCentral = isUltimo ? "Concluir" : "Concluir e Sair";
+        footer.appendChild(criarBotaoLeitor(labelCentral, "var(--verde-sucesso)", "white", () => concluirEFechar(), false));
 
         // Botão Avançar
         if (!isUltimo) {
-            const btnAvancar = criarBotaoLeitor("Avançar", "var(--azul-link)", "white", () => navegarNoDia(1));
-            footer.appendChild(btnAvancar);
+            footer.appendChild(criarBotaoLeitor("Avançar", "var(--azul-link)", "white", () => navegarNoDia(1), true));
         }
     }
 
-    function criarBotaoLeitor(label, bg, color, acao) {
+    function criarBotaoLeitor(label, bg, color, acao, isSide) {
         const btn = document.createElement("button");
-        btn.className = "btn-nav-leitor";
+        btn.className = `btn-nav-leitor ${isSide ? 'btn-side' : 'btn-expand'}`;
         btn.style.background = bg;
         btn.style.color = color;
         btn.innerText = label;
@@ -292,7 +284,7 @@
         }
     }
 
-    function concluirEFechar(marcarCheck) {
+    function concluirEFechar() {
         const key = `${leitorContexto.livro}_c${leitorContexto.capAtual}`;
         db.ref(`users/${currentUser}/progress/${key}`).set(true).then(() => {
             renderPlan();
@@ -300,18 +292,8 @@
         });
     }
 
-    // --- FERRAMENTAS DO LEITOR (CORRIGIDAS) ---
-    function mudarFonte(delta) {
-        fontSizeAtual += delta;
-        document.getElementById('reader-text').style.fontSize = fontSizeAtual + "rem";
-    }
-
-    function setTema(tema) {
-        const overlay = document.getElementById('reader-overlay');
-        overlay.classList.remove('theme-sepia', 'theme-dark');
-        if (tema !== 'light') overlay.classList.add('theme-' + tema);
-    }
-
+    function mudarFonte(delta) { fontSizeAtual += delta; document.getElementById('reader-text').style.fontSize = fontSizeAtual + "rem"; }
+    function setTema(tema) { const overlay = document.getElementById('reader-overlay'); overlay.classList.remove('theme-sepia', 'theme-dark'); if (tema !== 'light') overlay.classList.add('theme-' + tema); }
     function trocarVersao(v) { leitorContexto.versao = v; carregarTextoBiblico(); }
     function fecharLeitor() { document.getElementById('reader-overlay').style.display = 'none'; }
     function toggleTri(i) { const el = document.getElementById(`list-${i}`); const isOpen = el.style.display === "block"; document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none'); el.style.display = isOpen ? "none" : "block"; }
@@ -340,15 +322,8 @@
         });
     }
 
-    async function compararVerso(vIdx) {
-        const versoes = ['acf', 'nvi', 'ntlh', 'kja']; let html = "";
-        const res = await fetch(`${leitorContexto.versao}.json`); const data = await res.json();
-        alert("Função de comparação ativa para o verso " + (vIdx + 1));
-    }
-
-    window.addEventListener("load", () => {
-        setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2000);
-    });
+    async function compararVerso(vIdx) { alert("Verso: " + (vIdx + 1)); }
+    window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2000); });
 </script>
 </body>
 </html>
