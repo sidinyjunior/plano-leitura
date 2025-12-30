@@ -24,6 +24,14 @@
         }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         
+        /* BANNER DE INSTALAÇÃO PWA */
+        #install-banner {
+            display: none; width: 100%; max-width: 500px; background: #2d3436; color: white;
+            padding: 15px; border-radius: 15px; margin-bottom: 15px; justify-content: space-between;
+            align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10000;
+        }
+        #btn-install-now { background: var(--verde-whatsapp); border: none; padding: 8px 15px; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; }
+
         /* SPLASH SCREEN */
         #splash-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease; }
         #splash-screen img { width: 160px; max-width: 70%; border-radius: 28px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
@@ -36,21 +44,9 @@
         .display-name { font-weight: bold; font-size: clamp(0.85rem, 4vw, 1.1rem); color: #2d3436; border-bottom: 2px solid var(--verde-whatsapp); padding: 5px 0; text-align: center; text-transform: capitalize; width: 100%; margin-bottom: 10px; }
         .btn-exit { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--verde-whatsapp); color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; text-transform: uppercase; }
         
-        /* PROGRESSO GERAL - COR ALTERADA PARA #4F4F4F */
-        #progress-main { 
-            display: none; 
-            width: 100%; 
-            max-width: 500px; 
-            text-align: center; 
-            margin-bottom: 20px; 
-            padding: 15px; 
-            box-sizing: border-box; 
-            background: #4F4F4F; /* Cor solicitada:*/
-            border-radius: 20px; 
-        }
-        /* Ajuste no texto para melhor leitura sobre o fundo roxo */
+        /* PROGRESSO GERAL */
+        #progress-main { display: none; width: 100%; max-width: 500px; text-align: center; margin-bottom: 20px; padding: 15px; box-sizing: border-box; background: #4F4F4F; border-radius: 20px; }
         #main-percent { font-size: 12px; font-weight: bold; color: white !important; margin-bottom: 5px; }
-
         .mini-bar-bg { width: 100%; background: rgba(255,255,255,0.3); height: 12px; border-radius: 6px; overflow: hidden; margin-top: 5px; }
         .mini-bar-fill { height: 100%; background: white; transition: 0.5s; width: 0%; }
 
@@ -104,6 +100,11 @@
     <img src="assets/icone.png" alt="Logo">
     <h1>Plano Bienal de Leitura</h1>
     <p>2026 • 2027</p>
+</div>
+
+<div id="install-banner">
+    <span style="font-size: 0.85rem;">Instalar Aplicativo?</span>
+    <button id="btn-install-now">INSTALAR</button>
 </div>
 
 <div id="reader-overlay">
@@ -163,6 +164,30 @@
     const KEY_MY_PROFILES = "meus_perfis_locais";
     let leitorContexto = { livro: "", capAtual: 0, tIdx: 0, dIdx: 0, versao: "acf", diaCaps: [] };
     let fontSizeAtual = 1.2;
+    let deferredPrompt;
+
+    // REGISTRO DE SERVICE WORKER E PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').then(reg => console.log('SW registrado')).catch(err => console.log('Erro SW', err));
+        });
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('install-banner').style.display = 'flex';
+    });
+
+    document.getElementById('btn-install-now').addEventListener('click', () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(() => {
+                document.getElementById('install-banner').style.display = 'none';
+                deferredPrompt = null;
+            });
+        }
+    });
 
     const BIBLE_BOOKS = [{n: "Gênesis", c: 50}, {n: "Êxodo", c: 40}, {n: "Levítico", c: 27}, {n: "Números", c: 36}, {n: "Deuteronômio", c: 34}, {n: "Josué", c: 24}, {n: "Juízes", c: 21}, {n: "Rute", c: 4}, {n: "1 Samuel", c: 31}, {n: "2 Samuel", c: 24}, {n: "1 Reis", c: 22}, {n: "2 Reis", c: 25}, {n: "1 Crônicas", c: 29}, {n: "2 Crônicas", c: 36}, {n: "Esdras", c: 10}, {n: "Neemias", c: 13}, {n: "Ester", c: 10}, {n: "Jó", c: 42}, {n: "Salmos", c: 150}, {n: "Provérbios", c: 31}, {n: "Eclesiastes", c: 12}, {n: "Cantares", c: 8}, {n: "Isaías", c: 66}, {n: "Jeremias", c: 52}, {n: "Lamentações", c: 5}, {n: "Ezequiel", c: 48}, {n: "Daniel", c: 12}, {n: "Oseias", c: 14}, {n: "Joel", c: 3}, {n: "Amós", c: 9}, {n: "Obadias", c: 1}, {n: "Jonas", c: 4}, {n: "Miqueias", c: 7}, {n: "Naum", c: 3}, {n: "Habacuque", c: 3}, {n: "Sofonias", c: 3}, {n: "Ageu", c: 2}, {n: "Zacarias", c: 14}, {n: "Malaquias", c: 4}, {n: "Mateus", c: 28}, {n: "Marcos", c: 16}, {n: "Lucas", c: 24}, {n: "João", c: 21}, {n: "Atos", c: 28}, {n: "Romanos", c: 16}, {n: "1 Coríntios", c: 16}, {n: "2 Coríntios", c: 13}, {n: "Gálatas", c: 6}, {n: "Efésios", c: 6}, {n: "Filipenses", c: 4}, {n: "Colossenses", c: 4}, {n: "1 Tessalonicenses", c: 5}, {n: "2 Tessalonicenses", c: 3}, {n: "1 Timóteo", c: 6}, {n: "2 Timóteo", c: 4}, {n: "Tito", c: 3}, {n: "Filemom", c: 1}, {n: "Hebreus", c: 13}, {n: "Tiago", c: 5}, {n: "1 Pedro", c: 5}, {n: "2 Pedro", c: 3}, {n: "1 João", c: 5}, {n: "2 João", c: 1}, {n: "3 João", c: 1}, {n: "Judas", c: 1}, {n: "Apocalipse", c: 22}];
     const TOTAL_BIBLE_CHAPTERS = 1189;
@@ -285,6 +310,7 @@
 </script>
 </body>
 </html>
+
 
 
 
