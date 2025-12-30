@@ -75,24 +75,25 @@
         .cap-btn { display: inline-block; width: 32px; height: 32px; line-height: 32px; text-align: center; background: #fff; border: 1px solid #ddd; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 0.85rem; font-weight: bold; color: var(--verde-escuro); }
         .cap-btn.lido { background: var(--verde-sucesso); color: white; border-color: var(--verde-sucesso); }
 
-/* Botão de Leitura Física */
-.btn-fisica {
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    line-height: 32px;
-    text-align: center;
-    background: #fff;
-    border: 2px solid #e67e22; /* Laranja */
-    border-radius: 8px;
-    margin: 3px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    transition: 0.3s;
-}
-.btn-fisica:hover {
-    background: #fef5e7;
-}
+        /* Botão de Leitura Física */
+        .btn-fisica {
+            display: inline-block; width: 32px; height: 32px; line-height: 32px; text-align: center;
+            background: #fff; border: 2px solid #e67e22; border-radius: 8px; margin: 3px;
+            cursor: pointer; font-size: 1.1rem; transition: 0.3s;
+        }
+        .btn-fisica:hover { background: #fef5e7; }
+
+        /* Janela de Confirmação Estilizada */
+        #confirm-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10500; }
+        #custom-confirm {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 11000; width: 85%; max-width: 400px; text-align: center;
+        }
+        .confirm-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-c { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .btn-c-confirm { background: var(--verde-sucesso); color: white; }
+        .btn-c-cancel { background: #eee; color: #333; }
 
         /* BOTÕES DE USUÁRIO */
         .user-card { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 2px solid transparent; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
@@ -123,6 +124,15 @@
     <img src="assets/icone.png" alt="Logo">
     <h1>Plano Bienal de Leitura</h1>
     <p>2026 • 2027</p>
+</div>
+
+<div id="confirm-overlay"></div>
+<div id="custom-confirm">
+    <p id="confirm-text" style="font-weight: bold; margin: 0; line-height: 1.4;"></p>
+    <div class="confirm-buttons">
+        <button class="btn-c btn-c-cancel" onclick="fecharConfirm(false)">NÃO</button>
+        <button class="btn-c btn-c-confirm" onclick="fecharConfirm(true)">SIM</button>
+    </div>
 </div>
 
 <div id="install-banner">
@@ -190,8 +200,8 @@
     let leitorContexto = { livro: "", capAtual: 0, tIdx: 0, dIdx: 0, versao: "acf", diaCaps: [] };
     let fontSizeAtual = 1.2;
     let deferredPrompt;
+    let dadosTemporariosFisica = null;
 
-    // LÓGICA PWA CORRIGIDA
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js').then(reg => console.log('SW OK')).catch(err => console.log('SW Erro', err));
@@ -236,12 +246,9 @@
         });
     }
 
-    // --- FUNÇÕES DE LÓGICA (EDITAR E APAGAR) ---
-
     function editUser(oldName) {
         const newName = prompt("Digite o novo nome para este perfil:", oldName);
         if (!newName || newName.trim() === "" || newName === oldName) return;
-        
         db.ref('users/' + oldName).once('value', snap => {
             const userData = snap.val();
             db.ref('users/' + newName.trim()).set(userData).then(() => {
@@ -256,15 +263,12 @@
 
     function deleteUser(name) {
         if (!confirm(`Deseja realmente apagar o perfil de "${name}"?`)) return;
-        
         db.ref('users/' + name).remove().then(() => {
             let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
             mp = mp.filter(n => n !== name);
             localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
         });
     }
-
-    // --- FIM DAS FUNÇÕES ADICIONADAS ---
 
     function calculatePercentByChapters(progress) { if(!progress) return 0; let lidos = 0; Object.keys(progress).forEach(key => { if(key.includes('_c') && progress[key] === true) lidos++; }); return Math.round((lidos / TOTAL_BIBLE_CHAPTERS) * 100); }
     function loginUser(name) { currentUser = name; document.getElementById('access-overlay').style.display = 'none'; document.getElementById('inner-branding').style.display = 'block'; document.getElementById('header-main').style.display = "block"; document.getElementById('progress-main').style.display = "block"; document.getElementById('plan-container').style.display = "block"; document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); }
@@ -293,12 +297,13 @@
                         ${days.map((d, dIdx) => {
                             const dayChaps = readingsByDay[dIdx]; if(!dayChaps.length) return "";
                             let btns = ""; let allDone = true;
-                            dayChaps.forEach(ch => { const key = `${ch.b}_c${ch.c}`; const isDone = prog[key] === true; if(!isDone) allDone = false; btns += `<span class="cap-btn ${isDone?'lido':''}" onclick="abrirLeitor('${ch.b}', ${ch.c}, ${tIdx}, ${dIdx}, '${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}')">${ch.c}</span>`; });
-
-// Adiciona o botão da Bíblia Física após os capítulos do dia
-btns += `<span class="btn-fisica" title="Marcar leitura física" onclick="confirmarLeituraFisica('${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}', '${d.label}')">📖</span>`;
-
-
+                            dayChaps.forEach(ch => { 
+                                const key = `${ch.b}_c${ch.c}`; 
+                                const isDone = prog[key] === true; 
+                                if(!isDone) allDone = false; 
+                                btns += `<span class="cap-btn ${isDone?'lido':''}" onclick="abrirLeitor('${ch.b}', ${ch.c}, ${tIdx}, ${dIdx}, '${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}')">${ch.c}</span>`; 
+                            });
+                            btns += `<span class="btn-fisica" title="Marcar leitura física" onclick="confirmarLeituraFisica('${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}', '${d.label}')">📖</span>`;
                             const first = dayChaps[0], last = dayChaps[dayChaps.length-1]; const labelBook = first.b === last.b ? `${first.b} ${first.c}-${last.c}` : `${first.b} ${first.c} a ${last.b} ${last.c}`;
                             return `<div class="row"><div class="check-btn ${allDone ? 'done' : ''}"></div><div class="info"><div class="info-text-group"><span class="info-date">${d.label}</span><span class="info-book">${labelBook}</span></div><div class="caps-container">${btns}</div></div></div>`;
                         }).join('')}
@@ -312,76 +317,41 @@ btns += `<span class="btn-fisica" title="Marcar leitura física" onclick="confir
         document.getElementById('reader-overlay').style.display = 'flex'; carregarTextoBiblico();
     }
 
- async function carregarTextoBiblico() {
-    try {
-        const res = await fetch(`${leitorContexto.versao}.json`);
-        const data = await res.json();
-        
-        // 1. Padroniza a entrada: aceita lista direta [] (seus JSONs) ou objeto {livros: []}
-        let listaLivros = Array.isArray(data) ? data : data.livros;
-        
-        // 2. MAPA COMPLETO DE ABREVIAÇÕES: Traduz o nome do plano para o "id" do seu JSON
-        const mapaAbrev = {
-            "Gênesis": "gn", "Êxodo": "ex", "Levítico": "lv", "Números": "nm", "Deuteronômio": "dt",
-            "Josué": "js", "Juízes": "jz", "Rute": "rt", "1 Samuel": "1sm", "2 Samuel": "2sm",
-            "1 Reis": "1rs", "2 Reis": "2rs", "1 Crônicas": "1cr", "2 Crônicas": "2cr",
-            "Esdras": "ez", "Neemias": "ne", "Ester": "et", "Jó": "jo", "Salmos": "sl",
-            "Provérbios": "pv", "Eclesiastes": "ec", "Cantares": "ct", "Isaías": "is",
-            "Jeremias": "jr", "Lamentações": "lm", "Ezequiel": "ez", "Daniel": "dn",
-            "Oseias": "os", "Joel": "jl", "Amós": "am", "Obadias": "ob", "Jonas": "jn",
-            "Miqueias": "mq", "Naum": "na", "Habacuque": "hc", "Sofonias": "sf",
-            "Ageu": "ag", "Zacarias": "zc", "Malaquias": "ml",
-            "Mateus": "mt", "Marcos": "mc", "Lucas": "lc", "João": "jo", "Atos": "at",
-            "Romanos": "rm", "1 Coríntios": "1co", "2 Coríntios": "2co", "Gálatas": "gl",
-            "Efésios": "ef", "Filipenses": "fp", "Colossenses": "cl", "1 Tessalonicenses": "1ts",
-            "2 Tessalonicenses": "2ts", "1 Timóteo": "1tm", "2 Timóteo": "2tm", "Tito": "tt",
-            "Filemom": "fm", "Hebreus": "hb", "Tiago": "tg", "1 Pedro": "1pe", "2 Pedro": "2pe",
-            "1 João": "1jo", "2 João": "2jo", "3 João": "3jo", "Judas": "jd", "Apocalipse": "ap"
-        };
-
-        const nomeBusca = leitorContexto.livro;
-        const abrevBusca = mapaAbrev[nomeBusca];
-
-        // 3. Busca o livro tentando Nome, Name ou Abreviação (id/abbrev)
-        const lData = listaLivros.find(l => 
-            (l.nome === nomeBusca) || 
-            (l.name === nomeBusca) || 
-            (l.abbrev === abrevBusca) ||
-            (l.id === abrevBusca)
-        );
-
-        if (!lData) {
-            alert("Livro não encontrado no arquivo JSON: " + nomeBusca);
-            return;
-        }
-
-        // 4. Identifica se o arquivo usa 'chapters' (como seus arquivos) ou 'capitulos'
-        const capítulos = lData.chapters || lData.capitulos;
-        const versos = capítulos[leitorContexto.capAtual - 1];
-
-        if (!versos) {
-            alert("Capítulo não encontrado!");
-            return;
-        }
-
-        // 5. Exibe na tela mantendo seu padrão de design
-        document.getElementById('reader-title').innerText = `${leitorContexto.livro} ${leitorContexto.capAtual}`;
-        const cont = document.getElementById('reader-text');
-        cont.innerHTML = versos.map((v, i) => `
-            <div class="verse-row">
-                <span class="verse-num">${i+1}</span>
-                <span>${v}</span>
-            </div>
-        `).join('');
-        
-        cont.scrollTop = 0; 
-        atualizarBotoesNavegacao();
-
-    } catch(e) { 
-        console.error("Erro detalhado:", e);
-        alert("Erro ao carregar o texto. Verifique se os arquivos JSON estão na raiz do seu GitHub."); 
+    async function carregarTextoBiblico() {
+        try {
+            const res = await fetch(`${leitorContexto.versao}.json`);
+            const data = await res.json();
+            let listaLivros = Array.isArray(data) ? data : data.livros;
+            const mapaAbrev = {
+                "Gênesis": "gn", "Êxodo": "ex", "Levítico": "lv", "Números": "nm", "Deuteronômio": "dt",
+                "Josué": "js", "Juízes": "jz", "Rute": "rt", "1 Samuel": "1sm", "2 Samuel": "2sm",
+                "1 Reis": "1rs", "2 Reis": "2rs", "1 Crônicas": "1cr", "2 Crônicas": "2cr",
+                "Esdras": "ez", "Neemias": "ne", "Ester": "et", "Jó": "jo", "Salmos": "sl",
+                "Provérbios": "pv", "Eclesiastes": "ec", "Cantares": "ct", "Isaías": "is",
+                "Jeremias": "jr", "Lamentações": "lm", "Ezequiel": "ez", "Daniel": "dn",
+                "Oseias": "os", "Joel": "jl", "Amós": "am", "Obadias": "ob", "Jonas": "jn",
+                "Miqueias": "mq", "Naum": "na", "Habacuque": "hc", "Sofonias": "sf",
+                "Ageu": "ag", "Zacarias": "zc", "Malaquias": "ml",
+                "Mateus": "mt", "Marcos": "mc", "Lucas": "lc", "João": "jo", "Atos": "at",
+                "Romanos": "rm", "1 Coríntios": "1co", "2 Coríntios": "2co", "Gálatas": "gl",
+                "Efésios": "ef", "Filipenses": "fp", "Colossenses": "cl", "1 Tessalonicenses": "1ts",
+                "2 Tessalonicenses": "2ts", "1 Timóteo": "1tm", "2 Timóteo": "2tm", "Tito": "tt",
+                "Filemom": "fm", "Hebreus": "hb", "Tiago": "tg", "1 Pedro": "1pe", "2 Pedro": "2pe",
+                "1 João": "1jo", "2 João": "2jo", "3 João": "3jo", "Judas": "jd", "Apocalipse": "ap"
+            };
+            const nomeBusca = leitorContexto.livro;
+            const abrevBusca = mapaAbrev[nomeBusca];
+            const lData = listaLivros.find(l => (l.nome === nomeBusca) || (l.name === nomeBusca) || (l.abbrev === abrevBusca) || (l.id === abrevBusca));
+            if (!lData) { alert("Livro não encontrado no arquivo JSON: " + nomeBusca); return; }
+            const capítulos = lData.chapters || lData.capitulos;
+            const versos = capítulos[leitorContexto.capAtual - 1];
+            if (!versos) { alert("Capítulo não encontrado!"); return; }
+            document.getElementById('reader-title').innerText = `${leitorContexto.livro} ${leitorContexto.capAtual}`;
+            const cont = document.getElementById('reader-text');
+            cont.innerHTML = versos.map((v, i) => `<div class="verse-row"><span class="verse-num">${i+1}</span><span>${v}</span></div>`).join('');
+            cont.scrollTop = 0; atualizarBotoesNavegacao();
+        } catch(e) { console.error("Erro técnico:", e); alert("Erro ao carregar o texto."); }
     }
-}
 
     function atualizarBotoesNavegacao() {
         const footer = document.getElementById('reader-footer-ctrl'); footer.innerHTML = "";
@@ -429,43 +399,35 @@ btns += `<span class="btn-fisica" title="Marcar leitura física" onclick="confir
         });
     }
 
-
-function confirmarLeituraFisica(diaCapsStr, dataRotulo) {
-    const caps = JSON.parse(diaCapsStr);
-    const prog = JSON.parse(localStorage.getItem('temp_prog_check')) || {}; 
-    
-    // Verifica se todos os capítulos do dia já estão marcados como lidos
-    const todosLidos = caps.every(ch => {
-        const key = `${ch.b}_c${ch.c}`;
-        // Buscamos o estado atual no banco ou interface (usaremos uma lógica simples de check)
-        return document.querySelector(`[onclick*="'${ch.b}', ${ch.c}"]`).classList.contains('lido');
-    });
-
-    const acao = todosLidos ? "DESMARCAR" : "MARCAR";
-    const novoEstado = !todosLidos;
-
-    if (confirm(`${acao} LEITURA DE ${dataRotulo} EM BÍBLIA FÍSICA?`)) {
-        executarAcaoMassa(caps, novoEstado);
+    function confirmarLeituraFisica(diaCapsStr, dataRotulo) {
+        const caps = JSON.parse(diaCapsStr);
+        const todosLidos = caps.every(ch => {
+            const btn = document.querySelector(`[onclick*="'${ch.b}', ${ch.c}"]`);
+            return btn && btn.classList.contains('lido');
+        });
+        const acao = todosLidos ? "DESMARCAR" : "MARCAR";
+        dadosTemporariosFisica = { caps, estado: !todosLidos };
+        document.getElementById('confirm-text').innerText = `${acao} LEITURA DE ${dataRotulo} EM BÍBLIA FÍSICA?`;
+        document.getElementById('confirm-overlay').style.display = 'block';
+        document.getElementById('custom-confirm').style.display = 'block';
     }
-}
 
-function executarAcaoMassa(caps, estado) {
-    const updates = {};
-    caps.forEach(ch => {
-        const key = `${ch.b}_c${ch.c}`;
-        updates[key] = estado; // Define como true (lido) ou null/false (não lido)
-    });
+    function fecharConfirm(resposta) {
+        document.getElementById('confirm-overlay').style.display = 'none';
+        document.getElementById('custom-confirm').style.display = 'none';
+        if (resposta && dadosTemporariosFisica) {
+            executarAcaoMassa(dadosTemporariosFisica.caps, dadosTemporariosFisica.estado);
+        }
+        dadosTemporariosFisica = null;
+    }
 
-    db.ref(`users/${currentUser}/progress`).update(updates).then(() => {
-        renderPlan(); 
-    }).catch(err => {
-        alert("Erro ao processar: " + err.message);
-    });
-}
+    function executarAcaoMassa(caps, estado) {
+        const updates = {};
+        caps.forEach(ch => { updates[`${ch.b}_c${ch.c}`] = estado ? true : null; });
+        db.ref(`users/${currentUser}/progress`).update(updates).then(() => renderPlan());
+    }
 
-
-window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2500); });
-
+    window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2500); });
 </script>
 </body>
 </html>
