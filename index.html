@@ -41,39 +41,28 @@
         #splash-screen img { width: 160px; max-width: 70%; border-radius: 28px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         #splash-screen.hide { opacity: 0; pointer-events: none; }
 
-        .main-title { font-size: clamp(0.7rem, 3.8vw, 0.9rem); font-weight: 800; color: #2d3436; margin: 0 0 10px 0; text-transform: uppercase; white-space: nowrap; letter-spacing: -0.02em; }
-        
-        /* CABEÇALHO */
-        .header { width: 100%; max-width: 500px; background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; position: sticky; top: 10px; z-index: 1000; box-sizing: border-box; }
-        .display-name { font-weight: bold; font-size: clamp(0.85rem, 4vw, 1.1rem); color: #2d3436; border-bottom: 2px solid var(--verde-whatsapp); padding: 5px 0; text-align: center; text-transform: capitalize; width: 100%; margin-bottom: 10px; }
-        .btn-exit { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--verde-whatsapp); color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; text-transform: uppercase; }
-        
+        /* ACESSO E BOTÃO CADASTRAR (RESTAURADO) */
+        .access-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; z-index: 2000; padding: 20px; overflow-y: auto; }
+        .access-box { background: white; padding: 30px 25px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 450px; }
+        .input-name { width: 100%; padding: 15px; border: 2px solid #edf2f7; border-radius: 15px; outline: none; font-size: 1rem; box-sizing: border-box; background: #f8fafc; color: #2d3436; margin-bottom: 15px; }
+        .btn-add { width: 100%; padding: 16px; border: none; border-radius: 15px; background: linear-gradient(135deg, var(--verde-whatsapp), var(--verde-escuro)); color: white; font-weight: bold; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3); text-transform: uppercase; }
+
         /* PROGRESSO GERAL */
         #progress-main { display: none; width: 100%; max-width: 500px; text-align: center; margin-bottom: 20px; padding: 15px; box-sizing: border-box; background: #4F4F4F; border-radius: 20px; }
         #main-percent { font-size: 12px; font-weight: bold; color: white !important; margin-bottom: 5px; }
         .mini-bar-bg { width: 100%; background: rgba(255,255,255,0.3); height: 12px; border-radius: 6px; overflow: hidden; margin-top: 5px; }
         .mini-bar-fill { height: 100%; background: white; transition: 0.5s; width: 0%; }
 
-        /* BLOCOS DE TRIMESTRE */
+        /* TRIMESTRES E LISTA */
         .trimestre-box { background: #cbd5e0; border-radius: 15px; margin-bottom: 20px; overflow: hidden; border: 1px solid #a0aec0; transition: 0.3s ease; }
         .tri-header { width: 100%; padding: 18px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; background: transparent; }
         .trimestre-box.atual .tri-header { background: var(--cor-ferrugem); color: #fff; }
         .trimestre-box.concluido .tri-header { background: #d0e7ff; color: #2c3e50; }
-        .tri-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: bold; color: #495057; font-size: 0.9rem; }
         .reading-list { display: none; padding: 5px; max-height: 400px; overflow-y: auto; background: #fff; }
-
-        /* LINHA DE LEITURA */
         .row { display: flex; align-items: center; padding: 12px 14px; border-bottom: 1px solid #f2f2f2; }
         .check-btn { width: 26px; height: 26px; border: 2px solid #ddd; border-radius: 8px; margin-right: 12px; cursor: pointer; flex-shrink: 0; display:flex; align-items:center; justify-content:center; }
         .check-btn.done { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
         .check-btn.done::after { content: '✓'; font-weight: bold; }
-        .info { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; flex: 1; }
-        .info-text-group { display: flex; flex-direction: column; margin-right: 8px; min-width: 90px; }
-        .info-date { font-size: 10px; color: #95a5a6; text-transform: uppercase; font-weight: bold; }
-        .info-book { font-size: 14px; font-weight: 600; color: #2c3e50; white-space: nowrap; }
-        
-        .cap-btn { display: inline-block; width: 32px; height: 32px; line-height: 32px; text-align: center; background: #fff; border: 1px solid #ddd; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 0.85rem; font-weight: bold; color: var(--verde-escuro); }
-        .cap-btn.lido { background: var(--verde-sucesso); color: white; border-color: var(--verde-sucesso); }
 
         /* BOTÕES DE USUÁRIO */
         .user-card { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 2px solid transparent; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
@@ -83,18 +72,6 @@
         .btn-entrar { background: var(--azul-link); } 
         .btn-editar { background: var(--amarelo); color: #333; } 
         .btn-deletar { background: var(--vermelho); } 
-
-        /* LEITOR */
-        #reader-overlay { position: fixed; inset: 0; background: var(--bg-leitor); z-index: 5000; display: none; flex-direction: column; color: var(--texto-leitor); transition: 0.3s; }
-        .theme-sepia { --bg-leitor: #f4ecd8 !important; --texto-leitor: #5b4636 !important; }
-        .theme-dark { --bg-leitor: #1a1a1a !important; --texto-leitor: #e0e0e0 !important; }
-        .reader-footer { padding: 15px; display: flex; gap: 8px; background: #f9f9f9; border-top: 1px solid #ddd; margin-bottom: env(safe-area-inset-bottom); }
-        .btn-nav-leitor { padding: 12px; border: none; border-radius: 10px; font-weight: bold; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; white-space: nowrap; }
-        .btn-expand { flex: 2; }
-        .btn-side { flex: 0.8; }
-        
-        .access-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; z-index: 2000; padding: 20px; overflow-y: auto; }
-        .access-box { background: white; padding: 30px 25px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 450px; }
     </style>
 </head>
 
@@ -114,9 +91,19 @@
     </div>
 </div>
 
-<div id="reader-overlay">
+<div id="access-overlay" class="access-overlay">
+    <div class="access-box">
+        <img src="assets/icone.png" style="width: 85px; border-radius: 20px; margin-bottom: 15px;">
+        <h2 style="font-size: 0.9rem; font-weight: 800; color: #2d3436; margin: 0 0 15px 0; text-transform: uppercase;">PLANO BIENAL 2026-2027</h2>
+        <input type="text" id="newName" class="input-name" placeholder="Digite seu nome...">
+        <button class="btn-add" onclick="registerUser()">CADASTRAR E ENTRAR</button>
+        <div id="users-container" style="width:100%; margin-top:25px;"></div>
+    </div>
+</div>
+
+<div id="reader-overlay" style="position: fixed; inset: 0; background: var(--bg-leitor); z-index: 5000; display: none; flex-direction: column; color: var(--texto-leitor);">
     <div class="reader-header" style="padding: 10px 15px; background: #1a4731; color: white; display: flex; justify-content: space-between; align-items: center;">
-        <span id="reader-title" style="font-weight:bold;">Gênesis 1</span>
+        <span id="reader-title" style="font-weight:bold;"></span>
         <button onclick="fecharLeitor()" style="background:none; border:none; color:white; font-size:1.5rem;">✕</button>
     </div>
     <div class="reader-toolbar" style="display: flex; background: #245e41; padding: 8px 15px; gap: 10px; align-items: center; overflow-x: auto;">
@@ -132,26 +119,16 @@
         <button class="btn-tool" style="background:#1a1a1a; color:#fff" onclick="setTema('dark')">N</button>
         <button class="btn-tool" style="background:#fff; color:#333" onclick="setTema('light')">C</button>
     </div>
-    <div id="reader-text" class="reader-content" style="flex: 1; overflow-y: auto; padding: 20px; line-height: 1.6;"></div>
-    <div id="reader-footer-ctrl" class="reader-footer"></div>
-</div>
-
-<div id="access-overlay" class="access-overlay">
-    <div class="access-box">
-        <img src="assets/icone.png" style="width: 85px; border-radius: 20px; margin-bottom: 15px;">
-        <h2 class="main-title">PLANO BIENAL 2026-2027</h2>
-        <input type="text" id="newName" placeholder="Digite seu nome..." style="width: 100%; padding: 15px; border: 2px solid #edf2f7; border-radius: 15px; margin-bottom: 15px;">
-        <button class="btn-add" onclick="registerUser()">CADASTRAR E ENTRAR</button>
-        <div id="users-container" style="width:100%; margin-top:25px;"></div>
-    </div>
+    <div id="reader-text" style="flex: 1; overflow-y: auto; padding: 20px; line-height: 1.6;"></div>
+    <div id="reader-footer-ctrl" class="reader-footer" style="padding: 15px; display: flex; gap: 8px; background: #f9f9f9; border-top: 1px solid #ddd; margin-bottom: env(safe-area-inset-bottom);"></div>
 </div>
 
 <div class="header-branding" id="inner-branding" style="display:none; margin-top:10px; text-align: center;">
     <img src="assets/icone.png" style="width:85px; border-radius: 20px; margin-bottom: 10px;">
-    <h2 class="main-title">PLANO BIENAL 2026-2027</h2>
+    <h2 style="font-size: 0.85rem; font-weight: 800; color: #2d3436; text-transform: uppercase;">PLANO BIENAL 2026-2027</h2>
 </div>
 
-<div class="header" id="header-main" style="display:none;">
+<div class="header" id="header-main" style="display:none; width: 100%; max-width: 500px; background: white; padding: 15px; border-radius: 20px; margin-bottom: 20px;">
     <div id="userNameDisplay" class="display-name"></div>
     <button class="btn-exit" onclick="saveAndExit()">SALVAR E SAIR</button>
 </div>
@@ -173,28 +150,11 @@
     let fontSizeAtual = 1.2;
     let deferredPrompt;
 
-    // PWA
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js').then(reg => console.log('SW OK')).catch(err => console.log('SW Erro', err));
-        });
-    }
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault(); deferredPrompt = e;
-        document.getElementById('install-banner').style.display = 'flex';
-    });
-    document.getElementById('btn-install-now').addEventListener('click', () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then(() => {
-                document.getElementById('install-banner').style.display = 'none';
-                deferredPrompt = null;
-            });
-        }
-    });
-    document.getElementById('btn-not-now').addEventListener('click', () => {
-        document.getElementById('install-banner').style.display = 'none';
-    });
+    // PWA E SERVICE WORKER
+    if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js'); }); }
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; document.getElementById('install-banner').style.display = 'flex'; });
+    document.getElementById('btn-install-now').addEventListener('click', () => { if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { document.getElementById('install-banner').style.display = 'none'; deferredPrompt = null; }); } });
+    document.getElementById('btn-not-now').addEventListener('click', () => { document.getElementById('install-banner').style.display = 'none'; });
 
     const BIBLE_BOOKS = [{n: "Gênesis", c: 50}, {n: "Êxodo", c: 40}, {n: "Levítico", c: 27}, {n: "Números", c: 36}, {n: "Deuteronômio", c: 34}, {n: "Josué", c: 24}, {n: "Juízes", c: 21}, {n: "Rute", c: 4}, {n: "1 Samuel", c: 31}, {n: "2 Samuel", c: 24}, {n: "1 Reis", c: 22}, {n: "2 Reis", c: 25}, {n: "1 Crônicas", c: 29}, {n: "2 Crônicas", c: 36}, {n: "Esdras", c: 10}, {n: "Neemias", c: 13}, {n: "Ester", c: 10}, {n: "Jó", c: 42}, {n: "Salmos", c: 150}, {n: "Provérbios", c: 31}, {n: "Eclesiastes", c: 12}, {n: "Cantares", c: 8}, {n: "Isaías", c: 66}, {n: "Jeremias", c: 52}, {n: "Lamentações", c: 5}, {n: "Ezequiel", c: 48}, {n: "Daniel", c: 12}, {n: "Oseias", c: 14}, {n: "Joel", c: 3}, {n: "Amós", c: 9}, {n: "Obadias", c: 1}, {n: "Jonas", c: 4}, {n: "Miqueias", c: 7}, {n: "Naum", c: 3}, {n: "Habacuque", c: 3}, {n: "Sofonias", c: 3}, {n: "Ageu", c: 2}, {n: "Zacarias", c: 14}, {n: "Malaquias", c: 4}, {n: "Mateus", c: 28}, {n: "Marcos", c: 16}, {n: "Lucas", c: 24}, {n: "João", c: 21}, {n: "Atos", c: 28}, {n: "Romanos", c: 16}, {n: "1 Coríntios", c: 16}, {n: "2 Coríntios", c: 13}, {n: "Gálatas", c: 6}, {n: "Efésios", c: 6}, {n: "Filipenses", c: 4}, {n: "Colossenses", c: 4}, {n: "1 Tessalonicenses", c: 5}, {n: "2 Tessalonicenses", c: 3}, {n: "1 Timóteo", c: 6}, {n: "2 Timóteo", c: 4}, {n: "Tito", c: 3}, {n: "Filemom", c: 1}, {n: "Hebreus", c: 13}, {n: "Tiago", c: 5}, {n: "1 Pedro", c: 5}, {n: "2 Pedro", c: 3}, {n: "1 João", c: 5}, {n: "2 João", c: 1}, {n: "3 João", c: 1}, {n: "Judas", c: 1}, {n: "Apocalipse", c: 22}];
     const TOTAL_BIBLE_CHAPTERS = 1189;
@@ -214,139 +174,68 @@
         });
     }
 
-    function editUser(oldName) {
-        const newN = prompt("Digite o novo nome para o perfil:", oldName);
-        if (!newN || newN.trim() === "" || newN === oldName) return;
-        db.ref('users/' + oldName).once('value', snap => {
-            const data = snap.val();
-            db.ref('users/' + newN.trim()).set(data).then(() => {
-                db.ref('users/' + oldName).remove();
+    function editUser(oldN) {
+        const newN = prompt("Novo nome:", oldN);
+        if (!newN || newN.trim() === "" || newN === oldN) return;
+        db.ref('users/'+oldN).once('value', s => {
+            db.ref('users/'+newN.trim()).set(s.val()).then(() => {
+                db.ref('users/'+oldN).remove();
                 let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
-                mp = mp.map(n => n === oldName ? newN.trim() : n);
+                mp = mp.map(n => n === oldN ? newN.trim() : n);
                 localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
             });
         });
     }
 
     function deleteUser(name) {
-        if (!confirm(`Tem certeza que deseja apagar o perfil de "${name}"? Esta ação não pode ser desfeita.`)) return;
-        db.ref('users/' + name).remove().then(() => {
+        if (!confirm("Apagar perfil?")) return;
+        db.ref('users/'+name).remove().then(() => {
             let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
-            mp = mp.filter(n => n !== name);
-            localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
+            mp = mp.filter(n => n !== name); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
         });
     }
 
-    function calculatePercentByChapters(progress) { if(!progress) return 0; let lidos = 0; Object.keys(progress).forEach(key => { if(key.includes('_c') && progress[key] === true) lidos++; }); return Math.round((lidos / TOTAL_BIBLE_CHAPTERS) * 100); }
-    function loginUser(name) { currentUser = name; document.getElementById('access-overlay').style.display = 'none'; document.getElementById('inner-branding').style.display = 'block'; document.getElementById('header-main').style.display = "block"; document.getElementById('progress-main').style.display = "block"; document.getElementById('plan-container').style.display = "block"; document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); }
-    function saveAndExit() { document.getElementById('inner-branding').style.display = 'none'; document.getElementById('header-main').style.display = "none"; document.getElementById('progress-main').style.display = "none"; document.getElementById('plan-container').style.display = "none"; document.getElementById('access-overlay').style.display = 'flex'; currentUser = ""; window.scrollTo(0,0); }
-    function distributeChaptersBalanced(range, days) { let chaps = []; for (let i = range[0]; i <= range[1]; i++) { for (let c = 1; c <= BIBLE_BOOKS[i].c; c++) { chaps.push({ b: BIBLE_BOOKS[i].n, c: c }); } } let res = Array.from({ length: days }, () => []); let ratio = chaps.length / days; for (let i = 0; i < chaps.length; i++) { let dIdx = Math.min(Math.floor(i / ratio), days - 1); res[dIdx].push(chaps[i]); } return res; }
-    function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); curr.setDate(curr.getDate() + 1); } return dates; }
+    function calculatePercentByChapters(progress) { if(!progress) return 0; let l = 0; Object.keys(progress).forEach(k => { if(k.includes('_c') && progress[k] === true) l++; }); return Math.round((l / TOTAL_BIBLE_CHAPTERS) * 100); }
+    function registerUser() { const n = document.getElementById('newName').value.trim(); if(!n) return; let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); if(!mp.includes(n)) mp.push(n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); db.ref('users/'+n).update({name:n}); loginUser(n); }
+    function loginUser(n) { currentUser = n; document.getElementById('access-overlay').style.display='none'; document.getElementById('inner-branding').style.display='block'; document.getElementById('header-main').style.display='block'; document.getElementById('progress-main').style.display='block'; document.getElementById('plan-container').style.display='block'; document.getElementById('userNameDisplay').innerText = n; renderPlan(); }
+    function saveAndExit() { document.getElementById('inner-branding').style.display='none'; document.getElementById('header-main').style.display='none'; document.getElementById('progress-main').style.display='none'; document.getElementById('plan-container').style.display='none'; document.getElementById('access-overlay').style.display='flex'; currentUser=""; window.scrollTo(0,0); }
+    function distributeChaptersBalanced(range, days) { let ch = []; for(let i=range[0]; i<=range[1]; i++) { for(let c=1; c<=BIBLE_BOOKS[i].c; c++) { ch.push({b:BIBLE_BOOKS[i].n, c:c}); } } let res = Array.from({length:days}, ()=>[]); let r = ch.length/days; for(let i=0; i<ch.length; i++) { let dIdx = Math.min(Math.floor(i/r), days-1); res[dIdx].push(ch[i]); } return res; }
+    function getWeekdays(s, e) { let curr = new Date(s+"T12:00:00"), last = new Date(e+"T12:00:00"), d = []; while(curr<=last) { if(curr.getDay()!==0 && curr.getDay()!==6) d.push({label:["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2,'0') + "/" + (curr.getMonth()+1).toString().padStart(2,'0')}); curr.setDate(curr.getDate()+1); } return d; }
 
     function renderPlan() {
         const area = document.getElementById('plan-container'); area.innerHTML = "";
         db.ref('users/'+currentUser+'/progress').once('value', snap => {
-            const prog = snap.val() || {}; let curYear = 0;
+            const prog = snap.val() || {}; let curY = 0;
             CONFIG.forEach((t, tIdx) => {
-                if (t.ano !== curYear) { curYear = t.ano; const y = document.createElement('div'); y.style.cssText="font-weight:bold; margin:15px 5px;"; y.innerText=`📅 ANO ${curYear}`; area.appendChild(y); }
-                const days = getWeekdays(t.start, t.end); const readingsByDay = distributeChaptersBalanced(t.booksIdx, days.length);
+                if(t.ano !== curY) { curY = t.ano; const y = document.createElement('div'); y.style.cssText="font-weight:bold; margin:15px 5px;"; y.innerText=`📅 ANO ${curY}`; area.appendChild(y); }
+                const days = getWeekdays(t.start, t.end); const readByDay = distributeChaptersBalanced(t.booksIdx, days.length);
                 const isCur = tIdx === (function(){ const today = new Date(); for(let i=0; i<CONFIG.length; i++) if(today >= new Date(CONFIG[i].start) && today <= new Date(CONFIG[i].end)) return i; return 0; })();
-                let triLidos = 0; let triTotal = 0;
-                for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) { triTotal += BIBLE_BOOKS[bIdx].c; const bookName = BIBLE_BOOKS[bIdx].n; for(let c = 1; c <= BIBLE_BOOKS[bIdx].c; c++) { if(prog[`${bookName}_c${c}`] === true) triLidos++; } }
-                const pTri = Math.round((triLidos / triTotal) * 100); const isConcluido = pTri === 100;
-                const box = document.createElement('div'); box.className = `trimestre-box ${isCur && !isConcluido ? 'atual' : ''} ${isConcluido ? 'concluido' : ''}`;
-                box.innerHTML = `
-                    <button class="tri-header" onclick="toggleTri(${tIdx})">
-                        <div class="tri-title-row"><span>${t.tri}</span><span id="tri-perc-label-${tIdx}">${pTri}%</span></div>
-                        <div class="mini-bar-bg" style="background:#eee;"><div id="tri-bar-${tIdx}" class="mini-bar-fill" style="width:${pTri}%; background:var(--verde-sucesso);"></div></div>
-                    </button>
-                    <div class="reading-list" id="list-${tIdx}" style="${isCur?'display:block' : ''}">
-                        ${days.map((d, dIdx) => {
-                            const dayChaps = readingsByDay[dIdx]; if(!dayChaps.length) return "";
-                            let btns = ""; let allDone = true;
-                            dayChaps.forEach(ch => { const key = `${ch.b}_c${ch.c}`; const isDone = prog[key] === true; if(!isDone) allDone = false; btns += `<span class="cap-btn ${isDone?'lido':''}" onclick="abrirLeitor('${ch.b}', ${ch.c}, ${tIdx}, ${dIdx}, '${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}')">${ch.c}</span>`; });
-                            const first = dayChaps[0], last = dayChaps[dayChaps.length-1]; const labelBook = first.b === last.b ? `${first.b} ${first.c}-${last.c}` : `${first.b} ${first.c} a ${last.b} ${last.c}`;
-                            return `<div class="row"><div class="check-btn ${allDone ? 'done' : ''}"></div><div class="info"><div class="info-text-group"><span class="info-date">${d.label}</span><span class="info-book">${labelBook}</span></div><div class="caps-container">${btns}</div></div></div>`;
-                        }).join('')}
-                    </div>`; area.appendChild(box);
+                let tL = 0; let tT = 0;
+                for(let bIdx=t.booksIdx[0]; bIdx<=t.booksIdx[1]; bIdx++){ tT += BIBLE_BOOKS[bIdx].c; const bn = BIBLE_BOOKS[bIdx].n; for(let c=1; c<=BIBLE_BOOKS[bIdx].c; c++){ if(prog[`${bn}_c${c}`]===true) tL++; } }
+                const pT = Math.round((tL/tT)*100); const isC = pT === 100;
+                const box = document.createElement('div'); box.className = `trimestre-box ${isCur && !isC ? 'atual' : ''} ${isC ? 'concluido' : ''}`;
+                box.innerHTML = `<button class="tri-header" onclick="toggleTri(${tIdx})"><div class="tri-title-row"><span>${t.tri}</span><span id="tri-perc-label-${tIdx}">${pT}%</span></div><div class="mini-bar-bg" style="background:#eee;"><div id="tri-bar-${tIdx}" class="mini-bar-fill" style="width:${pT}%; background:var(--verde-sucesso);"></div></div></button><div class="reading-list" id="list-${tIdx}" style="${isCur?'display:block' : ''}">${days.map((d, dIdx) => { const dC = readByDay[dIdx]; if(!dC.length) return ""; let bns = ""; let aD = true; dC.forEach(ch => { const k = `${ch.b}_c${ch.c}`; const iD = prog[k]===true; if(!iD) aD = false; bns += `<span class="cap-btn ${iD?'lido':''}" onclick="abrirLeitor('${ch.b}', ${ch.c}, ${tIdx}, ${dIdx}, '${JSON.stringify(dC).replace(/"/g, '&quot;')}')">${ch.c}</span>`; }); const f = dC[0], l = dC[dC.length-1]; const lb = f.b === l.b ? `${f.b} ${f.c}-${l.c}` : `${f.b} ${f.c} a ${l.b} ${l.c}`; return `<div class="row"><div class="check-btn ${aD?'done':''}"></div><div class="info"><div class="info-text-group"><span class="info-date">${d.label}</span><span class="info-book">${lb}</span></div><div class="caps-container">${bns}</div></div></div>`; }).join('')}</div>`; area.appendChild(box);
             }); updateProgress();
         });
     }
 
-    async function abrirLeitor(livro, cap, t, d, diaCapsStr) {
-        leitorContexto = { ...leitorContexto, livro, capAtual: cap, tIdx: t, dIdx: d, diaCaps: JSON.parse(diaCapsStr) };
-        document.getElementById('reader-overlay').style.display = 'flex'; carregarTextoBiblico();
-    }
-
-    async function carregarTextoBiblico() {
-        try {
-            const res = await fetch(`${leitorContexto.versao}.json`); const data = await res.json();
-            const lData = data.livros.find(l => l.nome === leitorContexto.livro);
-            const versos = lData.capitulos[leitorContexto.capAtual - 1];
-            document.getElementById('reader-title').innerText = `${leitorContexto.livro} ${leitorContexto.capAtual}`;
-            const cont = document.getElementById('reader-text');
-            cont.innerHTML = versos.map((v, i) => `<div class="verse-row"><span class="verse-num">${i+1}</span><span>${v}</span></div>`).join('');
-            cont.scrollTop = 0; atualizarBotoesNavegacao();
-        } catch(e) { alert("Capítulo não disponível."); }
-    }
-
-    function atualizarBotoesNavegacao() {
-        const footer = document.getElementById('reader-footer-ctrl'); footer.innerHTML = "";
-        const idxAtual = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
-        const isPrimeiro = idxAtual === 0; const isUltimo = idxAtual === leitorContexto.diaCaps.length - 1;
-        if (!isPrimeiro) footer.appendChild(criarBotaoLeitor("Voltar", "#eee", "#333", () => navegarNoDia(-1), true));
-        footer.appendChild(criarBotaoLeitor(isUltimo ? "Concluir" : "Concluir e Sair", "var(--verde-sucesso)", "white", () => concluirEFechar(), false));
-        if (!isUltimo) footer.appendChild(criarBotaoLeitor("Avançar", "var(--azul-link)", "white", () => navegarNoDia(1), true));
-    }
-
-    function criarBotaoLeitor(label, bg, color, acao, isSide) {
-        const btn = document.createElement("button"); btn.className = `btn-nav-leitor ${isSide ? 'btn-side' : 'btn-expand'}`;
-        btn.style.background = bg; btn.style.color = color; btn.innerText = label; btn.onclick = acao; return btn;
-    }
-
-    function navegarNoDia(direcao) {
-        const idxAtual = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
-        const proximo = leitorContexto.diaCaps[idxAtual + direcao];
-        if (proximo) { leitorContexto.livro = proximo.b; leitorContexto.capAtual = proximo.c; carregarTextoBiblico(); }
-    }
-
-    function concluirEFechar() {
-        const key = `${leitorContexto.livro}_c${leitorContexto.capAtual}`;
-        db.ref(`users/${currentUser}/progress/${key}`).set(true).then(() => { renderPlan(); fecharLeitor(); });
-    }
-
-    function mudarFonte(delta) { fontSizeAtual += delta; document.getElementById('reader-text').style.fontSize = fontSizeAtual + "rem"; }
-    function setTema(tema) { const overlay = document.getElementById('reader-overlay'); overlay.classList.remove('theme-sepia', 'theme-dark'); if (tema !== 'light') overlay.classList.add('theme-' + tema); }
+    async function abrirLeitor(livro, cap, t, d, diaCapsStr) { leitorContexto = { ...leitorContexto, livro, capAtual: cap, tIdx: t, dIdx: d, diaCaps: JSON.parse(diaCapsStr) }; document.getElementById('reader-overlay').style.display = 'flex'; carregarTextoBiblico(); }
+    async function carregarTextoBiblico() { try { const res = await fetch(`${leitorContexto.versao}.json`); const data = await res.json(); const lData = data.livros.find(l => l.nome === leitorContexto.livro); const versos = lData.capitulos[leitorContexto.capAtual - 1]; document.getElementById('reader-title').innerText = `${leitorContexto.livro} ${leitorContexto.capAtual}`; document.getElementById('reader-text').innerHTML = versos.map((v, i) => `<div style="margin-bottom:15px;"><span style="font-size:0.7em;font-weight:bold;color:var(--cinza-texto);margin-right:10px;">${i+1}</span>${v}</div>`).join(''); document.getElementById('reader-text').scrollTop = 0; atualizarBotoesNavegacao(); } catch(e) { alert("Erro ao carregar texto."); } }
+    function atualizarBotoesNavegacao() { const f = document.getElementById('reader-footer-ctrl'); f.innerHTML = ""; const idx = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual); if (idx > 0) f.appendChild(criarBotaoLeitor("Voltar", "#eee", "#333", () => navegarNoDia(-1), true)); f.appendChild(criarBotaoLeitor(idx === leitorContexto.diaCaps.length-1 ? "Concluir" : "Concluir e Sair", "var(--verde-sucesso)", "white", () => concluirEFechar(), false)); if (idx < leitorContexto.diaCaps.length-1) f.appendChild(criarBotaoLeitor("Avançar", "var(--azul-link)", "white", () => navegarNoDia(1), true)); }
+    function criarBotaoLeitor(l, bg, c, ac, s) { const b = document.createElement("button"); b.style.cssText = `flex:${s?0.8:2}; padding:12px; border:none; border-radius:10px; font-weight:bold; font-size:0.8rem; text-transform:uppercase; white-space:nowrap; background:${bg}; color:${c}; cursor:pointer;`; b.innerText = l; b.onclick = ac; return b; }
+    function navegarNoDia(dir) { const idx = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual); const p = leitorContexto.diaCaps[idx + dir]; if (p) { leitorContexto.livro = p.b; leitorContexto.capAtual = p.c; carregarTextoBiblico(); } }
+    function concluirEFechar() { const k = `${leitorContexto.livro}_c${leitorContexto.capAtual}`; db.ref(`users/${currentUser}/progress/${k}`).set(true).then(() => { renderPlan(); fecharLeitor(); }); }
+    function mudarFonte(d) { fontSizeAtual += d; document.getElementById('reader-text').style.fontSize = fontSizeAtual + "rem"; }
+    function setTema(t) { const o = document.getElementById('reader-overlay'); o.style.backgroundColor = t === 'sepia' ? '#f4ecd8' : (t === 'dark' ? '#1a1a1a' : '#fff'); o.style.color = t === 'sepia' ? '#5b4636' : (t === 'dark' ? '#e0e0e0' : '#2d3436'); }
     function trocarVersao(v) { leitorContexto.versao = v; carregarTextoBiblico(); }
     function fecharLeitor() { document.getElementById('reader-overlay').style.display = 'none'; }
-    function registerUser() { 
-        const n = document.getElementById('newName').value.trim(); if(!n) return; 
-        let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); 
-        if(!mp.includes(n)) mp.push(n); 
-        localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); 
-        db.ref('users/'+n).update({name:n}); 
-        loginUser(n); 
-    }
-    function toggleTri(i) { const el = document.getElementById(`list-${i}`); const isOpen = el.style.display === "block"; document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none'); el.style.display = isOpen ? "none" : "block"; }
-    
-    function updateProgress() {
-        db.ref('users/'+currentUser+'/progress').once('value', snap => {
-            const prog = snap.val() || {}; let totalLidosGeral = 0;
-            CONFIG.forEach((t, i) => {
-                let totalChapsTri = 0; for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) totalChapsTri += BIBLE_BOOKS[bIdx].c;
-                let lidosTri = 0; for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) { const bookName = BIBLE_BOOKS[bIdx].n; for(let c = 1; c <= BIBLE_BOOKS[bIdx].c; c++) { if(prog[`${bookName}_c${c}`] === true) { lidosTri++; totalLidosGeral++; } } }
-                const pTri = Math.round((lidosTri / totalChapsTri) * 100); if(document.getElementById(`tri-perc-label-${i}`)) { document.getElementById(`tri-perc-label-${i}`).innerText = pTri + "%"; document.getElementById(`tri-bar-${i}`).style.width = pTri + "%"; }
-            });
-            const pGeral = Math.round((totalLidosGeral / TOTAL_BIBLE_CHAPTERS) * 100);
-            document.getElementById('main-bar').style.width = pGeral + "%";
-            document.getElementById('main-percent').innerText = pGeral + "% Concluído Geral";
-        });
-    }
-
+    function toggleTri(i) { const el = document.getElementById(`list-${i}`); const isO = el.style.display === "block"; document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none'); el.style.display = isO ? "none" : "block"; }
+    function updateProgress() { db.ref('users/'+currentUser+'/progress').once('value', snap => { const prog = snap.val() || {}; let tL = 0; CONFIG.forEach((t, i) => { let tCT = 0; for(let bIdx=t.booksIdx[0]; bIdx<=t.booksIdx[1]; bIdx++) tCT += BIBLE_BOOKS[bIdx].c; let lT = 0; for(let bIdx=t.booksIdx[0]; bIdx<=t.booksIdx[1]; bIdx++) { const bn = BIBLE_BOOKS[bIdx].n; for(let c=1; c<=BIBLE_BOOKS[bIdx].c; c++) { if(prog[`${bn}_c${c}`] === true) { lT++; tL++; } } } const pT = Math.round((lT/tCT)*100); if(document.getElementById(`tri-perc-label-${i}`)) { document.getElementById(`tri-perc-label-${i}`).innerText = pT + "%"; document.getElementById(`tri-bar-${i}`).style.width = pT + "%"; } }); const pG = Math.round((tL/TOTAL_BIBLE_CHAPTERS)*100); document.getElementById('main-bar').style.width = pG + "%"; document.getElementById('main-percent').innerText = pG + "% Concluído Geral"; }); }
     window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2000); });
 </script>
 </body>
 </html>
+
 
 
 
