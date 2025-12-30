@@ -407,7 +407,7 @@
         });
         const acao = todosLidos ? "DESMARCAR" : "MARCAR";
         dadosTemporariosFisica = { caps, estado: !todosLidos };
-        document.getElementById('confirm-text').innerText = `${acao} LEITURA DE ${dataRotulo} EM BÍBLIA FÍSICA?`;
+        document.getElementById('confirm-text').innerText = `${acao} ${dataRotulo} COMO FINALIZADO?`;
         document.getElementById('confirm-overlay').style.display = 'block';
         document.getElementById('custom-confirm').style.display = 'block';
     }
@@ -431,6 +431,7 @@
 </script>
 </body>
 </html>
+
 
 
 
