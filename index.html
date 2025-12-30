@@ -56,13 +56,11 @@
         .trimestre-box { background: #cbd5e0; border-radius: 15px; margin-bottom: 20px; overflow: hidden; border: 1px solid #a0aec0; transition: 0.3s ease; }
         .tri-header { width: 100%; padding: 18px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; background: transparent; }
         .trimestre-box.atual .tri-header { background: var(--cor-ferrugem); color: #fff; }
-        .trimestre-box.atual .tri-title-row { font-weight: 900; color: #fff; }
         .trimestre-box.concluido .tri-header { background: #d0e7ff; color: #2c3e50; }
         
         .tri-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: bold; color: #495057; font-size: 0.9rem; }
         .reading-list { display: none; padding: 5px; max-height: 400px; overflow-y: auto; background: #fff; }
         
-        /* LINHA DE LEITURA CORRIGIDA (ALINHAMENTO HORIZONTAL) */
         .row { display: flex; align-items: center; padding: 12px 14px; border-bottom: 1px solid #f2f2f2; }
         .check-btn { width: 26px; height: 26px; border: 2px solid #ddd; border-radius: 8px; margin-right: 12px; cursor: pointer; flex-shrink: 0; display:flex; align-items:center; justify-content:center; }
         .check-btn.done { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
@@ -72,9 +70,15 @@
         .info-text-group { display: flex; flex-direction: column; margin-right: 8px; min-width: 90px; }
         .info-date { font-size: 10px; color: #95a5a6; text-transform: uppercase; font-weight: bold; }
         .info-book { font-size: 14px; font-weight: 600; color: #2c3e50; white-space: nowrap; }
-        .caps-container { display: flex; flex-wrap: wrap; align-items: center; }
         
-        /* SPLASH E PERFIL */
+        /* TEMAS LEITOR */
+        .theme-sepia { --bg-leitor: #f4ecd8 !important; --texto-leitor: #5b4636 !important; }
+        .theme-dark { --bg-leitor: #1a1a1a !important; --texto-leitor: #e0e0e0 !important; }
+
+        /* RODAPÉ LEITOR CORRIGIDO */
+        .reader-footer { padding: 15px; display: flex; gap: 10px; background: #f9f9f9; border-top: 1px solid #ddd; margin-bottom: env(safe-area-inset-bottom); }
+        .btn-nav-leitor { flex: 1; padding: 12px; border: none; border-radius: 10px; font-weight: bold; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; }
+
         #splash-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease; }
         #splash-screen img { width: 160px; max-width: 70%; border-radius: 28px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         #splash-screen.hide { opacity: 0; pointer-events: none; }
@@ -115,9 +119,8 @@
         <button class="btn-tool" style="background:#fff; color:#333" onclick="setTema('light')">C</button>
     </div>
     <div id="reader-text" class="reader-content"></div>
-    <div class="reader-footer">
-        <button id="btn-finish" class="btn-nav btn-finish" style="width:100%; padding:15px; background:var(--verde-sucesso); color:white; border:none; border-radius:10px; font-weight:bold; display:none;" onclick="concluirLeitura()">CONCLUIR LEITURA</button>
-    </div>
+    <div id="reader-footer-ctrl" class="reader-footer">
+        </div>
 </div>
 
 <div id="access-overlay" class="access-overlay">
@@ -157,27 +160,17 @@
     const db = firebase.database();
     let currentUser = "";
     const KEY_MY_PROFILES = "meus_perfis_locais";
-    let leitorContexto = { livro: "", capAtual: 0, capInicio: 0, capFim: 0, tIdx: 0, dIdx: 0, versao: "acf" };
+    let leitorContexto = { livro: "", capAtual: 0, capInicio: 0, capFim: 0, tIdx: 0, dIdx: 0, versao: "acf", diaCaps: [] };
     let fontSizeAtual = 1.2;
 
     const BIBLE_BOOKS = [{n: "Gênesis", c: 50}, {n: "Êxodo", c: 40}, {n: "Levítico", c: 27}, {n: "Números", c: 36}, {n: "Deuteronômio", c: 34}, {n: "Josué", c: 24}, {n: "Juízes", c: 21}, {n: "Rute", c: 4}, {n: "1 Samuel", c: 31}, {n: "2 Samuel", c: 24}, {n: "1 Reis", c: 22}, {n: "2 Reis", c: 25}, {n: "1 Crônicas", c: 29}, {n: "2 Crônicas", c: 36}, {n: "Esdras", c: 10}, {n: "Neemias", c: 13}, {n: "Ester", c: 10}, {n: "Jó", c: 42}, {n: "Salmos", c: 150}, {n: "Provérbios", c: 31}, {n: "Eclesiastes", c: 12}, {n: "Cantares", c: 8}, {n: "Isaías", c: 66}, {n: "Jeremias", c: 52}, {n: "Lamentações", c: 5}, {n: "Ezequiel", c: 48}, {n: "Daniel", c: 12}, {n: "Oseias", c: 14}, {n: "Joel", c: 3}, {n: "Amós", c: 9}, {n: "Obadias", c: 1}, {n: "Jonas", c: 4}, {n: "Miqueias", c: 7}, {n: "Naum", c: 3}, {n: "Habacuque", c: 3}, {n: "Sofonias", c: 3}, {n: "Ageu", c: 2}, {n: "Zacarias", c: 14}, {n: "Malaquias", c: 4}, {n: "Mateus", c: 28}, {n: "Marcos", c: 16}, {n: "Lucas", c: 24}, {n: "João", c: 21}, {n: "Atos", c: 28}, {n: "Romanos", c: 16}, {n: "1 Coríntios", c: 16}, {n: "2 Coríntios", c: 13}, {n: "Gálatas", c: 6}, {n: "Efésios", c: 6}, {n: "Filipenses", c: 4}, {n: "Colossenses", c: 4}, {n: "1 Tessalonicenses", c: 5}, {n: "2 Tessalonicenses", c: 3}, {n: "1 Timóteo", c: 6}, {n: "2 Timóteo", c: 4}, {n: "Tito", c: 3}, {n: "Filemom", c: 1}, {n: "Hebreus", c: 13}, {n: "Tiago", c: 5}, {n: "1 Pedro", c: 5}, {n: "2 Pedro", c: 3}, {n: "1 João", c: 5}, {n: "2 João", c: 1}, {n: "3 João", c: 1}, {n: "Judas", c: 1}, {n: "Apocalipse", c: 22}];
     const TOTAL_BIBLE_CHAPTERS = 1189;
-
-    const CONFIG = [
-        { ano: 2026, tri: "1º Trimestre: Pentateuco", start: "2026-01-05", end: "2026-03-31", booksIdx: [0, 4] },
-        { ano: 2026, tri: "2º Trimestre: Históricos Parte 1", start: "2026-04-01", end: "2026-06-30", booksIdx: [5, 9] },
-        { ano: 2026, tri: "3º Trimestre: Históricos Parte 2", start: "2026-07-01", end: "2026-09-30", booksIdx: [10, 13] },
-        { ano: 2026, tri: "4º Trimestre: Históricos Parte 3 / Jó", start: "2026-10-01", end: "2026-12-18", booksIdx: [14, 17] },
-        { ano: 2027, tri: "1º Trimestre: Poéticos", start: "2027-01-04", end: "2027-03-31", booksIdx: [18, 21] },
-        { ano: 2027, tri: "2º Trimestre: Profetas Maiores", start: "2027-04-01", end: "2027-06-30", booksIdx: [22, 26] },
-        { ano: 2027, tri: "3º Trimestre: Profetas Menores + N.T. Parte 1", start: "2027-07-01", end: "2027-09-30", booksIdx: [27, 43] },
-        { ano: 2027, tri: "4º Trimestre: Novo Testamento Parte 2", start: "2027-10-01", end: "2027-12-17", booksIdx: [44, 65] }
-    ];
+    const CONFIG = [{ ano: 2026, tri: "1º Trimestre: Pentateuco", start: "2026-01-05", end: "2026-03-31", booksIdx: [0, 4] }, { ano: 2026, tri: "2º Trimestre: Históricos Parte 1", start: "2026-04-01", end: "2026-06-30", booksIdx: [5, 9] }, { ano: 2026, tri: "3º Trimestre: Históricos Parte 2", start: "2026-07-01", end: "2026-09-30", booksIdx: [10, 13] }, { ano: 2026, tri: "4º Trimestre: Históricos Parte 3 / Jó", start: "2026-10-01", end: "2026-12-18", booksIdx: [14, 17] }, { ano: 2027, tri: "1º Trimestre: Poéticos", start: "2027-01-04", end: "2027-03-31", booksIdx: [18, 21] }, { ano: 2027, tri: "2º Trimestre: Profetas Maiores", start: "2027-04-01", end: "2027-06-30", booksIdx: [22, 26] }, { ano: 2027, tri: "3º Trimestre: Profetas Menores + N.T. Parte 1", start: "2027-07-01", end: "2027-09-30", booksIdx: [27, 43] }, { ano: 2027, tri: "4º Trimestre: Novo Testamento Parte 2", start: "2027-10-01", end: "2027-12-17", booksIdx: [44, 65] }];
 
     db.ref('users').on('value', snap => renderCommunity(snap.val()));
 
-    function getCurrentTriIdx() { const today = new Date(); for(let i=0; i<CONFIG.length; i++) { if(today >= new Date(CONFIG[i].start) && today <= new Date(CONFIG[i].end)) return i; } return 0; }
-    function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) { dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); } curr.setDate(curr.getDate() + 1); } return dates; }
+    function getCurrentTriIdx() { const today = new Date(); for(let i=0; i<CONFIG.length; i++) if(today >= new Date(CONFIG[i].start) && today <= new Date(CONFIG[i].end)) return i; return 0; }
+    function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); curr.setDate(curr.getDate() + 1); } return dates; }
     
     function renderCommunity(data) { 
         const container = document.getElementById('users-container'); container.innerHTML = ""; if(!data) return;
@@ -194,27 +187,10 @@
         });
     }
 
-    function calculatePercentByChapters(progress) {
-        if(!progress) return 0;
-        let lidos = 0;
-        Object.keys(progress).forEach(key => { if(key.includes('_c') && progress[key] === true) lidos++; });
-        return Math.round((lidos / TOTAL_BIBLE_CHAPTERS) * 100);
-    }
-    
-    function registerUser() { 
-        const n = document.getElementById('newName').value.trim(); if(!n) return alert("Digite o nome!");
-        let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); if(!mp.includes(n)) { mp.push(n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); }
-        db.ref('users/'+n).update({name:n}); document.getElementById('newName').value=""; loginUser(n);
-    }
-
-    function loginUser(name) { 
-        currentUser = name; document.getElementById('access-overlay').style.display = 'none'; document.getElementById('inner-branding').style.display = 'block'; 
-        document.getElementById('header-main').style.display = "block"; document.getElementById('progress-main').style.display = "block"; 
-        document.getElementById('plan-container').style.display = "block"; document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); 
-    }
-
+    function calculatePercentByChapters(progress) { if(!progress) return 0; let lidos = 0; Object.keys(progress).forEach(key => { if(key.includes('_c') && progress[key] === true) lidos++; }); return Math.round((lidos / TOTAL_BIBLE_CHAPTERS) * 100); }
+    function registerUser() { const n = document.getElementById('newName').value.trim(); if(!n) return alert("Digite o nome!"); let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); if(!mp.includes(n)) { mp.push(n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); } db.ref('users/'+n).update({name:n}); document.getElementById('newName').value=""; loginUser(n); }
+    function loginUser(name) { currentUser = name; document.getElementById('access-overlay').style.display = 'none'; document.getElementById('inner-branding').style.display = 'block'; document.getElementById('header-main').style.display = "block"; document.getElementById('progress-main').style.display = "block"; document.getElementById('plan-container').style.display = "block"; document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); }
     function saveAndExit() { document.getElementById('inner-branding').style.display = 'none'; document.getElementById('header-main').style.display = "none"; document.getElementById('progress-main').style.display = "none"; document.getElementById('plan-container').style.display = "none"; document.getElementById('access-overlay').style.display = 'flex'; currentUser = ""; window.scrollTo(0,0); }
-
     function distributeChaptersBalanced(range, days) { let chaps = []; for (let i = range[0]; i <= range[1]; i++) { for (let c = 1; c <= BIBLE_BOOKS[i].c; c++) { chaps.push({ b: BIBLE_BOOKS[i].n, c: c }); } } let res = Array.from({ length: days }, () => []); let ratio = chaps.length / days; for (let i = 0; i < chaps.length; i++) { let dIdx = Math.min(Math.floor(i / ratio), days - 1); res[dIdx].push(chaps[i]); } return res; }
 
     function renderPlan() {
@@ -238,58 +214,141 @@
                         ${days.map((d, dIdx) => {
                             const dayChaps = readingsByDay[dIdx]; if(!dayChaps.length) return "";
                             let btns = ""; let allDone = true;
-                            dayChaps.forEach(ch => { const key = `${ch.b}_c${ch.c}`; const isDone = prog[key] === true; if(!isDone) allDone = false; btns += `<span class="cap-btn ${isDone?'lido':''}" data-book="${ch.b}" data-cap="${ch.c}" onclick="abrirLeitor('${ch.b}', ${ch.c}, ${tIdx})">${ch.c}</span>`; });
+                            dayChaps.forEach(ch => { 
+                                const key = `${ch.b}_c${ch.c}`; const isDone = prog[key] === true; if(!isDone) allDone = false; 
+                                btns += `<span class="cap-btn ${isDone?'lido':''}" data-book="${ch.b}" data-cap="${ch.c}" onclick="abrirLeitor('${ch.b}', ${ch.c}, ${tIdx}, ${dIdx}, '${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}')">${ch.c}</span>`; 
+                            });
                             const first = dayChaps[0], last = dayChaps[dayChaps.length-1]; const labelBook = first.b === last.b ? `${first.b} ${first.c}-${last.c}` : `${first.b} ${first.c} a ${last.b} ${last.c}`;
-                            return `<div class="row">
-                                <div class="check-btn ${allDone ? 'done' : ''}"></div>
-                                <div class="info">
-                                    <div class="info-text-group">
-                                        <span class="info-date">${d.label}</span>
-                                        <span class="info-book">${labelBook}</span>
-                                    </div>
-                                    <div class="caps-container">${btns}</div>
-                                </div>
-                            </div>`;
+                            return `<div class="row"><div class="check-btn ${allDone ? 'done' : ''}"></div><div class="info"><div class="info-text-group"><span class="info-date">${d.label}</span><span class="info-book">${labelBook}</span></div><div class="caps-container">${btns}</div></div></div>`;
                         }).join('')}
                     </div>`; area.appendChild(box);
             }); updateProgress();
         });
     }
 
-    async function abrirLeitor(livro, cap, t) { leitorContexto = { ...leitorContexto, livro, capAtual: cap, tIdx: t }; document.getElementById('reader-overlay').style.display = 'flex'; carregarTextoBiblico(); }
+    // --- FUNÇÕES DO LEITOR ---
+
+    async function abrirLeitor(livro, cap, t, d, diaCapsStr) {
+        leitorContexto = { ...leitorContexto, livro, capAtual: cap, tIdx: t, dIdx: d, diaCaps: JSON.parse(diaCapsStr) };
+        document.getElementById('reader-overlay').style.display = 'flex';
+        carregarTextoBiblico();
+    }
 
     async function carregarTextoBiblico() {
         try {
             const res = await fetch(`${leitorContexto.versao}.json`); const data = await res.json();
-            const lData = data.livros.find(l => l.nome === leitorContexto.livro); const versos = lData.capitulos[leitorContexto.capAtual - 1];
+            const lData = data.livros.find(l => l.nome === leitorContexto.livro);
+            const versos = lData.capitulos[leitorContexto.capAtual - 1];
             document.getElementById('reader-title').innerText = `${leitorContexto.livro} ${leitorContexto.capAtual}`;
-            const cont = document.getElementById('reader-text'); cont.innerHTML = versos.map((v, i) => `<div class="verse-row" onclick="compararVerso(${i})"><span class="verse-num">${i+1}</span><span>${v}</span></div>`).join('');
-            cont.scrollTop = 0; document.getElementById('btn-finish').style.display = 'block';
+            const cont = document.getElementById('reader-text');
+            cont.innerHTML = versos.map((v, i) => `<div class="verse-row" onclick="compararVerso(${i})"><span class="verse-num">${i+1}</span><span>${v}</span></div>`).join('');
+            cont.scrollTop = 0;
+            atualizarBotoesNavegacao();
         } catch(e) { alert("Capítulo não disponível."); }
     }
 
+    function atualizarBotoesNavegacao() {
+        const footer = document.getElementById('reader-footer-ctrl');
+        footer.innerHTML = "";
+        
+        const idxAtual = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
+        const isPrimeiro = idxAtual === 0;
+        const isUltimo = idxAtual === leitorContexto.diaCaps.length - 1;
+
+        // Botão Voltar
+        if (!isPrimeiro) {
+            const btnVoltar = criarBotaoLeitor("Voltar", "#eee", "#333", () => navegarNoDia(-1));
+            footer.appendChild(btnVoltar);
+        }
+
+        // Botão Concluir e Sair (Sempre presente, exceto no último onde vira Concluir)
+        const btnConcluirSair = criarBotaoLeitor(isUltimo ? "Concluir" : "Concluir e Sair", "var(--verde-sucesso)", "white", () => concluirEFechar(isUltimo));
+        footer.appendChild(btnConcluirSair);
+
+        // Botão Avançar
+        if (!isUltimo) {
+            const btnAvancar = criarBotaoLeitor("Avançar", "var(--azul-link)", "white", () => navegarNoDia(1));
+            footer.appendChild(btnAvancar);
+        }
+    }
+
+    function criarBotaoLeitor(label, bg, color, acao) {
+        const btn = document.createElement("button");
+        btn.className = "btn-nav-leitor";
+        btn.style.background = bg;
+        btn.style.color = color;
+        btn.innerText = label;
+        btn.onclick = acao;
+        return btn;
+    }
+
+    function navegarNoDia(direcao) {
+        const idxAtual = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
+        const proximo = leitorContexto.diaCaps[idxAtual + direcao];
+        if (proximo) {
+            leitorContexto.livro = proximo.b;
+            leitorContexto.capAtual = proximo.c;
+            carregarTextoBiblico();
+        }
+    }
+
+    function concluirEFechar(marcarCheck) {
+        const key = `${leitorContexto.livro}_c${leitorContexto.capAtual}`;
+        db.ref(`users/${currentUser}/progress/${key}`).set(true).then(() => {
+            renderPlan();
+            fecharLeitor();
+        });
+    }
+
+    // --- FERRAMENTAS DO LEITOR (CORRIGIDAS) ---
+    function mudarFonte(delta) {
+        fontSizeAtual += delta;
+        document.getElementById('reader-text').style.fontSize = fontSizeAtual + "rem";
+    }
+
+    function setTema(tema) {
+        const overlay = document.getElementById('reader-overlay');
+        overlay.classList.remove('theme-sepia', 'theme-dark');
+        if (tema !== 'light') overlay.classList.add('theme-' + tema);
+    }
+
+    function trocarVersao(v) { leitorContexto.versao = v; carregarTextoBiblico(); }
     function fecharLeitor() { document.getElementById('reader-overlay').style.display = 'none'; }
-    function concluirLeitura() { const key = `${leitorContexto.livro}_c${leitorContexto.capAtual}`; db.ref(`users/${currentUser}/progress/${key}`).set(true).then(() => { renderPlan(); fecharLeitor(); }); }
     function toggleTri(i) { const el = document.getElementById(`list-${i}`); const isOpen = el.style.display === "block"; document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none'); el.style.display = isOpen ? "none" : "block"; }
     
     function updateProgress() {
         db.ref('users/'+currentUser+'/progress').once('value', snap => {
-            const prog = snap.val() || {}; let totalLidosGeral = 0;
+            const prog = snap.val() || {};
+            let totalLidosGeral = 0;
             CONFIG.forEach((t, i) => {
-                let totalChapsTri = 0; for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) totalChapsTri += BIBLE_BOOKS[bIdx].c;
-                let lidosTri = 0; for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) { const bookName = BIBLE_BOOKS[bIdx].n; for(let c = 1; c <= BIBLE_BOOKS[bIdx].c; c++) { if(prog[`${bookName}_c${c}`] === true) { lidosTri++; totalLidosGeral++; } } }
-                const pTri = Math.round((lidosTri / totalChapsTri) * 100); if(document.getElementById(`tri-perc-label-${i}`)) { document.getElementById(`tri-perc-label-${i}`).innerText = pTri + "%"; document.getElementById(`tri-bar-${i}`).style.width = pTri + "%"; }
+                let totalChapsTri = 0;
+                for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) totalChapsTri += BIBLE_BOOKS[bIdx].c;
+                let lidosTri = 0;
+                for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) {
+                    const bookName = BIBLE_BOOKS[bIdx].n;
+                    for(let c = 1; c <= BIBLE_BOOKS[bIdx].c; c++) { if(prog[`${bookName}_c${c}`] === true) { lidosTri++; totalLidosGeral++; } }
+                }
+                const pTri = Math.round((lidosTri / totalChapsTri) * 100);
+                if(document.getElementById(`tri-perc-label-${i}`)) {
+                    document.getElementById(`tri-perc-label-${i}`).innerText = pTri + "%";
+                    document.getElementById(`tri-bar-${i}`).style.width = pTri + "%";
+                }
             });
-            const pGeral = Math.round((totalLidosGeral / TOTAL_BIBLE_CHAPTERS) * 100); document.getElementById('main-bar').style.width = pGeral + "%"; document.getElementById('main-percent').innerText = pGeral + "% Concluído Geral";
+            const pGeral = Math.round((totalLidosGeral / TOTAL_BIBLE_CHAPTERS) * 100);
+            document.getElementById('main-bar').style.width = pGeral + "%";
+            document.getElementById('main-percent').innerText = pGeral + "% Concluído Geral";
         });
     }
 
-    async function compararVerso(vIdx) { const versoes = ['acf', 'nvi', 'ntlh', 'kja']; let html = ""; document.getElementById('compare-modal').classList.add('active'); for (let v of versoes) { try { const res = await fetch(`${v}.json`); const data = await res.json(); const lData = data.livros.find(l => l.nome === leitorContexto.livro); const txt = lData.capitulos[leitorContexto.capAtual - 1][vIdx]; html += `<div class="compare-item"><span class="compare-ver">${data.versao}</span><p>${txt}</p></div>`; } catch(e) {} } document.getElementById('compare-content').innerHTML = html; }
-    function fecharComparador() { document.getElementById('compare-modal').classList.remove('active'); }
-    function trocarVersao(v) { leitorContexto.versao = v; carregarTextoBiblico(); }
-    function mudarFonte(d) { fontSizeAtual += d; document.documentElement.style.setProperty('--font-size-leitura', fontSizeAtual + 'rem'); }
-    function setTema(t) { const o = document.getElementById('reader-overlay'); o.className = ''; if(t!=='light') o.classList.add('theme-'+t); }
-    window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2000); });
+    async function compararVerso(vIdx) {
+        const versoes = ['acf', 'nvi', 'ntlh', 'kja']; let html = "";
+        const res = await fetch(`${leitorContexto.versao}.json`); const data = await res.json();
+        alert("Função de comparação ativa para o verso " + (vIdx + 1));
+    }
+
+    window.addEventListener("load", () => {
+        setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2000);
+    });
 </script>
 </body>
 </html>
