@@ -206,6 +206,12 @@
 
 <div id="plan-container" style="width:100%; max-width:500px; display:none;"></div>
 
+<footer id="footer-developer" style="display:none; width: 100%; text-align: center; padding: 20px 0; margin-top: 30px;">
+    <p style="font-family: 'Courier New', Courier, monospace; font-style: italic; font-size: 0.7rem; color: #000; margin: 0;">
+        Criado e Desenvolvido por Sidiny Junior
+    </p>
+</footer>
+
 <script>
     const firebaseConfig = { apiKey: "AIzaSyAefANpZLXBLstwIRoz2Y1o_uBHmDfgFxM", databaseURL: "https://plano-biblico-familiar-default-rtdb.firebaseio.com/", projectId: "plano-biblico-familiar" };
     firebase.initializeApp(firebaseConfig);
@@ -305,8 +311,8 @@
     }
 
     function calculatePercentByChapters(progress) { if(!progress) return 0; let lidos = 0; Object.keys(progress).forEach(key => { if(key.includes('_c') && progress[key] === true) lidos++; }); return Math.round((lidos / TOTAL_BIBLE_CHAPTERS) * 100); }
-    function loginUser(name) { currentUser = name; document.getElementById('access-overlay').style.display = 'none'; document.getElementById('inner-branding').style.display = 'block'; document.getElementById('header-main').style.display = "block"; document.getElementById('progress-main').style.display = "block"; document.getElementById('plan-container').style.display = "block"; document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); }
-    function saveAndExit() { document.getElementById('inner-branding').style.display = 'none'; document.getElementById('header-main').style.display = "none"; document.getElementById('progress-main').style.display = "none"; document.getElementById('plan-container').style.display = "none"; document.getElementById('access-overlay').style.display = 'flex'; currentUser = ""; window.scrollTo(0,0); }
+    function loginUser(name) { currentUser = name; document.getElementById('access-overlay').style.display = 'none'; document.getElementById('inner-branding').style.display = 'block'; document.getElementById('header-main').style.display = "block"; document.getElementById('progress-main').style.display = "block"; document.getElementById('plan-container').style.display = "block"; document.getElementById('footer-developer').style.display = "block";document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); }
+    function saveAndExit() { document.getElementById('inner-branding').style.display = 'none'; document.getElementById('header-main').style.display = "none"; document.getElementById('progress-main').style.display = "none"; document.getElementById('plan-container').style.display = "none"; document.getElementById('footer-developer').style.display = "none"; document.getElementById('access-overlay').style.display = 'flex'; currentUser = ""; window.scrollTo(0,0); }
     function distributeChaptersBalanced(range, days) { let chaps = []; for (let i = range[0]; i <= range[1]; i++) { for (let c = 1; c <= BIBLE_BOOKS[i].c; c++) { chaps.push({ b: BIBLE_BOOKS[i].n, c: c }); } } let res = Array.from({ length: days }, () => []); let ratio = chaps.length / days; for (let i = 0; i < chaps.length; i++) { let dIdx = Math.min(Math.floor(i / ratio), days - 1); res[dIdx].push(chaps[i]); } return res; }
     function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); curr.setDate(curr.getDate() + 1); } return dates; }
 
