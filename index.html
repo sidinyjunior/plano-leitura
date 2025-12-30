@@ -85,7 +85,7 @@
 
         /* Janela de Confirmação Estilizada */
         #confirm-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10500; }
-        #custom-confirm {
+        #custom-confirm, #edit-confirm {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             z-index: 11000; width: 85%; max-width: 400px; text-align: center;
@@ -94,6 +94,11 @@
         .btn-c { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         .btn-c-confirm { background: var(--verde-sucesso); color: white; }
         .btn-c-cancel { background: #eee; color: #333; }
+        
+        #edit-input-name {
+            width: 100%; padding: 12px; border: 2px solid #edf2f7; border-radius: 10px; 
+            margin-top: 10px; box-sizing: border-box; text-align: center; font-size: 1rem;
+        }
 
         /* BOTÕES DE USUÁRIO */
         .user-card { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 2px solid transparent; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
@@ -127,11 +132,21 @@
 </div>
 
 <div id="confirm-overlay"></div>
+
 <div id="custom-confirm">
     <p id="confirm-text" style="font-weight: bold; margin: 0; line-height: 1.4;"></p>
     <div class="confirm-buttons">
         <button class="btn-c btn-c-cancel" onclick="fecharConfirm(false)">NÃO</button>
         <button class="btn-c btn-c-confirm" onclick="fecharConfirm(true)">SIM</button>
+    </div>
+</div>
+
+<div id="edit-confirm">
+    <p style="font-weight: bold; margin: 0;">EDITAR NOME DO PERFIL</p>
+    <input type="text" id="edit-input-name" placeholder="Novo nome...">
+    <div class="confirm-buttons">
+        <button class="btn-c btn-c-cancel" onclick="fecharEdit(false)">CANCELAR</button>
+        <button class="btn-c btn-c-confirm" onclick="fecharEdit(true)">SALVAR</button>
     </div>
 </div>
 
@@ -201,6 +216,8 @@
     let fontSizeAtual = 1.2;
     let deferredPrompt;
     let dadosTemporariosFisica = null;
+    let acaoPendente = null;
+    let dadosEdicaoPendente = null;
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -246,28 +263,45 @@
         });
     }
 
+    // --- FUNÇÕES DE USUÁRIO ESTILIZADAS ---
     function editUser(oldName) {
-        const newName = prompt("Digite o novo nome para este perfil:", oldName);
-        if (!newName || newName.trim() === "" || newName === oldName) return;
-        db.ref('users/' + oldName).once('value', snap => {
-            const userData = snap.val();
-            db.ref('users/' + newName.trim()).set(userData).then(() => {
-                db.ref('users/' + oldName).remove().then(() => {
-                    let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
-                    mp = mp.map(n => n === oldName ? newName.trim() : n);
-                    localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
+        dadosEdicaoPendente = oldName;
+        document.getElementById('edit-input-name').value = oldName;
+        document.getElementById('confirm-overlay').style.display = 'block';
+        document.getElementById('edit-confirm').style.display = 'block';
+    }
+
+    function fecharEdit(salvar) {
+        const newName = document.getElementById('edit-input-name').value.trim();
+        const oldName = dadosEdicaoPendente;
+        document.getElementById('confirm-overlay').style.display = 'none';
+        document.getElementById('edit-confirm').style.display = 'none';
+        if (salvar && newName && newName !== oldName) {
+            db.ref('users/' + oldName).once('value', snap => {
+                const userData = snap.val();
+                db.ref('users/' + newName).set(userData).then(() => {
+                    db.ref('users/' + oldName).remove().then(() => {
+                        let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
+                        mp = mp.map(n => n === oldName ? newName : n);
+                        localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
+                    });
                 });
             });
-        });
+        }
+        dadosEdicaoPendente = null;
     }
 
     function deleteUser(name) {
-        if (!confirm(`Deseja realmente apagar o perfil de "${name}"?`)) return;
-        db.ref('users/' + name).remove().then(() => {
-            let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
-            mp = mp.filter(n => n !== name);
-            localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
-        });
+        acaoPendente = () => {
+            db.ref('users/' + name).remove().then(() => {
+                let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
+                mp = mp.filter(n => n !== name);
+                localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
+            });
+        };
+        document.getElementById('confirm-text').innerText = `DESEJA REALMENTE APAGAR O PERFIL DE "${name.toUpperCase()}"?`;
+        document.getElementById('confirm-overlay').style.display = 'block';
+        document.getElementById('custom-confirm').style.display = 'block';
     }
 
     function calculatePercentByChapters(progress) { if(!progress) return 0; let lidos = 0; Object.keys(progress).forEach(key => { if(key.includes('_c') && progress[key] === true) lidos++; }); return Math.round((lidos / TOTAL_BIBLE_CHAPTERS) * 100); }
@@ -399,6 +433,7 @@
         });
     }
 
+    // --- LÓGICA DE JANELAS CUSTOMIZADAS (FÍSICA, APAGAR, EDITAR) ---
     function confirmarLeituraFisica(diaCapsStr, dataRotulo) {
         const caps = JSON.parse(diaCapsStr);
         const todosLidos = caps.every(ch => {
@@ -406,8 +441,9 @@
             return btn && btn.classList.contains('lido');
         });
         const acao = todosLidos ? "DESMARCAR" : "MARCAR";
-        dadosTemporariosFisica = { caps, estado: !todosLidos };
-        document.getElementById('confirm-text').innerText = `${acao} ${dataRotulo} COMO FINALIZADO?`;
+        const estado = !todosLidos;
+        acaoPendente = () => executarAcaoMassa(caps, estado);
+        document.getElementById('confirm-text').innerText = `${acao} LEITURA DE ${dataRotulo} EM BÍBLIA FÍSICA?`;
         document.getElementById('confirm-overlay').style.display = 'block';
         document.getElementById('custom-confirm').style.display = 'block';
     }
@@ -415,10 +451,10 @@
     function fecharConfirm(resposta) {
         document.getElementById('confirm-overlay').style.display = 'none';
         document.getElementById('custom-confirm').style.display = 'none';
-        if (resposta && dadosTemporariosFisica) {
-            executarAcaoMassa(dadosTemporariosFisica.caps, dadosTemporariosFisica.estado);
+        if (resposta && acaoPendente) {
+            acaoPendente();
         }
-        dadosTemporariosFisica = null;
+        acaoPendente = null;
     }
 
     function executarAcaoMassa(caps, estado) {
