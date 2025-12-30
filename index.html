@@ -19,6 +19,7 @@
         :root {
             --cinza-claro: #d1d8e0; --verde-whatsapp: #25D366; --verde-escuro: #128C7E; --cinza-texto: #7f8c8d; 
             --amarelo: #f1c40f; --verde-sucesso: #2ecc71; --bg: #f4f7f6; --azul-link: #3498db; --vermelho: #e74c3c;
+            --cor-ferrugem: #d4ac0d; /* Cor de destaque para o trimestre atual */
             --font-size-leitura: 1.2rem; --bg-leitor: #ffffff; --texto-leitor: #2d3436;
         }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
@@ -68,19 +69,26 @@
         .mini-bar-bg { width: 100%; background: #eee; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; }
         .mini-bar-fill { height: 100%; background: var(--verde-sucesso); transition: 0.5s; width: 0%; }
         
-        /* ESTILO DOS BLOCOS (TRIMESTRES) ATUALIZADO */
-        .trimestre-box { background: #e9ecef; border-radius: 15px; margin-bottom: 20px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #dee2e6; transition: 0.3s ease; }
-        .trimestre-box.atual { background: white; border-left: 6px solid var(--amarelo); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        /* BLOCOS DE TRIMESTRE - ESTILIZAÇÃO CONFORME SOLICITADO */
+        .trimestre-box { background: #cbd5e0; /* Cinza mais escuro (Letra C) */ border-radius: 15px; margin-bottom: 20px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #a0aec0; transition: 0.3s ease; }
         
+        /* Cabeçalho do Trimestre */
         .tri-header { width: 100%; padding: 18px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; background: transparent; }
-        .trimestre-box.atual .tri-title-row { font-weight: 900; color: #1a1a1a; }
+        
+        /* Letra B: Trimestre Atual com destaque ferrugem */
+        .trimestre-box.atual .tri-header { background: var(--cor-ferrugem); color: #fff; }
+        .trimestre-box.atual .tri-title-row { font-weight: 900; color: #fff; }
+
+        /* Trimestre Concluído (100%) */
+        .trimestre-box.concluido .tri-header { background: #d0e7ff; color: #2c3e50; }
+        .trimestre-box.concluido .tri-title-row { color: #2c3e50; }
         
         .tri-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: bold; color: #495057; font-size: 0.9rem; }
         
+        /* Fundo Branco na Lista Expandida */
         .reading-list { display: none; padding: 5px; max-height: 400px; overflow-y: auto; background: #fff; }
-        .row { display: flex; align-items: center; padding: 14px; border-bottom: 1px solid #f9f9f9; }
         
-        /* QUADRADINHO DE CHECK RESTAURADO */
+        .row { display: flex; align-items: center; padding: 14px; border-bottom: 1px solid #f9f9f9; }
         .check-btn { width: 26px; height: 26px; border: 2px solid #ddd; border-radius: 8px; margin-right: 15px; cursor: pointer; flex-shrink: 0; display:flex; align-items:center; justify-content:center; }
         .check-btn.done { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
         .check-btn.done::after { content: '✓'; font-weight: bold; }
@@ -94,6 +102,19 @@
         .btn-entrar { background: var(--azul-link); }
         .btn-editar { background: var(--amarelo); color: #333; }
         .btn-deletar { background: var(--vermelho); }
+
+        /* Letra A: Retângulo arredondado para o progresso geral */
+        #progress-main { 
+            display: none; 
+            width: 100%; 
+            max-width: 500px; 
+            text-align: center; 
+            margin-bottom: 20px; 
+            padding: 15px; 
+            box-sizing: border-box; 
+            background: #e2e8f0; /* Cor suave para destaque */
+            border-radius: 20px; 
+        }
     </style>
 </head>
 
@@ -163,7 +184,7 @@
     </div>
 </div>
 
-<div id="progress-main" style="display:none; width:100%; max-width:500px; text-align:center; margin-bottom:20px; padding: 0 15px; box-sizing: border-box;">
+<div id="progress-main">
     <div id="main-percent" style="font-size: 12px; font-weight: bold; color: var(--cinza-texto); margin-bottom: 5px;">0% Concluído Geral</div>
     <div class="mini-bar-bg" style="height:14px;"><div id="main-bar" class="mini-bar-fill" style="width:0%; background: var(--azul-link);"></div></div>
 </div>
@@ -266,14 +287,27 @@
                 const readingsByDay = distributeChaptersBalanced(t.booksIdx, days.length);
                 const isCur = tIdx === getCurrentTriIdx();
                 
-                const box = document.createElement('div'); box.className = `trimestre-box ${isCur ? 'atual' : ''}`;
+                // Letra B: Lógica de cores baseada no progresso e índice atual
+                let triLidos = 0;
+                let triTotal = 0;
+                for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) {
+                    triTotal += BIBLE_BOOKS[bIdx].c;
+                    const bookName = BIBLE_BOOKS[bIdx].n;
+                    for(let c = 1; c <= BIBLE_BOOKS[bIdx].c; c++) { if(prog[`${bookName}_c${c}`] === true) triLidos++; }
+                }
+                const pTri = Math.round((triLidos / triTotal) * 100);
+                const isConcluido = pTri === 100;
+
+                const box = document.createElement('div'); 
+                box.className = `trimestre-box ${isCur && !isConcluido ? 'atual' : ''} ${isConcluido ? 'concluido' : ''}`;
+                
                 box.innerHTML = `
                     <button class="tri-header" onclick="toggleTri(${tIdx})">
                         <div class="tri-title-row">
                             <span>${t.tri}</span>
-                            <span id="tri-perc-label-${tIdx}">0%</span>
+                            <span id="tri-perc-label-${tIdx}">${pTri}%</span>
                         </div>
-                        <div class="mini-bar-bg"><div id="tri-bar-${tIdx}" class="mini-bar-fill"></div></div>
+                        <div class="mini-bar-bg"><div id="tri-bar-${tIdx}" class="mini-bar-fill" style="width:${pTri}%"></div></div>
                     </button>
                     <div class="reading-list" id="list-${tIdx}" style="${isCur?'display:block' : ''}">
                         ${days.map((d, dIdx) => {
@@ -392,5 +426,6 @@
 </script>
 </body>
 </html>
+
 
 
