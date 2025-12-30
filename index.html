@@ -432,23 +432,34 @@ btns += `<span class="btn-fisica" title="Marcar leitura física" onclick="confir
 
 function confirmarLeituraFisica(diaCapsStr, dataRotulo) {
     const caps = JSON.parse(diaCapsStr);
-    if (confirm(`FIZ A LEITURA DE ${dataRotulo} EM BÍBLIA FÍSICA?`)) {
-        marcarLeituraFisicaMassa(caps);
+    const prog = JSON.parse(localStorage.getItem('temp_prog_check')) || {}; 
+    
+    // Verifica se todos os capítulos do dia já estão marcados como lidos
+    const todosLidos = caps.every(ch => {
+        const key = `${ch.b}_c${ch.c}`;
+        // Buscamos o estado atual no banco ou interface (usaremos uma lógica simples de check)
+        return document.querySelector(`[onclick*="'${ch.b}', ${ch.c}"]`).classList.contains('lido');
+    });
+
+    const acao = todosLidos ? "DESMARCAR" : "MARCAR";
+    const novoEstado = !todosLidos;
+
+    if (confirm(`${acao} LEITURA DE ${dataRotulo} EM BÍBLIA FÍSICA?`)) {
+        executarAcaoMassa(caps, novoEstado);
     }
 }
 
-function marcarLeituraFisicaMassa(caps) {
+function executarAcaoMassa(caps, estado) {
     const updates = {};
     caps.forEach(ch => {
         const key = `${ch.b}_c${ch.c}`;
-        updates[key] = true;
+        updates[key] = estado; // Define como true (lido) ou null/false (não lido)
     });
 
-    // Envia todas as marcações de uma vez para o Firebase
     db.ref(`users/${currentUser}/progress`).update(updates).then(() => {
-        renderPlan(); // Atualiza a interface (checks e barras)
+        renderPlan(); 
     }).catch(err => {
-        alert("Erro ao salvar progresso: " + err.message);
+        alert("Erro ao processar: " + err.message);
     });
 }
 
@@ -458,6 +469,7 @@ window.addEventListener("load", () => { setTimeout(() => { document.getElementBy
 </script>
 </body>
 </html>
+
 
 
 
