@@ -321,7 +321,7 @@
         db.ref('users/'+currentUser+'/progress').once('value', snap => {
             const prog = snap.val() || {}; let curYear = 0;
             CONFIG.forEach((t, tIdx) => {
-                if (t.ano !== curYear) { curYear = t.ano; const y = document.createElement('div'); y.style.cssText="font-weight:bold; margin:40px 5px;"; y.innerText=`📅 ANO ${curYear}`; area.appendChild(y); }
+                if (t.ano !== curYear) { curYear = t.ano; const y = document.createElement('div'); y.style.cssText="font-weight:bold; margin:30px 5px;"; y.innerText=`📅 ANO ${curYear}`; area.appendChild(y); }
                 const days = getWeekdays(t.start, t.end); const readingsByDay = distributeChaptersBalanced(t.booksIdx, days.length);
                 const isCur = tIdx === (function(){ const today = new Date(); for(let i=0; i<CONFIG.length; i++) if(today >= new Date(CONFIG[i].start) && today <= new Date(CONFIG[i].end)) return i; return 0; })();
                 let triLidos = 0; let triTotal = 0;
@@ -473,6 +473,7 @@
 </script>
 </body>
 </html>
+
 
 
 
