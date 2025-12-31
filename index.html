@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PLANO DE LEITURA DA BÍBLIA [26-27]</title>
+    <title>PLANO BÍBLICO 26-27</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Plano Bíblico 26 AAAA 27">
+    <meta name="apple-mobile-web-app-title" content="Plano Bíblico 26–27">
     <link rel="apple-touch-icon" href="assets/icone.png">
     <link rel="icon" type="image/png" href="assets/icone.png">
     <link rel="manifest" href="manifest.json">
@@ -159,37 +159,6 @@
     margin-bottom: 20px;
     text-align: left;
 }
-
-         /* ADICIONADO: Estilos para o Splash Screen */
-        #splash-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-            background-color: #ffffff; /* Ajuste a cor de fundo se necessário */
-        }
-
-        #splash-screen img {
-            width: 120px; /* Tamanho da sua logo */
-            height: auto;
-            margin-bottom: 15px;
-        }
-
-        #splash-screen h1 {
-            font-size: 1.4rem;        /* Tamanho reduzido para caber na linha */
-            white-space: nowrap;      /* Força a ficar em uma única linha */
-            letter-spacing: -0.5px;   /* Deixa as letras levemente mais juntas */
-            margin: 0;
-            color: #333;              /* Cor do título */
-        }
-
-        #splash-screen p {
-            font-size: 1.1rem;
-            margin-top: 5px;
-            color: #666;
-        }   
     
     </style>
 </head>
@@ -198,7 +167,7 @@
 
 <div id="splash-screen">
     <img src="assets/icone.png" alt="Logo">
-    <h1>Plano Bienal de Leitura Da Bíblia</h1>
+    <h1>Plano Bienal de Leitura</h1>
     <p>2026 • 2027</p>
 </div>
 
@@ -287,7 +256,7 @@
 
 <div class="header-branding" id="inner-branding" style="display:none; margin-top:10px; text-align: center;">
     <img src="assets/icone.png" style="width:85px; border-radius: 20px; margin-bottom: 10px;">
-    <h2 class="main-title"> BIENAL 2026-2027</h2>
+    <h2 class="main-title">PLANO BIENAL 2026-2027</h2>
 </div>
 
 <div class="header" id="header-main" style="display:none;">
@@ -309,7 +278,7 @@
 </footer>
 
 <script>
-    const firebaseConfig = { apiKey: "AIzaSyAefANpZLXBLstwIRoz2Y1o_uBHmDfgFxM", databaseURL: "https://-biblico-familiar-default-rtdb.firebaseio.com/", projectId: "-biblico-familiar" };
+    const firebaseConfig = { apiKey: "AIzaSyAefANpZLXBLstwIRoz2Y1o_uBHmDfgFxM", databaseURL: "https://plano-biblico-familiar-default-rtdb.firebaseio.com/", projectId: "plano-biblico-familiar" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     let currentUser = "";
@@ -645,7 +614,7 @@ function fecharComparacao() {
     document.getElementById('confirm-overlay').style.display = 'none';
     document.getElementById('compare-list').innerHTML = ""; // Limpa para a próxima busca
 }
-    window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 500); });
+    window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2500); });
 
 // Se clicar no fundo escuro, fecha qualquer janela aberta
 document.getElementById('confirm-overlay').onclick = function() {
@@ -674,6 +643,47 @@ function fecharAjudaLeitor() {
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
