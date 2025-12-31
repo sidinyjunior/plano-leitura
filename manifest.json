@@ -1,5 +1,5 @@
 {
-  "name": " ",
+  "name": "Plano Bienal de Leitura da Bíblia",
   "short_name": "Plano Bíblico [26 e 27]",
   "start_url": ".",
   "display": "standalone",
@@ -11,13 +11,13 @@
       "src": "assets/icone_tela.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "assets/icone_abertura.png",
-      "sizes": "512x910",
+      "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
