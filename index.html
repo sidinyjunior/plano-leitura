@@ -479,15 +479,36 @@ function renderPlan() {
         } catch(e) { console.error("Erro técnico:", e); alert("Erro ao carregar o texto."); }
     }
 
-    function atualizarBotoesNavegacao() {
-        const footer = document.getElementById('reader-footer-ctrl'); footer.innerHTML = "";
-        const idxAtual = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
-        const isPrimeiro = idxAtual === 0; const isUltimo = idxAtual === leitorContexto.diaCaps.length - 1;
-        if (!isPrimeiro) footer.appendChild(criarBotaoLeitor("Voltar", "#eee", "#333", () => navegarNoDia(-1), true));
-        footer.appendChild(criarBotaoLeitor(isUltimo ? "Concluir" : "Concluir e Sair", "var(--verde-sucesso)", "white", () => concluirEFechar(), false));
-        if (!isUltimo) footer.appendChild(criarBotaoLeitor("Avançar", "var(--azul-link)", "white", () => navegarNoDia(1), true));
+   function atualizarBotoesNavegacao() {
+    const footer = document.getElementById('reader-footer-ctrl'); 
+    footer.innerHTML = "";
+    
+    const idxAtual = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
+    const isPrimeiro = idxAtual === 0; 
+    const isUltimo = idxAtual === leitorContexto.diaCaps.length - 1;
+
+    // 1. Botão VOLTAR (Seta)
+    if (!isPrimeiro) {
+        footer.appendChild(criarBotaoLeitor("❮", "#eee", "#333", () => navegarNoDia(-1), true));
+    } else {
+        // Espaçador para o botão verde não "dançar" na tela
+        const spacer = document.createElement("div"); spacer.style.flex = "0.8";
+        footer.appendChild(spacer);
     }
 
+    // 2. Botão CENTRAL (Com os novos nomes que você pediu)
+    const labelVerde = isUltimo ? "LEITURA DO DIA CONCLUÍDA" : "CAPÍTULO CONCLUÍDO E SAIR";
+    footer.appendChild(criarBotaoLeitor(labelVerde, "var(--verde-sucesso)", "white", () => concluirEFechar(), false));
+
+    // 3. Botão AVANÇAR (Seta)
+    if (!isUltimo) {
+        footer.appendChild(criarBotaoLeitor("❯", "var(--azul-link)", "white", () => navegarNoDia(1), true));
+    } else {
+        // Espaçador para manter o equilíbrio visual
+        const spacer = document.createElement("div"); spacer.style.flex = "0.8";
+        footer.appendChild(spacer);
+    }
+}
     function criarBotaoLeitor(label, bg, color, acao, isSide) {
         const btn = document.createElement("button"); btn.className = `btn-nav-leitor ${isSide ? 'btn-side' : 'btn-expand'}`;
         btn.style.background = bg; btn.style.color = color; btn.innerText = label; btn.onclick = acao; return btn;
@@ -644,6 +665,7 @@ function fecharAjudaLeitor() {
 </script>
 </body>
 </html>
+
 
 
 
