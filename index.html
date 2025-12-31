@@ -419,6 +419,15 @@ function renderPlan() {
                         }).join('')}
                     </div>`; area.appendChild(box);
             }); 
+
+// NOVO: Verifica se existia um trimestre aberto e reabre ele
+        if (ultimoTrimestreAberto !== null) {
+            const elParaReabrir = document.getElementById(`list-${ultimoTrimestreAberto}`);
+            if (elParaReabrir) {
+                elParaReabrir.style.display = "block";
+            }
+        }
+   
             updateProgress();
         });
     }
@@ -499,7 +508,23 @@ function renderPlan() {
     function trocarVersao(v) { leitorContexto.versao = v; carregarTextoBiblico(); }
     function fecharLeitor() { document.getElementById('reader-overlay').style.display = 'none'; }
     function registerUser() { const n = document.getElementById('newName').value.trim(); if(!n) return; let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); if(!mp.includes(n)) mp.push(n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); db.ref('users/'+n).update({name:n}); loginUser(n); }
-    function toggleTri(i) { const el = document.getElementById(`list-${i}`); const isOpen = el.style.display === "block"; document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none'); el.style.display = isOpen ? "none" : "block"; }
+    let ultimoTrimestreAberto = null; // Crie esta variável logo acima da função
+
+function toggleTri(i) {
+    const el = document.getElementById(`list-${i}`);
+    const isOpen = el.style.display === "block";
+    
+    // Fecha todos os outros primeiro
+    document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none');
+    
+    if (isOpen) {
+        el.style.display = "none";
+        ultimoTrimestreAberto = null; // Se fechou manualmente, limpa a memória
+    } else {
+        el.style.display = "block";
+        ultimoTrimestreAberto = i; // Salva qual trimestre está aberto agora
+    }
+}
     
     function updateProgress() {
         db.ref('users/'+currentUser+'/progress').once('value', snap => {
@@ -618,6 +643,7 @@ function fecharAjudaLeitor() {
 </script>
 </body>
 </html>
+
 
 
 
