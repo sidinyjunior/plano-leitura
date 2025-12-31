@@ -497,7 +497,7 @@ function renderPlan() {
     }
 
     // 2. Botão CENTRAL (Com os novos nomes que você pediu)
-    const labelVerde = isUltimo ? "LEITURA DO DIA CONCLUÍDA" : "CAPÍTULO CONCLUÍDO E SAIR";
+    const labelVerde = isUltimo ? "LEITURA DO DIA CONCLUÍDA" : "CAPÍTULO CONCLUÍDO | SAIR";
     footer.appendChild(criarBotaoLeitor(labelVerde, "var(--verde-sucesso)", "white", () => concluirEFechar(), false));
 
     // 3. Botão AVANÇAR (Seta)
@@ -572,7 +572,7 @@ function toggleTri(i) {
         const acao = todosLidos ? "DESMARCAR" : "MARCAR";
         const estado = !todosLidos;
         acaoPendente = () => executarAcaoMassa(caps, estado);
-        document.getElementById('confirm-text').innerText = `${acao} LEITURA DE ${dataRotulo} EM BÍBLIA FÍSICA?`;
+        document.getElementById('confirm-text').innerText = `${acao} ${dataRotulo} COMO FINALIZADO?`;
         document.getElementById('confirm-overlay').style.display = 'block';
         document.getElementById('custom-confirm').style.display = 'block';
     }
@@ -665,6 +665,7 @@ function fecharAjudaLeitor() {
 </script>
 </body>
 </html>
+
 
 
 
