@@ -137,6 +137,28 @@
 .compare-item { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 .compare-label { font-weight: bold; color: var(--verde-escuro); font-size: 0.8rem; text-transform: uppercase; display: block; margin-bottom: 4px; }
 .compare-text { font-size: 1rem; color: #333; line-height: 1.4; }
+
+        #ajuda-leitor-modal {
+    display: none;
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    z-index: 12000;
+    width: 85%;
+    max-width: 350px;
+    text-align: center;
+}
+.ajuda-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    text-align: left;
+}
     
     </style>
 </head>
@@ -173,8 +195,20 @@
         <strong id="compare-ref" style="color: var(--verde-escuro);">João 3:16</strong>
         <button onclick="fecharComparacao()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color: #999;">✕</button>
     </div>
-    <div id="compare-list">
-        </div>
+    <div id="compare-list"></div>
+</div>
+
+<div id="ajuda-leitor-modal">
+    <h3 style="margin-top:0; color:var(--verde-escuro); font-size: 1.2rem;">Dicas do Leitor</h3>
+    <div class="ajuda-item">
+        <span style="font-size: 1.5rem;">💡</span>
+        <span style="font-size: 0.9rem; color: #444;"><b>Comparar Versões:</b> Toque em qualquer versículo para ler em NVI, ACF e KJA.</span>
+    </div>
+    <div class="ajuda-item">
+        <span style="font-size: 1.5rem;">⚙️</span>
+        <span style="font-size: 0.9rem; color: #444;"><b>Personalizar:</b> Use os botões no topo para mudar o tamanho da letra e as cores do fundo.</span>
+    </div>
+    <button class="btn-c btn-c-confirm" onclick="fecharAjudaLeitor()" style="width:100%; margin-top: 10px;">ENTENDI</button>
 </div>
 
 <div id="install-banner">
@@ -188,7 +222,11 @@
 <div id="reader-overlay">
     <div class="reader-header" style="padding: 10px 15px; background: #1a4731; color: white; display: flex; justify-content: space-between; align-items: center;">
         <span id="reader-title" style="font-weight:bold;">Gênesis 1</span>
-        <button onclick="fecharLeitor()" style="background:none; border:none; color:white; font-size:1.5rem;">✕</button>
+        
+        <div style="display: flex; gap: 18px; align-items: center;">
+            <button onclick="abrirAjudaLeitor()" style="background:none; border:none; color:white; font-size:1.4rem; cursor:pointer; font-weight:bold; padding: 5px;">?</button>
+            <button onclick="fecharLeitor()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer; padding: 5px;">✕</button>
+        </div>
     </div>
     <div class="reader-toolbar" style="display: flex; background: #245e41; padding: 8px 15px; gap: 10px; align-items: center; overflow-x: auto;">
         <select id="select-versao" onchange="trocarVersao(this.value)" style="background:var(--verde-escuro); color:white; border:none; border-radius:5px; padding:4px;">
@@ -534,10 +572,10 @@ function renderPlan() {
                 const capítulos = lData.chapters || lData.capitulos;
                 const texto = capítulos[cap - 1][indiceVerso];
                 htmlResult += `
-                    <div class="compare-item">
-                        <span class="compare-label">${v.toUpperCase()}</span>
-                        <p class="compare-text">${texto}</p>
-                    </div>`;
+    <div class="compare-item">
+        <span class="compare-label">${v.toUpperCase()}</span>
+        <p class="compare-text" style="text-align: left; margin: 5px 0 0 0;">${texto}</p>
+    </div>`;
             }
         } catch (e) {
             console.error("Erro na versão " + v, e);
@@ -549,19 +587,33 @@ function renderPlan() {
 function fecharComparacao() {
     document.getElementById('compare-modal').style.display = 'none';
     document.getElementById('confirm-overlay').style.display = 'none';
+    document.getElementById('compare-list').innerHTML = ""; // Limpa para a próxima busca
 }
     window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2500); });
 
-    // Se clicar no fundo escuro, fecha qualquer janela aberta (Confirmar, Editar ou Comparar)
+// Se clicar no fundo escuro, fecha qualquer janela aberta
 document.getElementById('confirm-overlay').onclick = function() {
     document.getElementById('confirm-overlay').style.display = 'none';
     document.getElementById('custom-confirm').style.display = 'none';
     document.getElementById('edit-confirm').style.display = 'none';
+    // Adicione a linha abaixo para não travar na ajuda:
+    document.getElementById('ajuda-leitor-modal').style.display = 'none'; 
+    
     if(document.getElementById('compare-modal')) {
         document.getElementById('compare-modal').style.display = 'none';
     }
     acaoPendente = null;
 };
+
+function abrirAjudaLeitor() {
+    document.getElementById('confirm-overlay').style.display = 'block';
+    document.getElementById('ajuda-leitor-modal').style.display = 'block';
+}
+
+function fecharAjudaLeitor() {
+    document.getElementById('ajuda-leitor-modal').style.display = 'none';
+    document.getElementById('confirm-overlay').style.display = 'none';
+}
     
 </script>
 </body>
