@@ -551,9 +551,22 @@ function fecharComparacao() {
     document.getElementById('confirm-overlay').style.display = 'none';
 }
     window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2500); });
+
+    // Se clicar no fundo escuro, fecha qualquer janela aberta (Confirmar, Editar ou Comparar)
+document.getElementById('confirm-overlay').onclick = function() {
+    document.getElementById('confirm-overlay').style.display = 'none';
+    document.getElementById('custom-confirm').style.display = 'none';
+    document.getElementById('edit-confirm').style.display = 'none';
+    if(document.getElementById('compare-modal')) {
+        document.getElementById('compare-modal').style.display = 'none';
+    }
+    acaoPendente = null;
+};
+    
 </script>
 </body>
 </html>
+
 
 
 
