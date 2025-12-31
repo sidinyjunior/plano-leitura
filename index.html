@@ -24,13 +24,22 @@
         }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         
-        /* BANNER DE INSTALAÇÃO PWA - CORRIGIDO */
-        #install-banner {
-            display: none; width: 92%; max-width: 480px; background: #fff5f5; color: #2d3436;
-            padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #fed7d7;
-            flex-direction: column; align-items: center; gap: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); z-index: 10000; box-sizing: border-box;
-        }
+       /* Banner de Instalação Padronizado como Modal */
+#install-banner {
+    display: none; 
+    position: fixed; 
+    top: 50%; left: 50%; 
+    transform: translate(-50%, -50%);
+    width: 85%; max-width: 400px; 
+    background: white; 
+    padding: 25px; 
+    border-radius: 20px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4); 
+    z-index: 15000; /* Fica acima de tudo */
+    text-align: center;
+    flex-direction: column;
+    gap: 20px;
+}
         .banner-buttons { display: flex; gap: 10px; width: 100%; }
         .btn-pwa { flex: 1; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.75rem; }
         #btn-install-now { background: var(--verde-whatsapp); color: white; }
@@ -212,13 +221,20 @@
     <button class="btn-c btn-c-confirm" onclick="fecharAjudaLeitor()" style="width:100%; margin-top: 10px;">ENTENDI</button>
 </div>
 
-<div id="install-banner">
-    <span style="font-size: 0.9rem; font-weight: bold; color: #c53030;">Deseja instalar o Aplicativo?</span>
-    <div class="banner-buttons">
-        <button id="btn-not-now" class="btn-pwa">AGORA NÃO</button>
-        <button id="btn-install-now" class="btn-pwa">INSTALAR</button>
+    <div id="install-banner">
+    <img src="assets/icone.png" style="width: 80px; border-radius: 15px; margin: 0 auto;">
+    <div style="font-weight: bold; color: #2d3436; font-size: 1.1rem; line-height: 1.4;">
+        Instalar Plano Bíblico [26 e 27]?
+        <p style="font-weight: normal; font-size: 0.85rem; color: #666; margin-top: 5px;">
+            Tenha acesso rápido e leitura offline direto na sua tela inicial.
+        </p>
+    </div>
+    <div class="confirm-buttons">
+        <button id="btn-not-now" class="btn-c btn-c-cancel">AGORA NÃO</button>
+        <button id="btn-install-now" class="btn-c btn-c-confirm">INSTALAR</button>
     </div>
 </div>
+
 
 <div id="reader-overlay">
     <div class="reader-header" style="padding: 10px 15px; background: #1a4731; color: white; display: flex; justify-content: space-between; align-items: center;">
@@ -297,21 +313,19 @@
         });
     }
 
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById('install-banner').style.display = 'flex';
-    });
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Mostra o fundo escuro e o banner centralizado
+    document.getElementById('confirm-overlay').style.display = 'block';
+    document.getElementById('install-banner').style.display = 'flex';
+});
 
-    document.getElementById('btn-install-now').addEventListener('click', () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then(() => {
-                document.getElementById('install-banner').style.display = 'none';
-                deferredPrompt = null;
-            });
-        }
-    });
+// Ajuste no botão "Agora não" para esconder o fundo também
+document.getElementById('btn-not-now').addEventListener('click', () => {
+    document.getElementById('install-banner').style.display = 'none';
+    document.getElementById('confirm-overlay').style.display = 'none';
+});
 
     document.getElementById('btn-not-now').addEventListener('click', () => {
         document.getElementById('install-banner').style.display = 'none';
@@ -665,6 +679,7 @@ function fecharAjudaLeitor() {
 </script>
 </body>
 </html>
+
 
 
 
