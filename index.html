@@ -67,27 +67,8 @@
         .check-btn { width: 26px; height: 26px; border: 2px solid #ddd; border-radius: 8px; margin-right: 12px; cursor: pointer; flex-shrink: 0; display:flex; align-items:center; justify-content:center; }
         .check-btn.done { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
         .check-btn.done::after { content: '✓'; font-weight: bold; }
-       .info { 
-            display: flex; 
-            align-items: center; 
-            flex-wrap: nowrap; 
-            gap: 8px; 
-            flex: 1; 
-            overflow-x: auto; 
-            -ms-overflow-style: none; 
-            scrollbar-width: none; 
-        }
-        .info::-webkit-scrollbar {
-            display: none;
-        }
-        .info-text-group { 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            margin-right: 4px; 
-            min-width: 110px; 
-            flex-shrink: 0; 
-        }
+        .info { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; flex: 1; }
+        .info-text-group { display: flex; flex-direction: column; margin-right: 8px; min-width: 90px; }
         .info-date { font-size: 10px; color: #95a5a6; text-transform: uppercase; font-weight: bold; }
         .info-book { font-size: 14px; font-weight: 600; color: #2c3e50; white-space: nowrap; }
         
@@ -139,15 +120,6 @@
         
         .access-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; z-index: 2000; padding: 20px; overflow-y: auto; }
         .access-box { background: white; padding: 30px 25px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 450px; }
-
-/* Força o alinhamento dos botões (capítulos e bíblia) com o texto da esquerda */
-.caps-container {
-    display: flex;
-    align-items: center;    /* Isso alinha os quadradinhos no meio da linha do texto */
-    flex-wrap: wrap;        /* Permite que os botões pulem de linha se a tela for muito estreita */
-    gap: 2px;               /* Espaçamento mínimo entre os quadradinhos */
-}
-
     </style>
 </head>
 
@@ -507,6 +479,8 @@ function renderPlan() {
 </script>
 </body>
 </html>
+
+
 
 
 
