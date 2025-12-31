@@ -394,7 +394,7 @@ function renderPlan() {
             if (!versos) { alert("Capítulo não encontrado!"); return; }
             document.getElementById('reader-title').innerText = `${leitorContexto.livro} ${leitorContexto.capAtual}`;
             const cont = document.getElementById('reader-text');
-            cont.innerHTML = versos.map((v, i) => `<div class="verse-row"><span class="verse-num">${i+1}</span><span>${v}</span></div>`).join('');
+            cont.innerHTML = versos.map((v, i) => `iv class="verse-row" onclick="compararVersiculo(${i})"><span class="verse-num">${i+1}</span><span>${v}</span></div>`).join('');
             cont.scrollTop = 0; atualizarBotoesNavegacao();
         } catch(e) { console.error("Erro técnico:", e); alert("Erro ao carregar o texto."); }
     }
@@ -479,6 +479,7 @@ function renderPlan() {
 </script>
 </body>
 </html>
+
 
 
 
