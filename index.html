@@ -497,7 +497,7 @@ function renderPlan() {
     }
 
     // 2. Botão CENTRAL (Com os novos nomes que você pediu)
-    const labelVerde = isUltimo ? "LEITURA DO DIA CONCLUÍDA" : "CAPÍTULO CONCLUÍDO | SAIR";
+    const labelVerde = isUltimo ? "LEITURA DO DIA CONCLUÍDA" : "CAPÍTULO LIDO E CONCLUÍDO";
     footer.appendChild(criarBotaoLeitor(labelVerde, "var(--verde-sucesso)", "white", () => concluirEFechar(), false));
 
     // 3. Botão AVANÇAR (Seta)
@@ -665,6 +665,7 @@ function fecharAjudaLeitor() {
 </script>
 </body>
 </html>
+
 
 
 
