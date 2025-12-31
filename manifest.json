@@ -8,13 +8,13 @@
   
   "icons": [
     {
-      "src": "assets/icone.png",
+      "src": "assets/icone_1.png",
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "assets/icone.png",
+      "src": "assets/icone_1.png",
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any maskable"
