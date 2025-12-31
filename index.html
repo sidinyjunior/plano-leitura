@@ -120,6 +120,24 @@
         
         .access-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; z-index: 2000; padding: 20px; overflow-y: auto; }
         .access-box { background: white; padding: 30px 25px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 450px; }
+    
+    /* Janela de Comparação de Versículos */
+#compare-modal {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    z-index: 10000;
+    padding: 20px;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -5px 25px rgba(0,0,0,0.2);
+    max-height: 60vh;
+    overflow-y: auto;
+}
+.compare-item { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+.compare-label { font-weight: bold; color: var(--verde-escuro); font-size: 0.8rem; text-transform: uppercase; display: block; margin-bottom: 4px; }
+.compare-text { font-size: 1rem; color: #333; line-height: 1.4; }
+    
     </style>
 </head>
 
@@ -148,6 +166,15 @@
         <button class="btn-c btn-c-cancel" onclick="fecharEdit(false)">CANCELAR</button>
         <button class="btn-c btn-c-confirm" onclick="fecharEdit(true)">SALVAR</button>
     </div>
+</div>
+
+    <div id="compare-modal">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+        <strong id="compare-ref" style="color: var(--verde-escuro);">João 3:16</strong>
+        <button onclick="fecharComparacao()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color: #999;">✕</button>
+    </div>
+    <div id="compare-list">
+        </div>
 </div>
 
 <div id="install-banner">
@@ -480,10 +507,54 @@ function renderPlan() {
         db.ref(`users/${currentUser}/progress`).update(updates).then(() => renderPlan());
     }
 
+
+    async function compararVersiculo(indiceVerso) {
+    const versoNum = indiceVerso + 1;
+    const livro = leitorContexto.livro;
+    const cap = leitorContexto.capAtual;
+    const versoes = ['acf', 'nvi', 'kja'];
+    
+    document.getElementById('compare-ref').innerText = `${livro} ${cap}:${versoNum}`;
+    const list = document.getElementById('compare-list');
+    list.innerHTML = "<p>Carregando comparativo...</p>";
+    document.getElementById('confirm-overlay').style.display = 'block';
+    document.getElementById('compare-modal').style.display = 'block';
+
+    let htmlResult = "";
+
+    for (let v of versoes) {
+        try {
+            const res = await fetch(`${v}.json`);
+            const data = await res.json();
+            let listaLivros = Array.isArray(data) ? data : data.livros;
+            
+            // Busca o livro (usando a mesma lógica de mapa que você já tem no carregarTextoBiblico)
+            const lData = listaLivros.find(l => (l.nome === livro) || (l.name === livro));
+            if (lData) {
+                const capítulos = lData.chapters || lData.capitulos;
+                const texto = capítulos[cap - 1][indiceVerso];
+                htmlResult += `
+                    <div class="compare-item">
+                        <span class="compare-label">${v.toUpperCase()}</span>
+                        <p class="compare-text">${texto}</p>
+                    </div>`;
+            }
+        } catch (e) {
+            console.error("Erro na versão " + v, e);
+        }
+    }
+    list.innerHTML = htmlResult;
+}
+
+function fecharComparacao() {
+    document.getElementById('compare-modal').style.display = 'none';
+    document.getElementById('confirm-overlay').style.display = 'none';
+}
     window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 2500); });
 </script>
 </body>
 </html>
+
 
 
 
