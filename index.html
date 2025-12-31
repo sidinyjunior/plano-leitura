@@ -24,7 +24,6 @@
         }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         
-        /* BANNER DE INSTALAÇÃO PWA - CORRIGIDO */
         #install-banner {
             display: none; width: 92%; max-width: 480px; background: #fff5f5; color: #2d3436;
             padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #fed7d7;
@@ -36,25 +35,21 @@
         #btn-install-now { background: var(--verde-whatsapp); color: white; }
         #btn-not-now { background: var(--azul-link); color: white; }
 
-        /* SPLASH SCREEN */
         #splash-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease; }
         #splash-screen img { width: 160px; max-width: 70%; border-radius: 28px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         #splash-screen.hide { opacity: 0; pointer-events: none; }
 
         .main-title { font-size: clamp(0.7rem, 3.8vw, 0.9rem); font-weight: 800; color: #2d3436; margin: 0 0 10px 0; text-transform: uppercase; white-space: nowrap; letter-spacing: -0.02em; }
         
-        /* CABEÇALHO */
         .header { width: 100%; max-width: 500px; background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; position: sticky; top: 10px; z-index: 1000; box-sizing: border-box; }
         .display-name { font-weight: bold; font-size: clamp(0.85rem, 4vw, 1.1rem); color: #2d3436; border-bottom: 2px solid var(--verde-whatsapp); padding: 5px 0; text-align: center; text-transform: capitalize; width: 100%; margin-bottom: 10px; }
         .btn-exit { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--verde-whatsapp); color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; text-transform: uppercase; }
         
-        /* PROGRESSO GERAL */
         #progress-main { display: none; width: 100%; max-width: 500px; text-align: center; margin-bottom: 20px; padding: 15px; box-sizing: border-box; background: #4F4F4F; border-radius: 20px; }
         #main-percent { font-size: 12px; font-weight: bold; color: white !important; margin-bottom: 5px; }
         .mini-bar-bg { width: 100%; background: rgba(255,255,255,0.3); height: 12px; border-radius: 6px; overflow: hidden; margin-top: 5px; }
         .mini-bar-fill { height: 100%; background: white; transition: 0.5s; width: 0%; }
 
-        /* BLOCOS DE TRIMESTRE */
         .trimestre-box { background: #cbd5e0; border-radius: 15px; margin-bottom: 20px; overflow: hidden; border: 1px solid #a0aec0; transition: 0.3s ease; }
         .tri-header { width: 100%; padding: 18px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; background: transparent; }
         .trimestre-box.atual .tri-header { background: var(--cor-ferrugem); color: #fff; }
@@ -62,7 +57,6 @@
         .tri-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: bold; color: #495057; font-size: 0.9rem; }
         .reading-list { display: none; padding: 5px; max-height: 400px; overflow-y: auto; background: #fff; }
 
-        /* LINHA DE LEITURA */
         .row { display: flex; align-items: center; padding: 12px 14px; border-bottom: 1px solid #f2f2f2; }
         .check-btn { width: 26px; height: 26px; border: 2px solid #ddd; border-radius: 8px; margin-right: 12px; cursor: pointer; flex-shrink: 0; display:flex; align-items:center; justify-content:center; }
         .check-btn.done { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
@@ -75,7 +69,6 @@
         .cap-btn { display: inline-block; width: 32px; height: 32px; line-height: 32px; text-align: center; background: #fff; border: 1px solid #ddd; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 0.85rem; font-weight: bold; color: var(--verde-escuro); }
         .cap-btn.lido { background: var(--verde-sucesso); color: white; border-color: var(--verde-sucesso); }
 
-        /* Botão de Leitura Física */
         .btn-fisica {
             display: inline-block; width: 32px; height: 32px; line-height: 32px; text-align: center;
             background: #fff; border: 2px solid #e67e22; border-radius: 8px; margin: 3px;
@@ -83,24 +76,23 @@
         }
         .btn-fisica:hover { background: #fef5e7; }
 
-        /* Janela de Confirmação Estilizada */
+        /* Janelas Customizadas Alinhadas */
         #confirm-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10500; }
         #custom-confirm, #edit-confirm {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            z-index: 11000; width: 85%; max-width: 400px; text-align: center;
+            background: white; padding: 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            z-index: 11000; width: 88%; max-width: 400px; text-align: center; box-sizing: border-box;
         }
-        .confirm-buttons { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-c { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .confirm-buttons { display: flex; gap: 12px; margin-top: 20px; }
+        .btn-c { flex: 1; padding: 14px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.85rem; }
         .btn-c-confirm { background: var(--verde-sucesso); color: white; }
-        .btn-c-cancel { background: #eee; color: #333; }
+        .btn-c-cancel { background: #f1f2f6; color: #2f3542; }
         
         #edit-input-name {
-            width: 100%; padding: 12px; border: 2px solid #edf2f7; border-radius: 10px; 
-            margin-top: 10px; box-sizing: border-box; text-align: center; font-size: 1rem;
+            width: 100%; padding: 14px; border: 2px solid #edf2f7; border-radius: 12px; 
+            margin-top: 15px; box-sizing: border-box; text-align: center; font-size: 1rem;
         }
 
-        /* BOTÕES DE USUÁRIO */
         .user-card { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 2px solid transparent; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .user-card.meu-perfil { border-color: var(--azul-link); background: #f0f7ff; }
         .actions-row { display: flex; gap: 5px; margin-top: 12px; }
@@ -109,7 +101,6 @@
         .btn-editar { background: var(--amarelo); color: #333; } 
         .btn-deletar { background: var(--vermelho); } 
 
-        /* LEITOR */
         #reader-overlay { position: fixed; inset: 0; background: var(--bg-leitor); z-index: 5000; display: none; flex-direction: column; color: var(--texto-leitor); transition: 0.3s; }
         .theme-sepia { --bg-leitor: #f4ecd8 !important; --texto-leitor: #5b4636 !important; }
         .theme-dark { --bg-leitor: #1a1a1a !important; --texto-leitor: #e0e0e0 !important; }
@@ -134,7 +125,7 @@
 <div id="confirm-overlay"></div>
 
 <div id="custom-confirm">
-    <p id="confirm-text" style="font-weight: bold; margin: 0; line-height: 1.4;"></p>
+    <p id="confirm-text" style="font-weight: bold; margin: 0; line-height: 1.4; color: #2d3436;"></p>
     <div class="confirm-buttons">
         <button class="btn-c btn-c-cancel" onclick="fecharConfirm(false)">NÃO</button>
         <button class="btn-c btn-c-confirm" onclick="fecharConfirm(true)">SIM</button>
@@ -142,8 +133,8 @@
 </div>
 
 <div id="edit-confirm">
-    <p style="font-weight: bold; margin: 0;">EDITAR NOME DO PERFIL</p>
-    <input type="text" id="edit-input-name" placeholder="Novo nome...">
+    <p style="font-weight: bold; margin: 0; color: #2d3436;">EDITAR NOME DO PERFIL</p>
+    <input type="text" id="edit-input-name" placeholder="Digite o novo nome...">
     <div class="confirm-buttons">
         <button class="btn-c btn-c-cancel" onclick="fecharEdit(false)">CANCELAR</button>
         <button class="btn-c btn-c-confirm" onclick="fecharEdit(true)">SALVAR</button>
@@ -206,9 +197,9 @@
 
 <div id="plan-container" style="width:100%; max-width:500px; display:none;"></div>
 
-<footer id="footer-developer" style="display:none; width: 100%; text-align: center; padding: 3px 0; margin-top: 2px;">
-    <p style="font-family: 'Courier New', Courier, monospace; font-style: italic; font-size: 0.7rem; color: #000; margin: 0;">
-          Criado e Desenvolvido por Sidiny Junior
+<footer id="footer-developer" style="display:none; width: 100%; text-align: center; padding: 10px 0; margin-top: 20px;">
+    <p style="font-family: 'Courier New', Courier, monospace; font-style: italic; font-size: 0.65rem; color: #000; opacity: 0.7; margin: 0;">
+        © 2025-2027 Sidiny Junior. Todos os direitos reservados.
     </p>
 </footer>
 
@@ -221,7 +212,6 @@
     let leitorContexto = { livro: "", capAtual: 0, tIdx: 0, dIdx: 0, versao: "acf", diaCaps: [] };
     let fontSizeAtual = 1.2;
     let deferredPrompt;
-    let dadosTemporariosFisica = null;
     let acaoPendente = null;
     let dadosEdicaoPendente = null;
 
@@ -269,7 +259,6 @@
         });
     }
 
-    // --- FUNÇÕES DE USUÁRIO ESTILIZADAS ---
     function editUser(oldName) {
         dadosEdicaoPendente = oldName;
         document.getElementById('edit-input-name').value = oldName;
@@ -311,12 +300,12 @@
     }
 
     function calculatePercentByChapters(progress) { if(!progress) return 0; let lidos = 0; Object.keys(progress).forEach(key => { if(key.includes('_c') && progress[key] === true) lidos++; }); return Math.round((lidos / TOTAL_BIBLE_CHAPTERS) * 100); }
-    function loginUser(name) { currentUser = name; document.getElementById('access-overlay').style.display = 'none'; document.getElementById('inner-branding').style.display = 'block'; document.getElementById('header-main').style.display = "block"; document.getElementById('progress-main').style.display = "block"; document.getElementById('plan-container').style.display = "block"; document.getElementById('footer-developer').style.display = "block";document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); }
+    function loginUser(name) { currentUser = name; document.getElementById('access-overlay').style.display = 'none'; document.getElementById('inner-branding').style.display = 'block'; document.getElementById('header-main').style.display = "block"; document.getElementById('progress-main').style.display = "block"; document.getElementById('plan-container').style.display = "block"; document.getElementById('footer-developer').style.display = "block"; document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); }
     function saveAndExit() { document.getElementById('inner-branding').style.display = 'none'; document.getElementById('header-main').style.display = "none"; document.getElementById('progress-main').style.display = "none"; document.getElementById('plan-container').style.display = "none"; document.getElementById('footer-developer').style.display = "none"; document.getElementById('access-overlay').style.display = 'flex'; currentUser = ""; window.scrollTo(0,0); }
     function distributeChaptersBalanced(range, days) { let chaps = []; for (let i = range[0]; i <= range[1]; i++) { for (let c = 1; c <= BIBLE_BOOKS[i].c; c++) { chaps.push({ b: BIBLE_BOOKS[i].n, c: c }); } } let res = Array.from({ length: days }, () => []); let ratio = chaps.length / days; for (let i = 0; i < chaps.length; i++) { let dIdx = Math.min(Math.floor(i / ratio), days - 1); res[dIdx].push(chaps[i]); } return res; }
     function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); curr.setDate(curr.getDate() + 1); } return dates; }
 
-function renderPlan() {
+    function renderPlan() {
         const area = document.getElementById('plan-container'); area.innerHTML = "";
         db.ref('users/'+currentUser+'/progress').once('value', snap => {
             const prog = snap.val() || {}; let curYear = 0;
@@ -324,7 +313,7 @@ function renderPlan() {
                 if (t.ano !== curYear) { 
                     curYear = t.ano; 
                     const y = document.createElement('div'); 
-                    y.style.cssText="font-weight:bold; margin:30px 5px 15px 5px;"; // Ajuste de Distância B
+                    y.style.cssText="font-weight:bold; margin:35px 5px 15px 5px;"; 
                     y.innerText=`📅 ANO ${curYear}`; 
                     area.appendChild(y); 
                 }
@@ -336,10 +325,11 @@ function renderPlan() {
                 const box = document.createElement('div'); box.className = `trimestre-box ${isCur && !isConcluido ? 'atual' : ''} ${isConcluido ? 'concluido' : ''}`;
                 box.innerHTML = `
                     <button class="tri-header" onclick="toggleTri(${tIdx})">
-                        <div class="tri-title-row"><span>${t.tri}</span><span id="tri-perc-label-${tIdx}">${pTri}%</span></div>
+                        <div class="tri-title-row"><span>${t.tri}</span><span id="tri-perc-label-${tIdx}">${pTri} %</span></div>
                         <div class="mini-bar-bg" style="background:#eee;"><div id="tri-bar-${tIdx}" class="mini-bar-fill" style="width:${pTri}%; background:var(--verde-sucesso);"></div></div>
                     </button>
-                    <div class="reading-list" id="list-${tIdx}" style="display:none;"> ${days.map((d, dIdx) => {
+                    <div class="reading-list" id="list-${tIdx}" style="display:none;">
+                        ${days.map((d, dIdx) => {
                             const dayChaps = readingsByDay[dIdx]; if(!dayChaps.length) return "";
                             let btns = ""; let allDone = true;
                             dayChaps.forEach(ch => { 
@@ -353,8 +343,7 @@ function renderPlan() {
                             return `<div class="row"><div class="check-btn ${allDone ? 'done' : ''}"></div><div class="info"><div class="info-text-group"><span class="info-date">${d.label}</span><span class="info-book">${labelBook}</span></div><div class="caps-container">${btns}</div></div></div>`;
                         }).join('')}
                     </div>`; area.appendChild(box);
-            }); 
-            updateProgress();
+            }); updateProgress();
         });
     }
 
@@ -445,7 +434,6 @@ function renderPlan() {
         });
     }
 
-    // --- LÓGICA DE JANELAS CUSTOMIZADAS (FÍSICA, APAGAR, EDITAR) ---
     function confirmarLeituraFisica(diaCapsStr, dataRotulo) {
         const caps = JSON.parse(diaCapsStr);
         const todosLidos = caps.every(ch => {
@@ -479,6 +467,7 @@ function renderPlan() {
 </script>
 </body>
 </html>
+
 
 
 
