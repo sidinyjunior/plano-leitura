@@ -520,10 +520,27 @@ function renderPlan() {
         if (proximo) { leitorContexto.livro = proximo.b; leitorContexto.capAtual = proximo.c; carregarTextoBiblico(); }
     }
 
-    function concluirEFechar() {
-        const key = `${leitorContexto.livro}_c${leitorContexto.capAtual}`;
-        db.ref(`users/${currentUser}/progress/${key}`).set(true).then(() => { renderPlan(); fecharLeitor(); });
+  function concluirEFechar() {
+    const updates = {};
+    const idxAtual = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
+    const isUltimo = idxAtual === leitorContexto.diaCaps.length - 1;
+
+    if (isUltimo) {
+        // Se for o último botão, marca TODOS os capítulos do dia de uma vez
+        leitorContexto.diaCaps.forEach(ch => {
+            updates[`${ch.b}_c${ch.c}`] = true;
+        });
+    } else {
+        // Se for botão intermediário, marca apenas o capítulo atual
+        updates[`${leitorContexto.livro}_c${leitorContexto.capAtual}`] = true;
     }
+
+    // Envia a atualização em massa ou individual para o Firebase
+    db.ref(`users/${currentUser}/progress`).update(updates).then(() => {
+        renderPlan();
+        fecharLeitor();
+    });
+}
 
     function mudarFonte(delta) { fontSizeAtual += delta; document.getElementById('reader-text').style.fontSize = fontSizeAtual + "rem"; }
     function setTema(tema) { const overlay = document.getElementById('reader-overlay'); overlay.classList.remove('theme-sepia', 'theme-dark'); if (tema !== 'light') overlay.classList.add('theme-' + tema); }
@@ -665,6 +682,7 @@ function fecharAjudaLeitor() {
 </script>
 </body>
 </html>
+
 
 
 
