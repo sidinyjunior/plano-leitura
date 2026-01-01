@@ -160,7 +160,14 @@
     margin-bottom: 20px;
     text-align: left;
 }
-    
+
+.devocional-box { background: #FF7A00; border-radius: 20px; margin: 45px 0; overflow: hidden; box-shadow: 0 8px 25px rgba(255, 122, 0, 0.25); border: 1px solid #e66e00; }
+.devocional-header { width: 100%; padding: 22px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; background: transparent; color: white; }
+.devocional-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: 800; font-size: 1rem; text-transform: uppercase; }
+.devocional-bar-bg { width: 100%; background: rgba(255, 255, 255, 0.3); height: 12px; border-radius: 6px; margin-top: 12px; overflow: hidden; }
+.devocional-bar-fill { height: 100%; background: white; transition: 0.8s ease-in-out; width: 0%; }
+.devocional-perc-text { color: white; font-weight: bold; }
+        
     </style>
 </head>
 
@@ -420,12 +427,69 @@ function renderPlan() {
                         }).join('')}
                     </div>`; area.appendChild(box);
                 
-                if (tIdx === 3) { // 3 é o índice do 4º Trimestre de 2026
+             if (tIdx === 3) { 
                     renderBoxDevocional(area, prog);
 
                 }
 
                   });
+
+                if (ultimoTrimestreAberto !== null) {
+                const elParaReabrir = document.getElementById(`list-${ultimoTrimestreAberto}`);
+                if (elParaReabrir) elParaReabrir.style.display = "block";
+            }
+   
+            updateProgress();
+        });
+    }
+
+function renderBoxDevocional(area, prog) {
+    let lidosDev = 0;
+    LISTA_DEVOCIONAIS.forEach((d, index) => {
+        const idDev = (index + 1).toString().padStart(3, '0');
+        if (prog[`devocional_${idDev}`] === true) lidosDev++;
+    });
+    const pDev = Math.round((lidosDev / TOTAL_DEVOCIONAIS) * 100);
+
+    const boxDev = document.createElement('div');
+    boxDev.className = 'devocional-box';
+    boxDev.innerHTML = `
+        <button class="devocional-header" onclick="toggleDevocionalList()">
+            <div class="devocional-title-row">
+                <span>📙 Devocional Diário</span>
+                <span id="dev-perc-label" class="devocional-perc-text">${pDev}%</span>
+            </div>
+            <div class="devocional-bar-bg">
+                <div id="dev-bar-fill" class="devocional-bar-fill" style="width:${pDev}%"></div>
+            </div>
+        </button>
+        <div class="reading-list" id="list-devocional" style="display:none; background:#fff;">
+            ${LISTA_DEVOCIONAIS.map((d, index) => {
+                const idDev = (index + 1).toString().padStart(3, '0');
+                const isDone = prog[`devocional_${idDev}`] === true;
+                return \`
+                    <div class="row">
+                        <div class="check-btn \${isDone ? 'done' : ''}"></div>
+                        <div class="info">
+                            <div class="info-text-group">
+                                <span class="info-date">\${d.label}</span>
+                                <span class="info-book" style="color:#FF7A00; cursor:pointer;" 
+                                      onclick="abrirLeitorDevocional('\${idDev}', '\${d.label}')">
+                                      Devocional \${idDev}
+                                </span>
+                            </div>
+                        </div>
+                    </div>\`;
+            }).join('')}
+        </div>
+    `;
+    area.appendChild(boxDev);
+}
+
+
+
+
+    
 
             // Abre ou fecha a lista do Devocional
 function toggleDevocionalList() {
@@ -753,6 +817,7 @@ function fecharAjudaLeitor() {
 </script>
 </body>
 </html>
+
 
 
 
