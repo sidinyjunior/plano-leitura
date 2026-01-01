@@ -289,6 +289,34 @@
     const firebaseConfig = { apiKey: "AIzaSyAefANpZLXBLstwIRoz2Y1o_uBHmDfgFxM", databaseURL: "https://plano-biblico-familiar-default-rtdb.firebaseio.com/", projectId: "plano-biblico-familiar" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    
+const DEVOCIONAL_START = "2026-01-05";
+const DEVOCIONAL_END = "2026-12-18";
+
+function gerarDatasDevocional() {
+    let curr = new Date(DEVOCIONAL_START + "T12:00:00");
+    let last = new Date(DEVOCIONAL_END + "T12:00:00");
+    let datas = [];
+    while (curr <= last) {
+        if (curr.getDay() !== 0 && curr.getDay() !== 6) {
+            datas.push({
+                label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + 
+                       curr.getDate().toString().padStart(2, '0') + "/" + 
+                       (curr.getMonth() + 1).toString().padStart(2, '0'),
+                iso: curr.toISOString().split('T')[0]
+            });
+        }
+        curr.setDate(curr.getDate() + 1);
+    }
+    return datas;
+}
+
+const LISTA_DEVOCIONAIS = gerarDatasDevocional();
+const TOTAL_DEVOCIONAIS = LISTA_DEVOCIONAIS.length;
+
+
+
+    
     let currentUser = "";
     const KEY_MY_PROFILES = "meus_perfis_locais";
     let leitorContexto = { livro: "", capAtual: 0, tIdx: 0, dIdx: 0, versao: "acf", diaCaps: [] };
@@ -469,13 +497,13 @@ function renderBoxDevocional(area, prog) {
                 const isDone = prog[`devocional_${idDev}`] === true;
                 return \`
                     <div class="row">
-                        <div class="check-btn \${isDone ? 'done' : ''}"></div>
+                        <div class="check-btn ${isDone ? 'done' : ''}"></div>
                         <div class="info">
                             <div class="info-text-group">
-                                <span class="info-date">\${d.label}</span>
+                                <span class="info-date">${d.label}</span>
                                 <span class="info-book" style="color:#FF7A00; cursor:pointer;" 
-                                      onclick="abrirLeitorDevocional('\${idDev}', '\${d.label}')">
-                                      Devocional \${idDev}
+                                      onclick="abrirLeitorDevocional('${idDev}', '${d.label}')">
+                                      Devocional ${idDev}
                                 </span>
                             </div>
                         </div>
@@ -817,6 +845,7 @@ function fecharAjudaLeitor() {
 </script>
 </body>
 </html>
+
 
 
 
