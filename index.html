@@ -24,7 +24,6 @@
         }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         
-        /* BANNER DE INSTALAÇÃO PWA - CORRIGIDO */
         #install-banner {
             display: none; width: 92%; max-width: 480px; background: #fff5f5; color: #2d3436;
             padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #fed7d7;
@@ -36,25 +35,21 @@
         #btn-install-now { background: var(--verde-whatsapp); color: white; }
         #btn-not-now { background: var(--azul-link); color: white; }
 
-        /* SPLASH SCREEN */
         #splash-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease; }
         #splash-screen img { width: 160px; max-width: 70%; border-radius: 28px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         #splash-screen.hide { opacity: 0; pointer-events: none; }
 
         .main-title { font-size: clamp(0.7rem, 3.8vw, 0.9rem); font-weight: 800; color: #2d3436; margin: 0 0 10px 0; text-transform: uppercase; white-space: nowrap; letter-spacing: -0.02em; }
         
-        /* CABEÇALHO */
         .header { width: 100%; max-width: 500px; background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; position: sticky; top: 10px; z-index: 1000; box-sizing: border-box; }
         .display-name { font-weight: bold; font-size: clamp(0.85rem, 4vw, 1.1rem); color: #2d3436; border-bottom: 2px solid var(--verde-whatsapp); padding: 5px 0; text-align: center; text-transform: capitalize; width: 100%; margin-bottom: 10px; }
         .btn-exit { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--verde-whatsapp); color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; text-transform: uppercase; }
         
-        /* PROGRESSO GERAL */
         #progress-main { display: none; width: 100%; max-width: 500px; text-align: center; margin-bottom: 20px; padding: 15px; box-sizing: border-box; background: #4F4F4F; border-radius: 20px; }
         #main-percent { font-size: 12px; font-weight: bold; color: white !important; margin-bottom: 5px; }
         .mini-bar-bg { width: 100%; background: rgba(255,255,255,0.3); height: 12px; border-radius: 6px; overflow: hidden; margin-top: 5px; }
         .mini-bar-fill { height: 100%; background: white; transition: 0.5s; width: 0%; }
 
-        /* BLOCOS DE TRIMESTRE */
         .trimestre-box { background: #cbd5e0; border-radius: 15px; margin-bottom: 20px; overflow: hidden; border: 1px solid #a0aec0; transition: 0.3s ease; }
         .tri-header { width: 100%; padding: 18px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; background: transparent; }
         .trimestre-box.atual .tri-header { background: var(--cor-ferrugem); color: #fff; }
@@ -62,7 +57,6 @@
         .tri-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: bold; color: #495057; font-size: 0.9rem; }
         .reading-list { display: none; padding: 5px; max-height: 400px; overflow-y: auto; background: #fff; }
 
-        /* LINHA DE LEITURA */
         .row { display: flex; align-items: center; padding: 12px 14px; border-bottom: 1px solid #f2f2f2; }
         .check-btn { width: 26px; height: 26px; border: 2px solid #ddd; border-radius: 8px; margin-right: 12px; cursor: pointer; flex-shrink: 0; display:flex; align-items:center; justify-content:center; }
         .check-btn.done { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
@@ -75,32 +69,18 @@
         .cap-btn { display: inline-block; width: 32px; height: 32px; line-height: 32px; text-align: center; background: #fff; border: 1px solid #ddd; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 0.85rem; font-weight: bold; color: var(--verde-escuro); }
         .cap-btn.lido { background: var(--verde-sucesso); color: white; border-color: var(--verde-sucesso); }
 
-        /* Botão de Leitura Física */
-        .btn-fisica {
-            display: inline-block; width: 32px; height: 32px; line-height: 32px; text-align: center;
-            background: #fff; border: 2px solid #e67e22; border-radius: 8px; margin: 3px;
-            cursor: pointer; font-size: 1.1rem; transition: 0.3s;
-        }
+        .btn-fisica { display: inline-block; width: 32px; height: 32px; line-height: 32px; text-align: center; background: #fff; border: 2px solid #e67e22; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 1.1rem; transition: 0.3s; }
         .btn-fisica:hover { background: #fef5e7; }
 
-        /* Janela de Confirmação Estilizada */
         #confirm-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10500; }
-        #custom-confirm, #edit-confirm {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            z-index: 11000; width: 85%; max-width: 400px; text-align: center;
-        }
+        #custom-confirm, #edit-confirm { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 11000; width: 85%; max-width: 400px; text-align: center; }
         .confirm-buttons { display: flex; gap: 10px; margin-top: 20px; }
         .btn-c { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         .btn-c-confirm { background: var(--verde-sucesso); color: white; }
         .btn-c-cancel { background: #eee; color: #333; }
         
-        #edit-input-name {
-            width: 100%; padding: 12px; border: 2px solid #edf2f7; border-radius: 10px; 
-            margin-top: 10px; box-sizing: border-box; text-align: center; font-size: 1rem;
-        }
+        #edit-input-name { width: 100%; padding: 12px; border: 2px solid #edf2f7; border-radius: 10px; margin-top: 10px; box-sizing: border-box; text-align: center; font-size: 1rem; }
 
-        /* BOTÕES DE USUÁRIO */
         .user-card { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 2px solid transparent; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .user-card.meu-perfil { border-color: var(--azul-link); background: #f0f7ff; }
         .actions-row { display: flex; gap: 5px; margin-top: 12px; }
@@ -109,7 +89,6 @@
         .btn-editar { background: var(--amarelo); color: #333; } 
         .btn-deletar { background: var(--vermelho); } 
 
-        /* LEITOR */
         #reader-overlay { position: fixed; inset: 0; background: var(--bg-leitor); z-index: 5000; display: none; flex-direction: column; color: var(--texto-leitor); transition: 0.3s; }
         .theme-sepia { --bg-leitor: #f4ecd8 !important; --texto-leitor: #5b4636 !important; }
         .theme-dark { --bg-leitor: #1a1a1a !important; --texto-leitor: #e0e0e0 !important; }
@@ -121,53 +100,21 @@
         .access-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; z-index: 2000; padding: 0 15px 20px 15px; overflow-y: auto; }
         .access-box { background: white; padding: 30px 25px; border-radius: 0 0 25px 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 94%; max-width: 450px; margin-bottom: 30px; }
 
-    
-    /* Janela de Comparação de Versículos */
-#compare-modal {
-    display: none;
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: white;
-    z-index: 10000;
-    padding: 20px;
-    border-radius: 20px 20px 0 0;
-    box-shadow: 0 -5px 25px rgba(0,0,0,0.2);
-    max-height: 60vh;
-    overflow-y: auto;
-}
-.compare-item { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-.compare-label { font-weight: bold; color: var(--verde-escuro); font-size: 0.8rem; text-transform: uppercase; display: block; margin-bottom: 4px; }
-.compare-text { font-size: 1rem; color: #333; line-height: 1.4; }
+        #compare-modal { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: white; z-index: 10000; padding: 20px; border-radius: 20px 20px 0 0; box-shadow: 0 -5px 25px rgba(0,0,0,0.2); max-height: 60vh; overflow-y: auto; }
+        .compare-item { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .compare-label { font-weight: bold; color: var(--verde-escuro); font-size: 0.8rem; text-transform: uppercase; display: block; margin-bottom: 4px; }
+        .compare-text { font-size: 1rem; color: #333; line-height: 1.4; }
 
-        #ajuda-leitor-modal {
-    display: none;
-    position: fixed;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    z-index: 12000;
-    width: 85%;
-    max-width: 350px;
-    text-align: center;
-}
-.ajuda-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    text-align: left;
-}
+        #ajuda-leitor-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); z-index: 12000; width: 85%; max-width: 350px; text-align: center; }
+        .ajuda-item { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; text-align: left; }
 
-.devocional-box { background: #FF7A00; border-radius: 20px; margin: 45px 0; overflow: hidden; box-shadow: 0 8px 25px rgba(255, 122, 0, 0.25); border: 1px solid #e66e00; }
-.devocional-header { width: 100%; padding: 22px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; background: transparent; color: white; }
-.devocional-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: 800; font-size: 1rem; text-transform: uppercase; }
-.devocional-bar-bg { width: 100%; background: rgba(255, 255, 255, 0.3); height: 12px; border-radius: 6px; margin-top: 12px; overflow: hidden; }
-.devocional-bar-fill { height: 100%; background: white; transition: 0.8s ease-in-out; width: 0%; }
-.devocional-perc-text { color: white; font-weight: bold; }
-        
+        /* ESTILOS DEVOCIONAL - BANCO INTER */
+        .devocional-box { background: #FF7A00; border-radius: 20px; margin: 45px 0; overflow: hidden; box-shadow: 0 8px 25px rgba(255, 122, 0, 0.25); border: 1px solid #e66e00; }
+        .devocional-header { width: 100%; padding: 22px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; background: transparent; color: white; }
+        .devocional-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: 800; font-size: 1rem; text-transform: uppercase; }
+        .devocional-bar-bg { width: 100%; background: rgba(255, 255, 255, 0.3); height: 12px; border-radius: 6px; margin-top: 12px; overflow: hidden; }
+        .devocional-bar-fill { height: 100%; background: white; transition: 0.8s ease-in-out; width: 0%; }
+        .devocional-perc-text { color: white; font-weight: bold; }
     </style>
 </head>
 
@@ -198,7 +145,7 @@
     </div>
 </div>
 
-    <div id="compare-modal">
+<div id="compare-modal">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
         <strong id="compare-ref" style="color: var(--verde-escuro);">João 3:16</strong>
         <button onclick="fecharComparacao()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color: #999;">✕</button>
@@ -230,7 +177,6 @@
 <div id="reader-overlay">
     <div class="reader-header" style="padding: 10px 15px; background: #1a4731; color: white; display: flex; justify-content: space-between; align-items: center;">
         <span id="reader-title" style="font-weight:bold;">Gênesis 1</span>
-        
         <div style="display: flex; gap: 18px; align-items: center;">
             <button onclick="abrirAjudaLeitor()" style="background:none; border:none; color:white; font-size:1.4rem; cursor:pointer; font-weight:bold; padding: 5px;">?</button>
             <button onclick="fecharLeitor()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer; padding: 5px;">✕</button>
@@ -290,32 +236,30 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     
-const DEVOCIONAL_START = "2026-01-05";
-const DEVOCIONAL_END = "2026-12-18";
+    // CONFIGURAÇÃO DATAS DEVOCIONAL
+    const DEVOCIONAL_START = "2026-01-05";
+    const DEVOCIONAL_END = "2026-12-18";
 
-function gerarDatasDevocional() {
-    let curr = new Date(DEVOCIONAL_START + "T12:00:00");
-    let last = new Date(DEVOCIONAL_END + "T12:00:00");
-    let datas = [];
-    while (curr <= last) {
-        if (curr.getDay() !== 0 && curr.getDay() !== 6) {
-            datas.push({
-                label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + 
-                       curr.getDate().toString().padStart(2, '0') + "/" + 
-                       (curr.getMonth() + 1).toString().padStart(2, '0'),
-                iso: curr.toISOString().split('T')[0]
-            });
+    function gerarDatasDevocional() {
+        let curr = new Date(DEVOCIONAL_START + "T12:00:00");
+        let last = new Date(DEVOCIONAL_END + "T12:00:00");
+        let datas = [];
+        while (curr <= last) {
+            if (curr.getDay() !== 0 && curr.getDay() !== 6) {
+                datas.push({
+                    label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + 
+                           curr.getDate().toString().padStart(2, '0') + "/" + 
+                           (curr.getMonth() + 1).toString().padStart(2, '0'),
+                    iso: curr.toISOString().split('T')[0]
+                });
+            }
+            curr.setDate(curr.getDate() + 1);
         }
-        curr.setDate(curr.getDate() + 1);
+        return datas;
     }
-    return datas;
-}
 
-const LISTA_DEVOCIONAIS = gerarDatasDevocional();
-const TOTAL_DEVOCIONAIS = LISTA_DEVOCIONAIS.length;
-
-
-
+    const LISTA_DEVOCIONAIS = gerarDatasDevocional();
+    const TOTAL_DEVOCIONAIS = LISTA_DEVOCIONAIS.length;
     
     let currentUser = "";
     const KEY_MY_PROFILES = "meus_perfis_locais";
@@ -325,6 +269,7 @@ const TOTAL_DEVOCIONAIS = LISTA_DEVOCIONAIS.length;
     let dadosTemporariosFisica = null;
     let acaoPendente = null;
     let dadosEdicaoPendente = null;
+    let ultimoTrimestreAberto = null;
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -370,7 +315,6 @@ const TOTAL_DEVOCIONAIS = LISTA_DEVOCIONAIS.length;
         });
     }
 
-    // --- FUNÇÕES DE USUÁRIO ESTILIZADAS ---
     function editUser(oldName) {
         dadosEdicaoPendente = oldName;
         document.getElementById('edit-input-name').value = oldName;
@@ -417,7 +361,7 @@ const TOTAL_DEVOCIONAIS = LISTA_DEVOCIONAIS.length;
     function distributeChaptersBalanced(range, days) { let chaps = []; for (let i = range[0]; i <= range[1]; i++) { for (let c = 1; c <= BIBLE_BOOKS[i].c; c++) { chaps.push({ b: BIBLE_BOOKS[i].n, c: c }); } } let res = Array.from({ length: days }, () => []); let ratio = chaps.length / days; for (let i = 0; i < chaps.length; i++) { let dIdx = Math.min(Math.floor(i / ratio), days - 1); res[dIdx].push(chaps[i]); } return res; }
     function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); curr.setDate(curr.getDate() + 1); } return dates; }
 
-function renderPlan() {
+    function renderPlan() {
         const area = document.getElementById('plan-container'); area.innerHTML = "";
         db.ref('users/'+currentUser+'/progress').once('value', snap => {
             const prog = snap.val() || {}; let curYear = 0;
@@ -425,11 +369,12 @@ function renderPlan() {
                 if (t.ano !== curYear) { 
                     curYear = t.ano; 
                     const y = document.createElement('div'); 
-                    y.style.cssText="font-weight:bold; margin:30px 5px 15px 5px;"; // Ajuste de Distância B
+                    y.style.cssText="font-weight:bold; margin:30px 5px 15px 5px;"; 
                     y.innerText=`📅 ANO ${curYear}`; 
                     area.appendChild(y); 
                 }
-                const days = getWeekdays(t.start, t.end); const readingsByDay = distributeChaptersBalanced(t.booksIdx, days.length);
+                const days = getWeekdays(t.start, t.end); 
+                const readingsByDay = distributeChaptersBalanced(t.booksIdx, days.length);
                 const isCur = tIdx === (function(){ const today = new Date(); for(let i=0; i<CONFIG.length; i++) if(today >= new Date(CONFIG[i].start) && today <= new Date(CONFIG[i].end)) return i; return 0; })();
                 let triLidos = 0; let triTotal = 0;
                 for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) { triTotal += BIBLE_BOOKS[bIdx].c; const bookName = BIBLE_BOOKS[bIdx].n; for(let c = 1; c <= BIBLE_BOOKS[bIdx].c; c++) { if(prog[`${bookName}_c${c}`] === true) triLidos++; } }
@@ -453,113 +398,93 @@ function renderPlan() {
                             const first = dayChaps[0], last = dayChaps[dayChaps.length-1]; const labelBook = first.b === last.b ? `${first.b} ${first.c}-${last.c}` : `${first.b} ${first.c} a ${last.b} ${last.c}`;
                             return `<div class="row"><div class="check-btn ${allDone ? 'done' : ''}"></div><div class="info"><div class="info-text-group"><span class="info-date">${d.label}</span><span class="info-book">${labelBook}</span></div><div class="caps-container">${btns}</div></div></div>`;
                         }).join('')}
-                    </div>`; area.appendChild(box);
-               
+                    </div>`; 
+                area.appendChild(box);
+                
                 if (tIdx === 3) { 
                     renderBoxDevocional(area, prog);
                 }
-            }); // Este fecha o CONFIG.forEach corretamente
+            });
 
             if (ultimoTrimestreAberto !== null) {
                 const elParaReabrir = document.getElementById(`list-${ultimoTrimestreAberto}`);
                 if (elParaReabrir) elParaReabrir.style.display = "block";
             }
-   
             updateProgress();
         });
     }
 
-// FUNÇÃO QUE DESENHA O BOX LARANJA (Corrigida sem barras invertidas)
-function renderBoxDevocional(area, prog) {
-    let lidosDev = 0;
-    LISTA_DEVOCIONAIS.forEach((d, index) => {
-        const idDev = (index + 1).toString().padStart(3, '0');
-        if (prog[`devocional_${idDev}`] === true) lidosDev++;
-    });
-    const pDev = Math.round((lidosDev / TOTAL_DEVOCIONAIS) * 100);
-
-    const boxDev = document.createElement('div');
-    boxDev.className = 'devocional-box';
-    boxDev.innerHTML = `
-        <button class="devocional-header" onclick="toggleDevocionalList()">
-            <div class="devocional-title-row">
-                <span>📙 Devocional Diário</span>
-                <span id="dev-perc-label" class="devocional-perc-text">${pDev}%</span>
-            </div>
-            <div class="devocional-bar-bg">
-                <div id="dev-bar-fill" class="devocional-bar-fill" style="width:${pDev}%"></div>
-            </div>
-        </button>
-        <div class="reading-list" id="list-devocional" style="display:none; background:#fff;">
-            ${LISTA_DEVOCIONAIS.map((d, index) => {
-                const idDev = (index + 1).toString().padStart(3, '0');
-                const isDone = prog[`devocional_${idDev}`] === true;
-                return `
-                    <div class="row">
-                        <div class="check-btn ${isDone ? 'done' : ''}"></div>
-                        <div class="info">
-                            <div class="info-text-group">
-                                <span class="info-date">${d.label}</span>
-                                <span class="info-book" style="color:#FF7A00; cursor:pointer;" 
-                                      onclick="abrirLeitorDevocional('${idDev}', '${d.label}')">
-                                      Devocional ${idDev}
-                                </span>
+    function renderBoxDevocional(area, prog) {
+        let lidosDev = 0;
+        LISTA_DEVOCIONAIS.forEach((d, index) => {
+            const idDev = (index + 1).toString().padStart(3, '0');
+            if (prog[`devocional_${idDev}`] === true) lidosDev++;
+        });
+        const pDev = Math.round((lidosDev / TOTAL_DEVOCIONAIS) * 100);
+        const boxDev = document.createElement('div');
+        boxDev.className = 'devocional-box';
+        boxDev.innerHTML = `
+            <button class="devocional-header" onclick="toggleDevocionalList()">
+                <div class="devocional-title-row">
+                    <span>📙 Devocional Diário</span>
+                    <span id="dev-perc-label" class="devocional-perc-text">${pDev}%</span>
+                </div>
+                <div class="devocional-bar-bg">
+                    <div id="dev-bar-fill" class="devocional-bar-fill" style="width:${pDev}%"></div>
+                </div>
+            </button>
+            <div class="reading-list" id="list-devocional" style="display:none; background:#fff;">
+                ${LISTA_DEVOCIONAIS.map((d, index) => {
+                    const idDev = (index + 1).toString().padStart(3, '0');
+                    const isDone = prog[`devocional_${idDev}`] === true;
+                    return `<div class="row">
+                            <div class="check-btn ${isDone ? 'done' : ''}"></div>
+                            <div class="info">
+                                <div class="info-text-group">
+                                    <span class="info-date">${d.label}</span>
+                                    <span class="info-book" style="color:#FF7A00; cursor:pointer;" onclick="abrirLeitorDevocional('${idDev}', '${d.label}')">Devocional ${idDev}</span>
+                                </div>
                             </div>
-                        </div>
-                    </div>`;
-            }).join('')}
-        </div>
-    `;
-    area.appendChild(boxDev);
-}
-
-// FUNÇÕES DE SUPORTE (Apenas uma cópia de cada)
-function toggleDevocionalList() {
-    const el = document.getElementById('list-devocional');
-    const isOpen = el.style.display === "block";
-    document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none');
-    el.style.display = isOpen ? "none" : "block";
-    ultimoTrimestreAberto = null; 
-}
-
-async function abrirLeitorDevocional(id, dataLabel) {
-    document.getElementById('reader-overlay').style.display = 'flex';
-    document.getElementById('reader-title').innerText = `Devocional ${id}`;
-    const cont = document.getElementById('reader-text');
-    cont.innerHTML = "<p>Carregando devocional...</p>";
-    document.querySelector('.reader-toolbar').style.display = 'none';
-    try {
-        const url = `https://raw.githubusercontent.com/SEU_USUARIO/plano-leitura/main/Devocional_Diario/devocional_${id}.json`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("Ainda não postado");
-        const data = await res.json();
-        cont.innerHTML = `<h2 style="color:#FF7A00; text-align:center;">${data.titulo}</h2><p style="font-style:italic; color:var(--cinza-texto); text-align:center;">${data.referencia || ""}</p><hr style="border:0; border-top:1px solid #eee; margin:20px 0;"><div style="text-align:left; font-size: 1.1rem; line-height: 1.6;">${data.texto}</div>`;
-        const footer = document.getElementById('reader-footer-ctrl');
-        footer.innerHTML = "";
-        footer.appendChild(criarBotaoLeitor("FINALIZAR DEVOCIONAL E FECHAR", "var(--verde-sucesso)", "white", () => concluirDevocional(id), false));
-    } catch (e) {
-        cont.innerHTML = `<div style="text-align:center; padding:40px 20px;"><span style="font-size:4rem;">⏳</span><h3 style="color:#FF7A00;">Devocional Ainda Não Postado</h3><p>Este conteúdo será postado em breve.</p></div>`;
-        document.getElementById('reader-footer-ctrl').innerHTML = ""; 
+                        </div>`;
+                }).join('')}
+            </div>`;
+        area.appendChild(boxDev);
     }
-}
 
-function concluirDevocional(id) {
-    db.ref(`users/${currentUser}/progress/devocional_${id}`).set(true).then(() => {
-        renderPlan();
-        fecharLeitor();
-        document.querySelector('.reader-toolbar').style.display = 'flex';
-    });
-}
+    function toggleDevocionalList() {
+        const el = document.getElementById('list-devocional');
+        const isOpen = el.style.display === "block";
+        document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none');
+        el.style.display = isOpen ? "none" : "block";
+        ultimoTrimestreAberto = null; 
+    }
 
-// NOVO: Verifica se existia um trimestre aberto e reabre ele
-        if (ultimoTrimestreAberto !== null) {
-            const elParaReabrir = document.getElementById(`list-${ultimoTrimestreAberto}`);
-            if (elParaReabrir) {
-                elParaReabrir.style.display = "block";
-            }
+    async function abrirLeitorDevocional(id, dataLabel) {
+        document.getElementById('reader-overlay').style.display = 'flex';
+        document.getElementById('reader-title').innerText = `Devocional ${id}`;
+        const cont = document.getElementById('reader-text');
+        cont.innerHTML = "<p>Carregando devocional...</p>";
+        document.querySelector('.reader-toolbar').style.display = 'none';
+        try {
+            const url = `https://raw.githubusercontent.com/SEU_USUARIO/plano-leitura/main/Devocional_Diario/devocional_${id}.json`;
+            const res = await fetch(url);
+            if (!res.ok) throw new Error("Ainda não postado");
+            const data = await res.json();
+            cont.innerHTML = `<h2 style="color:#FF7A00; text-align:center;">${data.titulo}</h2><p style="font-style:italic; color:var(--cinza-texto); text-align:center;">${data.referencia || ""}</p><hr style="border:0; border-top:1px solid #eee; margin:20px 0;"><div style="text-align:left; font-size: 1.1rem; line-height: 1.6;">${data.texto}</div>`;
+            const footer = document.getElementById('reader-footer-ctrl');
+            footer.innerHTML = "";
+            footer.appendChild(criarBotaoLeitor("FINALIZAR DEVOCIONAL E FECHAR", "var(--verde-sucesso)", "white", () => concluirDevocional(id), false));
+        } catch (e) {
+            cont.innerHTML = `<div style="text-align:center; padding:40px 20px;"><span style="font-size:4rem;">⏳</span><h3 style="color:#FF7A00;">Devocional Ainda Não Postado</h3><p>Este conteúdo será postado em breve.</p></div>`;
+            document.getElementById('reader-footer-ctrl').innerHTML = ""; 
         }
-   
-            updateProgress();
+    }
+
+    function concluirDevocional(id) {
+        db.ref(`users/${currentUser}/progress/devocional_${id}`).set(true).then(() => {
+            renderPlan();
+            fecharLeitor();
+            document.querySelector('.reader-toolbar').style.display = 'flex';
         });
     }
 
@@ -573,72 +498,31 @@ function concluirDevocional(id) {
             const res = await fetch(`${leitorContexto.versao}.json`);
             const data = await res.json();
             let listaLivros = Array.isArray(data) ? data : data.livros;
-            const mapaAbrev = {
-                "Gênesis": "gn", "Êxodo": "ex", "Levítico": "lv", "Números": "nm", "Deuteronômio": "dt",
-                "Josué": "js", "Juízes": "jz", "Rute": "rt", "1 Samuel": "1sm", "2 Samuel": "2sm",
-                "1 Reis": "1rs", "2 Reis": "2rs", "1 Crônicas": "1cr", "2 Crônicas": "2cr",
-                "Esdras": "ez", "Neemias": "ne", "Ester": "et", "Jó": "jo", "Salmos": "sl",
-                "Provérbios": "pv", "Eclesiastes": "ec", "Cantares": "ct", "Isaías": "is",
-                "Jeremias": "jr", "Lamentações": "lm", "Ezequiel": "ez", "Daniel": "dn",
-                "Oseias": "os", "Joel": "jl", "Amós": "am", "Obadias": "ob", "Jonas": "jn",
-                "Miqueias": "mq", "Naum": "na", "Habacuque": "hc", "Sofonias": "sf",
-                "Ageu": "ag", "Zacarias": "zc", "Malaquias": "ml",
-                "Mateus": "mt", "Marcos": "mc", "Lucas": "lc", "João": "jo", "Atos": "at",
-                "Romanos": "rm", "1 Coríntios": "1co", "2 Coríntios": "2co", "Gálatas": "gl",
-                "Efésios": "ef", "Filipenses": "fp", "Colossenses": "cl", "1 Tessalonicenses": "1ts",
-                "2 Tessalonicenses": "2ts", "1 Timóteo": "1tm", "2 Timóteo": "2tm", "Tito": "tt",
-                "Filemom": "fm", "Hebreus": "hb", "Tiago": "tg", "1 Pedro": "1pe", "2 Pedro": "2pe",
-                "1 João": "1jo", "2 João": "2jo", "3 João": "3jo", "Judas": "jd", "Apocalipse": "ap"
-            };
+            const mapaAbrev = { "Gênesis": "gn", "Êxodo": "ex", "Levítico": "lv", "Números": "nm", "Deuteronômio": "dt", "Josué": "js", "Juízes": "jz", "Rute": "rt", "1 Samuel": "1sm", "2 Samuel": "2sm", "1 Reis": "1rs", "2 Reis": "2rs", "1 Crônicas": "1cr", "2 Crônicas": "2cr", "Esdras": "ez", "Neemias": "ne", "Ester": "et", "Jó": "jo", "Salmos": "sl", "Provérbios": "pv", "Eclesiastes": "ec", "Cantares": "ct", "Isaías": "is", "Jeremias": "jr", "Lamentações": "lm", "Ezequiel": "ez", "Daniel": "dn", "Oseias": "os", "Joel": "jl", "Amós": "am", "Obadias": "ob", "Jonas": "jn", "Miqueias": "mq", "Naum": "na", "Habacuque": "hc", "Sofonias": "sf", "Ageu": "ag", "Zacarias": "zc", "Malaquias": "ml", "Mateus": "mt", "Marcos": "mc", "Lucas": "lc", "João": "jo", "Atos": "at", "Romanos": "rm", "1 Coríntios": "1co", "2 Coríntios": "2co", "Gálatas": "gl", "Efésios": "ef", "Filipenses": "fp", "Colossenses": "cl", "1 Tessalonicenses": "1ts", "2 Tessalonicenses": "2ts", "1 Timóteo": "1tm", "2 Timóteo": "2tm", "Tito": "tt", "Filemom": "fm", "Hebreus": "hb", "Tiago": "tg", "1 Pedro": "1pe", "2 Pedro": "2pe", "1 João": "1jo", "2 João": "2jo", "3 João": "3jo", "Judas": "jd", "Apocalipse": "ap" };
             const nomeBusca = leitorContexto.livro;
-            const abrevBusca = mapaAbrev[nomeBusca];
-            const lData = listaLivros.find(l => (l.nome === nomeBusca) || (l.name === nomeBusca) || (l.abbrev === abrevBusca) || (l.id === abrevBusca));
-            if (!lData) { alert("Livro não encontrado no arquivo JSON: " + nomeBusca); return; }
+            const lData = listaLivros.find(l => (l.nome === nomeBusca) || (l.name === nomeBusca));
+            if (!lData) return;
             const capítulos = lData.chapters || lData.capitulos;
             const versos = capítulos[leitorContexto.capAtual - 1];
-            if (!versos) { alert("Capítulo não encontrado!"); return; }
             document.getElementById('reader-title').innerText = `${leitorContexto.livro} ${leitorContexto.capAtual}`;
             const cont = document.getElementById('reader-text');
-            cont.innerHTML = versos.map((v, i) => `
-    <div class="verse-row" onclick="compararVersiculo(${i})">
-        <span class="verse-num">${i+1}</span>
-        <span>${v}</span>
-    </div>
-`).join('');
+            cont.innerHTML = versos.map((v, i) => `<div class="verse-row" onclick="compararVersiculo(${i})"><span class="verse-num">${i+1}</span><span>${v}</span></div>`).join('');
             cont.scrollTop = 0; atualizarBotoesNavegacao();
-        } catch(e) { console.error("Erro técnico:", e); alert("Erro ao carregar o texto."); }
+        } catch(e) { console.error(e); }
     }
 
-   function atualizarBotoesNavegacao() {
-    const footer = document.getElementById('reader-footer-ctrl'); 
-    footer.innerHTML = "";
-    
-    const idxAtual = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
-    const isPrimeiro = idxAtual === 0; 
-    const isUltimo = idxAtual === leitorContexto.diaCaps.length - 1;
-
-    // 1. Botão VOLTAR (Seta)
-    if (!isPrimeiro) {
-        footer.appendChild(criarBotaoLeitor("❮", "#eee", "#333", () => navegarNoDia(-1), true));
-    } else {
-        // Espaçador para o botão verde não "dançar" na tela
-        const spacer = document.createElement("div"); spacer.style.flex = "0.8";
-        footer.appendChild(spacer);
+    function atualizarBotoesNavegacao() {
+        const footer = document.getElementById('reader-footer-ctrl'); footer.innerHTML = "";
+        const idxAtual = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
+        const isPrimeiro = idxAtual === 0; const isUltimo = idxAtual === leitorContexto.diaCaps.length - 1;
+        if (!isPrimeiro) footer.appendChild(criarBotaoLeitor("❮", "#eee", "#333", () => navegarNoDia(-1), true));
+        else { const s = document.createElement("div"); s.style.flex = "0.8"; footer.appendChild(s); }
+        const labelVerde = isUltimo ? "LEITURA DO DIA CONCLUÍDA" : "FINALIZAR CAPÍTULO E FECHAR ";
+        footer.appendChild(criarBotaoLeitor(labelVerde, "var(--verde-sucesso)", "white", () => concluirEFechar(), false));
+        if (!isUltimo) footer.appendChild(criarBotaoLeitor("❯", "var(--azul-link)", "white", () => navegarNoDia(1), true));
+        else { const s = document.createElement("div"); s.style.flex = "0.8"; footer.appendChild(s); }
     }
 
-    // 2. Botão CENTRAL (Com os novos nomes que você pediu)
-    const labelVerde = isUltimo ? "LEITURA DO DIA CONCLUÍDA" : "FINALIZAR CAPÍTULO E FECHAR ";
-    footer.appendChild(criarBotaoLeitor(labelVerde, "var(--verde-sucesso)", "white", () => concluirEFechar(), false));
-
-    // 3. Botão AVANÇAR (Seta)
-    if (!isUltimo) {
-        footer.appendChild(criarBotaoLeitor("❯", "var(--azul-link)", "white", () => navegarNoDia(1), true));
-    } else {
-        // Espaçador para manter o equilíbrio visual
-        const spacer = document.createElement("div"); spacer.style.flex = "0.8";
-        footer.appendChild(spacer);
-    }
-}
     function criarBotaoLeitor(label, bg, color, acao, isSide) {
         const btn = document.createElement("button"); btn.className = `btn-nav-leitor ${isSide ? 'btn-side' : 'btn-expand'}`;
         btn.style.background = bg; btn.style.color = color; btn.innerText = label; btn.onclick = acao; return btn;
@@ -650,50 +534,25 @@ function concluirDevocional(id) {
         if (proximo) { leitorContexto.livro = proximo.b; leitorContexto.capAtual = proximo.c; carregarTextoBiblico(); }
     }
 
-  function concluirEFechar() {
-    const updates = {};
-    const idxAtual = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
-    const isUltimo = idxAtual === leitorContexto.diaCaps.length - 1;
-
-    if (isUltimo) {
-        // Se for o último botão, marca TODOS os capítulos do dia de uma vez
-        leitorContexto.diaCaps.forEach(ch => {
-            updates[`${ch.b}_c${ch.c}`] = true;
-        });
-    } else {
-        // Se for botão intermediário, marca apenas o capítulo atual
-        updates[`${leitorContexto.livro}_c${leitorContexto.capAtual}`] = true;
+    function concluirEFechar() {
+        const updates = {};
+        leitorContexto.diaCaps.forEach(ch => { updates[`${ch.b}_c${ch.c}`] = true; });
+        db.ref(`users/${currentUser}/progress`).update(updates).then(() => { renderPlan(); fecharLeitor(); });
     }
-
-    // Envia a atualização em massa ou individual para o Firebase
-    db.ref(`users/${currentUser}/progress`).update(updates).then(() => {
-        renderPlan();
-        fecharLeitor();
-    });
-}
 
     function mudarFonte(delta) { fontSizeAtual += delta; document.getElementById('reader-text').style.fontSize = fontSizeAtual + "rem"; }
     function setTema(tema) { const overlay = document.getElementById('reader-overlay'); overlay.classList.remove('theme-sepia', 'theme-dark'); if (tema !== 'light') overlay.classList.add('theme-' + tema); }
     function trocarVersao(v) { leitorContexto.versao = v; carregarTextoBiblico(); }
-    function fecharLeitor() { document.getElementById('reader-overlay').style.display = 'none'; }
+    function fecharLeitor() { document.getElementById('reader-overlay').style.display = 'none'; document.querySelector('.reader-toolbar').style.display = 'flex'; }
     function registerUser() { const n = document.getElementById('newName').value.trim(); if(!n) return; let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); if(!mp.includes(n)) mp.push(n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); db.ref('users/'+n).update({name:n}); loginUser(n); }
-    let ultimoTrimestreAberto = null; // Crie esta variável logo acima da função
 
-function toggleTri(i) {
-    const el = document.getElementById(`list-${i}`);
-    const isOpen = el.style.display === "block";
-    
-    // Fecha todos os outros primeiro
-    document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none');
-    
-    if (isOpen) {
-        el.style.display = "none";
-        ultimoTrimestreAberto = null; // Se fechou manualmente, limpa a memória
-    } else {
-        el.style.display = "block";
-        ultimoTrimestreAberto = i; // Salva qual trimestre está aberto agora
+    function toggleTri(i) {
+        const el = document.getElementById(`list-${i}`);
+        const isOpen = el.style.display === "block";
+        document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none');
+        if (isOpen) { el.style.display = "none"; ultimoTrimestreAberto = null; } 
+        else { el.style.display = "block"; ultimoTrimestreAberto = i; }
     }
-}
     
     function updateProgress() {
         db.ref('users/'+currentUser+'/progress').once('value', snap => {
@@ -709,17 +568,10 @@ function toggleTri(i) {
         });
     }
 
-    // --- LÓGICA DE JANELAS CUSTOMIZADAS (FÍSICA, APAGAR, EDITAR) ---
     function confirmarLeituraFisica(diaCapsStr, dataRotulo) {
         const caps = JSON.parse(diaCapsStr);
-        const todosLidos = caps.every(ch => {
-            const btn = document.querySelector(`[onclick*="'${ch.b}', ${ch.c}"]`);
-            return btn && btn.classList.contains('lido');
-        });
-        const acao = todosLidos ? "DESMARCAR" : "MARCAR";
-        const estado = !todosLidos;
-        acaoPendente = () => executarAcaoMassa(caps, estado);
-        document.getElementById('confirm-text').innerText = `${acao} ${dataRotulo} COMO FINALIZADO?`;
+        acaoPendente = () => executarAcaoMassa(caps, true);
+        document.getElementById('confirm-text').innerText = `MARCAR ${dataRotulo} COMO FINALIZADO?`;
         document.getElementById('confirm-overlay').style.display = 'block';
         document.getElementById('custom-confirm').style.display = 'block';
     }
@@ -727,9 +579,7 @@ function toggleTri(i) {
     function fecharConfirm(resposta) {
         document.getElementById('confirm-overlay').style.display = 'none';
         document.getElementById('custom-confirm').style.display = 'none';
-        if (resposta && acaoPendente) {
-            acaoPendente();
-        }
+        if (resposta && acaoPendente) acaoPendente();
         acaoPendente = null;
     }
 
@@ -739,76 +589,40 @@ function toggleTri(i) {
         db.ref(`users/${currentUser}/progress`).update(updates).then(() => renderPlan());
     }
 
-
     async function compararVersiculo(indiceVerso) {
-    const versoNum = indiceVerso + 1;
-    const livro = leitorContexto.livro;
-    const cap = leitorContexto.capAtual;
-    const versoes = ['acf', 'nvi', 'kja'];
-    
-    document.getElementById('compare-ref').innerText = `${livro} ${cap}:${versoNum}`;
-    const list = document.getElementById('compare-list');
-    list.innerHTML = "<p>Carregando comparativo...</p>";
-    document.getElementById('confirm-overlay').style.display = 'block';
-    document.getElementById('compare-modal').style.display = 'block';
-
-    let htmlResult = "";
-
-    for (let v of versoes) {
-        try {
-            const res = await fetch(`${v}.json`);
-            const data = await res.json();
-            let listaLivros = Array.isArray(data) ? data : data.livros;
-            
-            // Busca o livro (usando a mesma lógica de mapa que você já tem no carregarTextoBiblico)
-            const lData = listaLivros.find(l => (l.nome === livro) || (l.name === livro));
-            if (lData) {
-                const capítulos = lData.chapters || lData.capitulos;
-                const texto = capítulos[cap - 1][indiceVerso];
-                htmlResult += `
-    <div class="compare-item">
-        <span class="compare-label">${v.toUpperCase()}</span>
-        <p class="compare-text" style="text-align: left; margin: 5px 0 0 0;">${texto}</p>
-    </div>`;
-            }
-        } catch (e) {
-            console.error("Erro na versão " + v, e);
+        const versoes = ['acf', 'nvi', 'kja'];
+        const list = document.getElementById('compare-list');
+        list.innerHTML = "<p>Carregando...</p>";
+        document.getElementById('confirm-overlay').style.display = 'block';
+        document.getElementById('compare-modal').style.display = 'block';
+        let htmlResult = "";
+        for (let v of versoes) {
+            try {
+                const res = await fetch(`${v}.json`);
+                const data = await res.json();
+                let listaLivros = Array.isArray(data) ? data : data.livros;
+                const lData = listaLivros.find(l => l.nome === leitorContexto.livro);
+                const texto = (lData.chapters || lData.capitulos)[leitorContexto.capAtual - 1][indiceVerso];
+                htmlResult += `<div class="compare-item"><span class="compare-label">${v.toUpperCase()}</span><p class="compare-text">${texto}</p></div>`;
+            } catch (e) {}
         }
+        list.innerHTML = htmlResult;
     }
-    list.innerHTML = htmlResult;
-}
 
-function fecharComparacao() {
-    document.getElementById('compare-modal').style.display = 'none';
-    document.getElementById('confirm-overlay').style.display = 'none';
-    document.getElementById('compare-list').innerHTML = ""; // Limpa para a próxima busca
-}
+    function fecharComparacao() { document.getElementById('compare-modal').style.display = 'none'; document.getElementById('confirm-overlay').style.display = 'none'; }
     window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 3000); });
 
-// Se clicar no fundo escuro, fecha qualquer janela aberta
-document.getElementById('confirm-overlay').onclick = function() {
-    document.getElementById('confirm-overlay').style.display = 'none';
-    document.getElementById('custom-confirm').style.display = 'none';
-    document.getElementById('edit-confirm').style.display = 'none';
-    // Adicione a linha abaixo para não travar na ajuda:
-    document.getElementById('ajuda-leitor-modal').style.display = 'none'; 
-    
-    if(document.getElementById('compare-modal')) {
-        document.getElementById('compare-modal').style.display = 'none';
-    }
-    acaoPendente = null;
-};
+    document.getElementById('confirm-overlay').onclick = function() {
+        document.getElementById('confirm-overlay').style.display = 'none';
+        document.getElementById('custom-confirm').style.display = 'none';
+        document.getElementById('edit-confirm').style.display = 'none';
+        document.getElementById('ajuda-leitor-modal').style.display = 'none'; 
+        if(document.getElementById('compare-modal')) document.getElementById('compare-modal').style.display = 'none';
+        acaoPendente = null;
+    };
 
-function abrirAjudaLeitor() {
-    document.getElementById('confirm-overlay').style.display = 'block';
-    document.getElementById('ajuda-leitor-modal').style.display = 'block';
-}
-
-function fecharAjudaLeitor() {
-    document.getElementById('ajuda-leitor-modal').style.display = 'none';
-    document.getElementById('confirm-overlay').style.display = 'none';
-}
-    
+    function abrirAjudaLeitor() { document.getElementById('confirm-overlay').style.display = 'block'; document.getElementById('ajuda-leitor-modal').style.display = 'block'; }
+    function fecharAjudaLeitor() { document.getElementById('ajuda-leitor-modal').style.display = 'none'; document.getElementById('confirm-overlay').style.display = 'none'; }
 </script>
 </body>
 </html>
