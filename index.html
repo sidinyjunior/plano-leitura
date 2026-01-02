@@ -773,33 +773,34 @@ async function carregarTextoBiblico() {
     const seletor = document.getElementById('select-versao');
     if (seletor) seletor.style.display = 'inline-block';
 }
-    function registerUser() {
-    const n = document.getElementById('newName').value.trim();
+   function registerUser() {
+    const inputNome = document.getElementById('newName');
+    const n = inputNome.value.trim();
     if(!n) return;
 
-    // 1. Verifica quantos usuários já existem no Firebase
     db.ref('users').once('value', snap => {
         const users = snap.val() || {};
         const totalUsers = Object.keys(users).length;
 
-        // 2. Se já houver 150 e o usuário for NOVO (não está apenas reentrando)
-        if (totalUsers >= 4 && !users[n]) {
-            alert("Limite de 4 participantes excedido! Procure o desenvolvedor para solicitar acesso.");
+        if (totalUsers >= 100 && !users[n]) {
+            alert("Limite de 100 participantes excedido! Procure o desenvolvedor para solicitar acesso.");
             return;
         }
 
-        // 3. Se estiver tudo ok, prossegue com o registro
         let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
         if(!mp.includes(n)) mp.push(n);
         localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
         
-        // Salva o nome e a data do primeiro acesso
         const agora = new Date().toLocaleDateString('pt-BR');
         db.ref('users/'+n).update({
             name: n,
             ultimoAcesso: agora
+        }).then(() => {
+            // --- LINHA QUE LIMPA O CAMPO ---
+            inputNome.value = ""; 
+            // ------------------------------
+            loginUser(n);
         });
-        loginUser(n);
     });
 }
 
@@ -925,6 +926,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
