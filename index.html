@@ -537,8 +537,16 @@ async function abrirLeitorDevocional(id, dataLabel) {
     document.getElementById('reader-text').style.fontSize = "1.1rem";
 
     // 2. PREPARAÇÃO DA TELA
-   document.getElementById('reader-overlay').style.display = 'flex';
-    document.getElementById('reader-title').innerText = `Devocional ${id} - ${dataLabel}`;
+    document.getElementById('reader-overlay').style.display = 'flex';
+    
+    // --- NOVO BLOCO DO TÍTULO COM ÍCONE ---
+    const idFormatado = String(id).padStart(3, '0');
+    document.getElementById('reader-title').innerHTML = `
+        <img src="assets/icone_titulo_devocional.png" 
+             style="width: 26px; height: 26px; vertical-align: middle; margin-right: 8px; margin-top: -3px;">
+        Devocional ${idFormatado} - ${dataLabel}
+    `;
+    // ---------------------------------------
     
     const cont = document.getElementById('reader-text');
     
@@ -549,7 +557,7 @@ async function abrirLeitorDevocional(id, dataLabel) {
     const toolbar = document.querySelector('.reader-toolbar');
     toolbar.style.display = 'flex';
 
-    // 2. Esconde apenas o seletor de versões da Bíblia (que não serve para o devocional)
+    // 2. Esconde apenas o seletor de versões da Bíblia
     const seletorVersao = document.getElementById('select-versao');
     if (seletorVersao) seletorVersao.style.display = 'none';
 
@@ -838,6 +846,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
