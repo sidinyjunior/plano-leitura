@@ -271,7 +271,7 @@
 </div>
 
 <div id="progress-main">
-    <div id="main-percent">0% CONCLUÍDO GERAL</div>
+    <div id="main-percent">0% CONCLUÍDO DO PLANO DE LEITURA BÍBLICA</div>
     <div class="mini-bar-bg"><div id="main-bar" class="mini-bar-fill"></div></div>
 </div>
 
@@ -702,7 +702,7 @@ function concluirDevocional(id) {
             });
             const pGeral = Math.round((totalLidosGeral / TOTAL_BIBLE_CHAPTERS) * 100);
             document.getElementById('main-bar').style.width = pGeral + "%";
-            document.getElementById('main-percent').innerText = pGeral + "% CONCLUÍDO GERAL";
+            document.getElementById('main-percent').innerText = pGeral + "% CONCLUÍDO DO PLANO DE LEITURA BÍBLICA";
         });
     }
 
@@ -806,6 +806,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
