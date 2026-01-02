@@ -537,8 +537,8 @@ async function abrirLeitorDevocional(id, dataLabel) {
     document.getElementById('reader-text').style.fontSize = "1.1rem";
 
     // 2. PREPARAÇÃO DA TELA
-    document.getElementById('reader-overlay').style.display = 'flex';
-    document.getElementById('reader-title').innerText = `Devocional ${id}`;
+   document.getElementById('reader-overlay').style.display = 'flex';
+    document.getElementById('reader-title').innerText = `Devocional ${id} - ${dataLabel}`;
     
     const cont = document.getElementById('reader-text');
     
@@ -838,6 +838,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
