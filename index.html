@@ -321,20 +321,30 @@
         document.getElementById('confirm-overlay').style.display = 'block';
         document.getElementById('edit-confirm').style.display = 'block';
     }
-
+    
     function fecharEdit(salvar) {
         const newName = document.getElementById('edit-input-name').value.trim();
         const oldName = dadosEdicaoPendente;
         document.getElementById('confirm-overlay').style.display = 'none';
         document.getElementById('edit-confirm').style.display = 'none';
+        
         if (salvar && newName && newName !== oldName) {
             db.ref('users/' + oldName).once('value', snap => {
                 const userData = snap.val();
+                // 1. Cria o novo nó com os dados antigos
                 db.ref('users/' + newName).set(userData).then(() => {
+                    // 2. Remove o nome antigo
                     db.ref('users/' + oldName).remove().then(() => {
+                        // 3. Atualiza o localStorage para o App saber que este perfil é seu
                         let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
                         mp = mp.map(n => n === oldName ? newName : n);
                         localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
+                        
+                        // 4. CORREÇÃO: Força o Firebase a disparar o gatilho de redesenho da tela
+                        // Isso fará com que o renderCommunity rode de novo e mostre os botões
+                        db.ref('users').once('value', snap => {
+                            renderCommunity(snap.val());
+                        });
                     });
                 });
             });
@@ -357,7 +367,18 @@
 
     function calculatePercentByChapters(progress) { if(!progress) return 0; let lidos = 0; Object.keys(progress).forEach(key => { if(key.includes('_c') && progress[key] === true) lidos++; }); return Math.round((lidos / TOTAL_BIBLE_CHAPTERS) * 100); }
     function loginUser(name) { currentUser = name; document.getElementById('access-overlay').style.display = 'none'; document.getElementById('inner-branding').style.display = 'block'; document.getElementById('header-main').style.display = "block"; document.getElementById('progress-main').style.display = "block"; document.getElementById('plan-container').style.display = "block"; document.getElementById('footer-developer').style.display = "block";document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); }
-    function saveAndExit() { document.getElementById('inner-branding').style.display = 'none'; document.getElementById('header-main').style.display = "none"; document.getElementById('progress-main').style.display = "none"; document.getElementById('plan-container').style.display = "none"; document.getElementById('footer-developer').style.display = "none"; document.getElementById('access-overlay').style.display = 'flex'; currentUser = ""; window.scrollTo(0,0); }
+    function saveAndExit() { 
+        document.getElementById('inner-branding').style.display = 'none'; 
+        document.getElementById('header-main').style.display = "none"; 
+        document.getElementById('progress-main').style.display = "none"; 
+        document.getElementById('plan-container').style.display = "none"; 
+        document.getElementById('footer-developer').style.display = "none"; 
+        document.getElementById('access-overlay').style.display = 'flex'; 
+        currentUser = ""; 
+        window.scrollTo(0,0);
+        // Recarrega a comunidade para garantir que os botões apareçam
+        db.ref('users').once('value', snap => renderCommunity(snap.val()));
+    }
     function distributeChaptersBalanced(range, days) { let chaps = []; for (let i = range[0]; i <= range[1]; i++) { for (let c = 1; c <= BIBLE_BOOKS[i].c; c++) { chaps.push({ b: BIBLE_BOOKS[i].n, c: c }); } } let res = Array.from({ length: days }, () => []); let ratio = chaps.length / days; for (let i = 0; i < chaps.length; i++) { let dIdx = Math.min(Math.floor(i / ratio), days - 1); res[dIdx].push(chaps[i]); } return res; }
     function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); curr.setDate(curr.getDate() + 1); } return dates; }
 
@@ -626,6 +647,7 @@
 </script>
 </body>
 </html>
+
 
 
 
