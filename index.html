@@ -45,8 +45,34 @@
         .display-name { font-weight: bold; font-size: clamp(0.85rem, 4vw, 1.1rem); color: #2d3436; border-bottom: 2px solid var(--verde-whatsapp); padding: 5px 0; text-align: center; text-transform: capitalize; width: 100%; margin-bottom: 10px; }
         .btn-exit { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--verde-whatsapp); color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; text-transform: uppercase; }
         
-        #progress-main { display: none; width: 100%; max-width: 500px; text-align: center; margin-bottom: 20px; padding: 15px; box-sizing: border-box; background: #4F4F4F; border-radius: 20px; }
-        #main-percent { font-size: 12px; font-weight: bold; color: white !important; margin-bottom: 5px; }
+       #progress-main { 
+    display: none; 
+    width: 100%; 
+    max-width: 500px; 
+    text-align: center; 
+    
+    /* 1. DESCER O BOTÃO: aumenta o espaço entre o 'Salvar e Sair' e ele */
+    margin: 40px auto 20px auto !important; 
+    
+    /* 2. ESPESSURA (ALTURA): O primeiro valor (30px) controla a altura */
+    /* Aumentei de 15px para 30px para ele ficar bem robusto */
+    padding: 30px 15px; 
+    
+    box-sizing: border-box; 
+    
+    /* 3. COR: Medium Blue */
+    background: #0000CD !important; 
+    border-radius: 20px; 
+}
+
+#main-percent { 
+    /* 4. TEXTO MAIÚSCULO VIA CSS */
+    text-transform: uppercase;
+    font-size: 13px; 
+    font-weight: bold; 
+    color: white !important; 
+    margin-bottom: 10px; 
+}
         .mini-bar-bg { width: 100%; background: rgba(255,255,255,0.3); height: 12px; border-radius: 6px; overflow: hidden; margin-top: 5px; }
         .mini-bar-fill { height: 100%; background: white; transition: 0.5s; width: 0%; }
 
@@ -244,7 +270,7 @@
 </div>
 
 <div id="progress-main">
-    <div id="main-percent">0% Concluído Geral</div>
+    <div id="main-percent">0% CONCLUÍDO GERAL</div>
     <div class="mini-bar-bg"><div id="main-bar" class="mini-bar-fill"></div></div>
 </div>
 
@@ -590,7 +616,7 @@
             });
             const pGeral = Math.round((totalLidosGeral / TOTAL_BIBLE_CHAPTERS) * 100);
             document.getElementById('main-bar').style.width = pGeral + "%";
-            document.getElementById('main-percent').innerText = pGeral + "% Concluído Geral";
+            document.getElementById('main-percent').innerText = pGeral + "% CONCLUÍDO GERAL";
         });
     }
 
@@ -652,6 +678,7 @@
 </script>
 </body>
 </html>
+
 
 
 
