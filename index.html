@@ -235,10 +235,10 @@
     </div>
     <div class="reader-toolbar" style="display: flex; background: #245e41; padding: 8px 15px; gap: 10px; align-items: center; overflow-x: auto;">
         <select id="select-versao" onchange="trocarVersao(this.value)" style="background:var(--verde-escuro); color:white; border:none; border-radius:5px; padding:4px;">
-    <option value="acf">ACF (Almeida Corrigida Fiel)</option>
-    <option value="nvi">NVI (Nova Versão Internacional)</option>
-    <option value="kja">KJA (King James - Português)</option>
-    <option value="kjv">KJV (King James - Inglês)</option> </select>
+    <option value="acf">ACF (Fiel)</option>
+    <option value="nvi">NVI (Moderna)</option>
+    <option value="kja">KJA (Português)</option>
+    <option value="kjv">KJV (Inglês)</option> </select>
         
         <button class="btn-tool" onclick="mudarFonte(-0.1)">A-</button>
         <button class="btn-tool" onclick="mudarFonte(0.1)">A+</button>
@@ -736,6 +736,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
