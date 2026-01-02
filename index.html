@@ -608,20 +608,33 @@ async function carregarTextoBiblico() {
     try {
         const res = await fetch(`${leitorContexto.versao}.json`);
         
-        // 1. A LINHA QUE VOCÊ QUERIA ACRESCENTAR (Segurança)
+        // Segurança: interrompe se o arquivo não for encontrado
         if (!res.ok) throw new Error("Arquivo não encontrado");
 
         const data = await res.json();
 
-        // 2. AJUSTE PARA O KJV FUNCIONAR (Ele é um Array direto, os outros têm a chave .livros)
+        // Ajuste para KJV (Array direto) vs Outros (Objeto com chave .livros)
         let listaLivros = Array.isArray(data) ? data : (data.livros || data.capitulos);
 
         const mapaAbrev = { "Gênesis": "gn", "Êxodo": "ex", "Levítico": "lv", "Números": "nm", "Deuteronômio": "dt", "Josué": "js", "Juízes": "jz", "Rute": "rt", "1 Samuel": "1sm", "2 Samuel": "2sm", "1 Reis": "1rs", "2 Reis": "2rs", "1 Crônicas": "1cr", "2 Crônicas": "2cr", "Esdras": "ez", "Neemias": "ne", "Ester": "et", "Jó": "jo", "Salmos": "sl", "Provérbios": "pv", "Eclesiastes": "ec", "Cantares": "ct", "Isaías": "is", "Jeremias": "jr", "Lamentações": "lm", "Ezequiel": "ez", "Daniel": "dn", "Oseias": "os", "Joel": "jl", "Amós": "am", "Obadias": "ob", "Jonas": "jn", "Miqueias": "mq", "Naum": "na", "Habacuque": "hc", "Sofonias": "sf", "Ageu": "ag", "Zacarias": "zc", "Malaquias": "ml", "Mateus": "mt", "Marcos": "mc", "Lucas": "lc", "João": "jo", "Atos": "at", "Romanos": "rm", "1 Coríntios": "1co", "2 Coríntios": "2co", "Gálatas": "gl", "Efésios": "ef", "Filipenses": "fp", "Colossenses": "cl", "1 Tessalonicenses": "1ts", "2 Tessalonicenses": "2ts", "1 Timóteo": "1tm", "2 Timóteo": "2tm", "Tito": "tt", "Filemom": "fm", "Hebreus": "hb", "Tiago": "tg", "1 Pedro": "1pe", "2 Pedro": "2pe", "1 João": "1jo", "2 João": "2jo", "3 João": "3jo", "Judas": "jd", "Apocalipse": "ap" };
         
-        const nomeBusca = leitorContexto.livro;
-        const lData = listaLivros.find(l => (l.nome === nomeBusca) || (l.name === nomeBusca));
+        const nomeBusca = leitorContexto.livro; 
+        const abrevBusca = mapaAbrev[nomeBusca]; 
+
+        // BUSCA INTELIGENTE: Cruza nome, nome em inglês e abreviação
+        const lData = listaLivros.find(l => {
+            const nomeArquivo = (l.nome || l.name || "").toLowerCase();
+            const abrevArquivo = (l.abbrev || l.abbreviation || l.abrev || "").toLowerCase();
+            
+            return nomeArquivo === nomeBusca.toLowerCase() || 
+                   nomeArquivo === nomeBusca || 
+                   abrevArquivo === abrevBusca;
+        });
         
-        if (!lData) return;
+        if (!lData) {
+            console.error("Livro não encontrado na versão selecionada:", nomeBusca);
+            return;
+        }
         
         const capítulos = lData.chapters || lData.capitulos;
         const versos = capítulos[leitorContexto.capAtual - 1];
@@ -629,14 +642,15 @@ async function carregarTextoBiblico() {
         document.getElementById('reader-title').innerText = `${leitorContexto.livro} ${leitorContexto.capAtual}`;
         const cont = document.getElementById('reader-text');
         
-        // 3. AJUSTE PARA O MODO NOTURNO (Garante que o texto bíblico siga o tema)
+        // Garante que o texto siga o tema (Claro/Noturno)
         cont.style.color = "var(--texto-leitor)";
         
         cont.innerHTML = versos.map((v, i) => `<div class="verse-row" onclick="compararVersiculo(${i})"><span class="verse-num">${i+1}</span><span>${v}</span></div>`).join('');
         cont.scrollTop = 0; 
         atualizarBotoesNavegacao();
+
     } catch(e) { 
-        console.error(e); 
+        console.error("Erro ao carregar texto bíblico:", e); 
     }
 }
 
@@ -824,6 +838,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
