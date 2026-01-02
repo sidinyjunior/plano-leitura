@@ -519,7 +519,7 @@
         cont.innerHTML = "<p>Carregando devocional...</p>";
         document.querySelector('.reader-toolbar').style.display = 'none';
         try {
-            const url = `https://raw.githubusercontent.com/SEU_USUARIO/plano-leitura/main/Devocional_Diario/devocional_${id}.json`;
+            const url = `https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_${id}.json`;
             const res = await fetch(url);
             if (!res.ok) throw new Error("Ainda não postado");
             const data = await res.json();
@@ -736,6 +736,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
