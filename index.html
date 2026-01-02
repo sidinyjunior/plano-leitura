@@ -322,6 +322,7 @@
     let acaoPendente = null;
     let dadosEdicaoPendente = null;
     let ultimoTrimestreAberto = null;
+    let devocionalAberto = false; // Controla se a lista de devocionais deve ficar aberta
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -454,10 +455,18 @@
                     </div>`; 
                 area.appendChild(box);
                 
-                if (tIdx === 3) { 
+             if (tIdx === 3) { 
                     renderBoxDevocional(area, prog);
+                    
+                    // Verifica se a gaveta de devocionais deve permanecer aberta
+                    if (devocionalAberto) {
+                        const listDev = document.getElementById('list-devocional');
+                        if (listDev) {
+                            listDev.style.display = "block";
+                        }
+                    }
                 }
-            });
+            }); // Este fechamento encerra o loop de trimestres (forEach) corretamente
 
             if (ultimoTrimestreAberto !== null) {
                 const elParaReabrir = document.getElementById(`list-${ultimoTrimestreAberto}`);
@@ -504,13 +513,22 @@
         area.appendChild(boxDev);
     }
 
-    function toggleDevocionalList() {
-        const el = document.getElementById('list-devocional');
-        const isOpen = el.style.display === "block";
-        document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none');
-        el.style.display = isOpen ? "none" : "block";
+ function toggleDevocionalList() {
+    const el = document.getElementById('list-devocional');
+    const isOpen = el.style.display === "block";
+    
+    // Fecha as outras listas de trimestres
+    document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none');
+    
+    if (isOpen) {
+        el.style.display = "none";
+        devocionalAberto = false;
+    } else {
+        el.style.display = "block";
+        devocionalAberto = true;
         ultimoTrimestreAberto = null; 
     }
+}
 
 async function abrirLeitorDevocional(id, dataLabel) {
         document.getElementById('reader-overlay').style.display = 'flex';
@@ -766,6 +784,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
