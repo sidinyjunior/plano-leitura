@@ -531,63 +531,62 @@
 }
 
 async function abrirLeitorDevocional(id, dataLabel) {
-        document.getElementById('reader-overlay').style.display = 'flex';
-        document.getElementById('reader-title').innerText = `Devocional ${id}`;
-        const cont = document.getElementById('reader-text');
-        
-        // Limpa e mostra carregando
-        cont.innerHTML = "<div style='text-align:center; padding:20px;'>Carregando Devocional...</div>";
-        document.querySelector('.reader-toolbar').style.display = 'none';
+    // 1. RESET DE ESTADO (O segredo da independência)
+    setTema('light'); // Força o modo claro sempre que abrir devocional
+    fontSizeAtual = 1.1; // Reseta o tamanho da fonte
+    document.getElementById('reader-text').style.fontSize = "1.1rem";
 
-        try {
-            // URL oficial do seu GitHub
-            const url = `https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_${id}.json`;
-            const res = await fetch(url);
+    // 2. PREPARAÇÃO DA TELA
+    document.getElementById('reader-overlay').style.display = 'flex';
+    document.getElementById('reader-title').innerText = `Devocional ${id}`;
+    
+    const cont = document.getElementById('reader-text');
+    
+    // Limpa e mostra carregando
+    cont.innerHTML = "<div style='text-align:center; padding:20px;'>Carregando Devocional...</div>";
+
+    // Esconde a toolbar da Bíblia para independência total
+    document.querySelector('.reader-toolbar').style.display = 'none';
+
+    try {
+        const url = `https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_${id}.json`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Não encontrado");
+        const data = await res.json();
+
+        // Monta o visual com o box azul adaptável (estilo show)
+        cont.innerHTML = `
+            <h2 style="color:#4682B4; text-align:center; margin-bottom: 20px;">${data.titulo}</h2>
             
-            if (!res.ok) throw new Error("Ainda não postado");
-            
-            const data = await res.json();
+            <div style="background: rgba(70, 130, 180, 0.1); padding: 20px; border-radius: 12px; border-left: 5px solid #4682B4; margin-bottom: 25px;">
+                <p style="font-style: italic; font-size: 1.1rem; margin: 0; color: #2d3436;">"${data.referencia}"</p>
+                <p style="font-weight: bold; text-align: right; margin: 10px 0 0 0; color: #4682B4;">- ${data.versiculo}</p>
+            </div>
 
-            // Monta o visual com o destaque para o versículo que você pediu
-            cont.innerHTML = `
-                <h2 style="color:#4682B4; text-align:center; margin-bottom: 20px;">${data.titulo}</h2>
-                
-                <div style="background: #f0f4f8; padding: 20px; border-radius: 12px; border-left: 5px solid #4682B4; margin-bottom: 25px;">
-                    <p style="font-style: italic; font-size: 1.1rem; margin: 0; color: #2d3436;">"${data.referencia}"</p>
-                    <p style="font-weight: bold; text-align: right; margin: 10px 0 0 0; color: #4682B4;">- ${data.versiculo}</p>
-                </div>
+            <div style="line-height: 1.8; font-size: 1.1rem; text-align: justify; color: #333;">
+                ${data.texto.replace(/\n/g, '<br>')}
+            </div>
+            <div style="height: 40px;"></div> 
+        `;
 
-                <div style="line-height: 1.8; font-size: 1.1rem; text-align: justify; color: #333;">
-                    ${data.texto.replace(/\n/g, '<br>')}
-                </div>
-                
-                <div style="height: 40px;"></div> 
-            `;
+        const footer = document.getElementById('reader-footer-ctrl');
+        footer.innerHTML = "";
+        footer.appendChild(criarBotaoLeitor("FINALIZAR DEVOCIONAL E FECHAR", "var(--verde-sucesso)", "white", () => concluirDevocional(id), false));
 
-            // Configura o botão de finalizar lá embaixo
-            const footer = document.getElementById('reader-footer-ctrl');
-            footer.innerHTML = "";
-            footer.appendChild(criarBotaoLeitor("FINALIZAR DEVOCIONAL E FECHAR", "var(--verde-sucesso)", "white", () => concluirDevocional(id), false));
-            
-        } catch (e) {
-            console.error(e);
-            cont.innerHTML = `
-                <div style="text-align:center; padding:40px 20px;">
-                    <span style="font-size:4rem;">⏳</span>
-                    <h3 style="color:#4682B4;">Devocional Ainda Não Disponível</h3>
-                    <p>Este conteúdo será postado em breve no GitHub.</p>
-                </div>`;
-            document.getElementById('reader-footer-ctrl').innerHTML = ""; 
-        }
+    } catch (e) {
+        console.error(e);
+        cont.innerHTML = "<div style='text-align:center; padding:40px;'>⏳ Devocional ainda não postado.</div>";
+        document.getElementById('reader-footer-ctrl').innerHTML = ""; 
     }
+}
 
-    function concluirDevocional(id) {
-        db.ref(`users/${currentUser}/progress/devocional_${id}`).set(true).then(() => {
-            renderPlan();
-            fecharLeitor();
-            document.querySelector('.reader-toolbar').style.display = 'flex';
-        });
-    }
+function concluirDevocional(id) {
+    db.ref(`users/${currentUser}/progress/devocional_${id}`).set(true).then(() => {
+        renderPlan();
+        fecharLeitor();
+        document.querySelector('.reader-toolbar').style.display = 'flex';
+    });
+}
 
     async function abrirLeitor(livro, cap, t, d, diaCapsStr) {
         leitorContexto = { ...leitorContexto, livro, capAtual: cap, tIdx: t, dIdx: d, diaCaps: JSON.parse(diaCapsStr) };
@@ -784,6 +783,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
