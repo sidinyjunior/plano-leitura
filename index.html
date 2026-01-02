@@ -126,7 +126,7 @@
         .access-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; z-index: 2000; padding: 0 15px 20px 15px; overflow-y: auto; }
         .access-box { background: white; padding: 30px 25px; border-radius: 0 0 25px 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 94%; max-width: 450px; margin-bottom: 30px; }
 
-        #compare-modal { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: white; z-index: 10000; padding: 20px; border-radius: 20px 20px 0 0; box-shadow: 0 -5px 25px rgba(0,0,0,0.2); max-height: 60vh; overflow-y: auto; }
+        #compare-modal { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: white; z-index: 20000; padding: 20px; border-radius: 20px 20px 0 0; box-shadow: 0 -5px 25px rgba(0,0,0,0.2); max-height: 60vh; overflow-y: auto; }
         .compare-item { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
         .compare-label { font-weight: bold; color: var(--verde-escuro); font-size: 0.8rem; text-transform: uppercase; display: block; margin-bottom: 4px; }
         .compare-text { font-size: 1rem; color: #333; line-height: 1.4; }
@@ -235,10 +235,11 @@
     </div>
     <div class="reader-toolbar" style="display: flex; background: #245e41; padding: 8px 15px; gap: 10px; align-items: center; overflow-x: auto;">
         <select id="select-versao" onchange="trocarVersao(this.value)" style="background:var(--verde-escuro); color:white; border:none; border-radius:5px; padding:4px;">
-            <option value="acf">ACF (Fiel)</option>
-            <option value="nvi">NVI (Moderna)</option>
-            <option value="kja">KJA (King James)</option>
-        </select>
+    <option value="acf">ACF (Almeida Corrigida Fiel)</option>
+    <option value="nvi">NVI (Nova Versão Internacional)</option>
+    <option value="kja">KJA (King James - Português)</option>
+    <option value="kjv">KJV (King James - Inglês)</option> </select>
+        
         <button class="btn-tool" onclick="mudarFonte(-0.1)">A-</button>
         <button class="btn-tool" onclick="mudarFonte(0.1)">A+</button>
         <button class="btn-tool" style="background:#f4ecd8; color:#5b4636" onclick="setTema('sepia')">S</button>
@@ -672,26 +673,52 @@
         db.ref(`users/${currentUser}/progress`).update(updates).then(() => renderPlan());
     }
 
-    async function compararVersiculo(indiceVerso) {
-        const versoes = ['acf', 'nvi', 'kja'];
-        const list = document.getElementById('compare-list');
-        list.innerHTML = "<p>Carregando...</p>";
-        document.getElementById('confirm-overlay').style.display = 'block';
-        document.getElementById('compare-modal').style.display = 'block';
-        let htmlResult = "";
-        for (let v of versoes) {
-            try {
-                const res = await fetch(`${v}.json`);
-                const data = await res.json();
-                let listaLivros = Array.isArray(data) ? data : data.livros;
-                const lData = listaLivros.find(l => l.nome === leitorContexto.livro);
-                const texto = (lData.chapters || lData.capitulos)[leitorContexto.capAtual - 1][indiceVerso];
-                htmlResult += `<div class="compare-item"><span class="compare-label">${v.toUpperCase()}</span><p class="compare-text">${texto}</p></div>`;
-            } catch (e) {}
-        }
-        list.innerHTML = htmlResult;
-    }
+async function compararVersiculo(indiceVerso) {
+    const versoNum = indiceVerso + 1;
+    const livroOriginal = leitorContexto.livro;
+    const cap = leitorContexto.capAtual;
+    const versoes = ['acf', 'nvi', 'kja', 'kjv']; // Incluído o KJV aqui
+    
+    document.getElementById('compare-ref').innerText = `${livroOriginal} ${cap}:${versoNum}`;
+    const list = document.getElementById('compare-list');
+    list.innerHTML = "<p style='text-align:center;'>Carregando comparativo...</p>";
+    document.getElementById('confirm-overlay').style.display = 'block';
+    document.getElementById('compare-modal').style.display = 'block';
 
+    let htmlResult = "";
+
+    // Função interna para limpar acentos e facilitar a busca
+    const limparTexto = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+    for (let v of versoes) {
+        try {
+            const res = await fetch(`${v}.json`);
+            if (!res.ok) continue;
+            const data = await res.json();
+            let listaLivros = Array.isArray(data) ? data : data.livros;
+            
+            // Busca o livro ignorando acentos e maiúsculas
+            const lData = listaLivros.find(l => {
+                const nomeNoArquivo = limparTexto(l.nome || l.name || "");
+                const nomeBuscado = limparTexto(livroOriginal);
+                return nomeNoArquivo === nomeBuscado || l.abbrev === nomeBuscado;
+            });
+
+            if (lData) {
+                const capítulos = lData.chapters || lData.capitulos;
+                const texto = capítulos[cap - 1][indiceVerso];
+                htmlResult += `
+                    <div class="compare-item">
+                        <span class="compare-label">${v.toUpperCase()}</span>
+                        <p class="compare-text" style="text-align: left; margin: 5px 0 0 0;">${texto}</p>
+                    </div>`;
+            }
+        } catch (e) {
+            console.error("Erro na versão " + v, e);
+        }
+    }
+    list.innerHTML = htmlResult || "<p style='text-align:center;'>Versículo não encontrado nas versões disponíveis.</p>";
+}
     function fecharComparacao() { document.getElementById('compare-modal').style.display = 'none'; document.getElementById('confirm-overlay').style.display = 'none'; }
     window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 3000); });
 
@@ -709,6 +736,7 @@
 </script>
 </body>
 </html>
+
 
 
 
