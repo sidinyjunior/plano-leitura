@@ -588,8 +588,18 @@
 
     function concluirEFechar() {
         const updates = {};
-        // MARCA APENAS O CAPÍTULO QUE ESTÁ ABERTO NA TELA
-        updates[`${leitorContexto.livro}_c${leitorContexto.capAtual}`] = true;
+        const idxAtual = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
+        const isUltimo = idxAtual === leitorContexto.diaCaps.length - 1;
+
+        if (isUltimo) {
+            // Se chegou ao fim da série do dia, marca todos os capítulos da lista
+            leitorContexto.diaCaps.forEach(ch => {
+                updates[`${ch.b}_c${ch.c}`] = true;
+            });
+        } else {
+            // Se fechar no meio da série, marca apenas o capítulo que está na tela
+            updates[`${leitorContexto.livro}_c${leitorContexto.capAtual}`] = true;
+        }
 
         db.ref(`users/${currentUser}/progress`).update(updates).then(() => {
             renderPlan();
@@ -653,10 +663,10 @@
         acaoPendente = null;
     }
 
-    function executarAcaoMassa(caps, estado) {
+  function executarAcaoMassa(caps, estado) {
         const updates = {};
         caps.forEach(ch => { 
-            // Se estado for true, marca. Se for false, remove (null).
+            // true para marcar, null para remover a chave e desmarcar de verdade
             updates[`${ch.b}_c${ch.c}`] = estado ? true : null; 
         });
         db.ref(`users/${currentUser}/progress`).update(updates).then(() => renderPlan());
@@ -699,6 +709,7 @@
 </script>
 </body>
 </html>
+
 
 
 
