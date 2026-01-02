@@ -563,19 +563,21 @@ async function abrirLeitorDevocional(id, dataLabel) {
         if (!res.ok) throw new Error("Não encontrado");
         const data = await res.json();
 
-        // Monta o visual com o box azul adaptável (estilo show)
+       // Monta o visual com classes que aceitam mudança de fonte e cor
         cont.innerHTML = `
-            <h2 style="color:#4682B4; text-align:center; margin-bottom: 20px;">${data.titulo}</h2>
-            
-            <div style="background: rgba(70, 130, 180, 0.1); padding: 20px; border-radius: 12px; border-left: 5px solid #4682B4; margin-bottom: 25px;">
-                <p style="font-style: italic; font-size: 1.1rem; margin: 0; color: #2d3436;">"${data.referencia}"</p>
-                <p style="font-weight: bold; text-align: right; margin: 10px 0 0 0; color: #4682B4;">- ${data.versiculo}</p>
-            </div>
+            <div id="devocional-container" style="color: var(--texto-leitor);">
+                <h2 style="color:#4682B4; text-align:center; margin-bottom: 20px;">${data.titulo}</h2>
+                
+                <div style="background: rgba(70, 130, 180, 0.1); padding: 20px; border-radius: 12px; border-left: 5px solid #4682B4; margin-bottom: 25px;">
+                    <p style="font-style: italic; font-size: 1.1rem; margin: 0;">"${data.referencia}"</p>
+                    <p style="font-weight: bold; text-align: right; margin: 10px 0 0 0; color: #4682B4;">- ${data.versiculo}</p>
+                </div>
 
-            <div style="line-height: 1.8; font-size: 1.1rem; text-align: justify; color: #333;">
-                ${data.texto.replace(/\n/g, '<br>')}
+                <div id="texto-corpo-devocional" style="line-height: 1.8; text-align: justify; font-size: inherit;">
+                    ${data.texto.replace(/\n/g, '<br>')}
+                </div>
+                <div style="height: 40px;"></div> 
             </div>
-            <div style="height: 40px;"></div> 
         `;
 
         const footer = document.getElementById('reader-footer-ctrl');
@@ -664,7 +666,14 @@ function concluirDevocional(id) {
         });
     }
     
-    function mudarFonte(delta) { fontSizeAtual += delta; document.getElementById('reader-text').style.fontSize = fontSizeAtual + "rem"; }
+    function mudarFonte(delta) { 
+    fontSizeAtual += delta; 
+    document.getElementById('reader-text').style.fontSize = fontSizeAtual + "rem";
+    
+    // LINHA NOVA: Garante que o corpo do devocional também mude
+    const corpoDev = document.getElementById('texto-corpo-devocional');
+    if(corpoDev) corpoDev.style.fontSize = fontSizeAtual + "rem";
+}
     function setTema(tema) { const overlay = document.getElementById('reader-overlay'); overlay.classList.remove('theme-sepia', 'theme-dark'); if (tema !== 'light') overlay.classList.add('theme-' + tema); }
     function trocarVersao(v) { leitorContexto.versao = v; carregarTextoBiblico(); }
     function fecharLeitor() { 
@@ -797,6 +806,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
