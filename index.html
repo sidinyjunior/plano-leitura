@@ -675,7 +675,7 @@ function concluirDevocional(id) {
     if(corpoDev) corpoDev.style.fontSize = fontSizeAtual + "rem";
 }
     function setTema(tema) { const overlay = document.getElementById('reader-overlay'); overlay.classList.remove('theme-sepia', 'theme-dark'); if (tema !== 'light') overlay.classList.add('theme-' + tema); }
-    function trocarVersao(v) { leitorContexto.versao = v; carregarTextoBiblico(); }
+    function trocarVersao(v) { leitorContexto.versao = v.toLowerCase(); carregarTextoBiblico(); }
     function fecharLeitor() { 
     document.getElementById('reader-overlay').style.display = 'none'; 
     // Garante que o seletor de versão volte a aparecer para a Bíblia
@@ -806,6 +806,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
