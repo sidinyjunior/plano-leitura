@@ -109,7 +109,7 @@
         .ajuda-item { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; text-align: left; }
 
         /* ESTILOS DEVOCIONAL - BANCO INTER */
-        .devocional-box { background: #FF7A00; border-radius: 20px; margin: 45px 0; overflow: hidden; box-shadow: 0 8px 25px rgba(255, 122, 0, 0.25); border: 1px solid #e66e00; }
+        .devocional-box { background: #FF8C00; border-radius: 20px; margin: 45px 0; overflow: hidden; box-shadow: 0 8px 25px rgba(255, 122, 0, 0.25); border: 1px solid #e66e00; }
         .devocional-header { width: 100%; padding: 22px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; background: transparent; color: white; }
         .devocional-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: 800; font-size: 1rem; text-transform: uppercase; }
         .devocional-bar-bg { width: 100%; background: rgba(255, 255, 255, 0.3); height: 12px; border-radius: 6px; margin-top: 12px; overflow: hidden; }
@@ -463,7 +463,7 @@
                             <div class="info">
                                 <div class="info-text-group">
                                     <span class="info-date">${d.label}</span>
-                                    <span class="info-book" style="color:#FF7A00; cursor:pointer;" onclick="abrirLeitorDevocional('${idDev}', '${d.label}')">Devocional ${idDev}</span>
+                                    <span class="info-book" style="color:#FF8C00; cursor:pointer;" onclick="abrirLeitorDevocional('${idDev}', '${d.label}')">Devocional ${idDev}</span>
                                 </div>
                             </div>
                         </div>`;
@@ -491,7 +491,7 @@
             const res = await fetch(url);
             if (!res.ok) throw new Error("Ainda não postado");
             const data = await res.json();
-            cont.innerHTML = `<h2 style="color:#FF7A00; text-align:center;">${data.titulo}</h2><p style="font-style:italic; color:var(--cinza-texto); text-align:center;">${data.referencia || ""}</p><hr style="border:0; border-top:1px solid #eee; margin:20px 0;"><div style="text-align:left; font-size: 1.1rem; line-height: 1.6;">${data.texto}</div>`;
+            cont.innerHTML = `<h2 style="color:#FF8C00; text-align:center;">${data.titulo}</h2><p style="font-style:italic; color:var(--cinza-texto); text-align:center;">${data.referencia || ""}</p><hr style="border:0; border-top:1px solid #eee; margin:20px 0;"><div style="text-align:left; font-size: 1.1rem; line-height: 1.6;">${data.texto}</div>`;
             const footer = document.getElementById('reader-footer-ctrl');
             footer.innerHTML = "";
             footer.appendChild(criarBotaoLeitor("FINALIZAR DEVOCIONAL E FECHAR", "var(--verde-sucesso)", "white", () => concluirDevocional(id), false));
@@ -647,6 +647,7 @@
 </script>
 </body>
 </html>
+
 
 
 
