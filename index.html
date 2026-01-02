@@ -588,10 +588,15 @@
 
     function concluirEFechar() {
         const updates = {};
-        leitorContexto.diaCaps.forEach(ch => { updates[`${ch.b}_c${ch.c}`] = true; });
-        db.ref(`users/${currentUser}/progress`).update(updates).then(() => { renderPlan(); fecharLeitor(); });
-    }
+        // MARCA APENAS O CAPÍTULO QUE ESTÁ ABERTO NA TELA
+        updates[`${leitorContexto.livro}_c${leitorContexto.capAtual}`] = true;
 
+        db.ref(`users/${currentUser}/progress`).update(updates).then(() => {
+            renderPlan();
+            fecharLeitor();
+        });
+    }
+    
     function mudarFonte(delta) { fontSizeAtual += delta; document.getElementById('reader-text').style.fontSize = fontSizeAtual + "rem"; }
     function setTema(tema) { const overlay = document.getElementById('reader-overlay'); overlay.classList.remove('theme-sepia', 'theme-dark'); if (tema !== 'light') overlay.classList.add('theme-' + tema); }
     function trocarVersao(v) { leitorContexto.versao = v; carregarTextoBiblico(); }
@@ -620,14 +625,27 @@
         });
     }
 
-    function confirmarLeituraFisica(diaCapsStr, dataRotulo) {
+      function confirmarLeituraFisica(diaCapsStr, dataRotulo) {
         const caps = JSON.parse(diaCapsStr);
-        acaoPendente = () => executarAcaoMassa(caps, true);
-        document.getElementById('confirm-text').innerText = `MARCAR ${dataRotulo} COMO FINALIZADO?`;
-        document.getElementById('confirm-overlay').style.display = 'block';
-        document.getElementById('custom-confirm').style.display = 'block';
-    }
+        
+        // BUSCA NO BANCO DE DADOS (DENTRO DA MEMÓRIA ATUAL) SE TODOS ESTÃO MARCADOS
+        db.ref(`users/${currentUser}/progress`).once('value', snap => {
+            const prog = snap.val() || {};
+            
+            // Verifica se todos os capítulos desse dia já estão como true no banco
+            const todosLidos = caps.every(ch => prog[`${ch.b}_c${ch.c}`] === true);
+            
+            const acao = todosLidos ? "DESMARCAR" : "MARCAR";
+            const estado = !todosLidos; // Se estão todos lidos, o novo estado será 'false' (desmarcar)
 
+            acaoPendente = () => executarAcaoMassa(caps, estado);
+            
+            document.getElementById('confirm-text').innerText = `${acao} ${dataRotulo} COMO FINALIZADO?`;
+            document.getElementById('confirm-overlay').style.display = 'block';
+            document.getElementById('custom-confirm').style.display = 'block';
+        });
+    }
+    
     function fecharConfirm(resposta) {
         document.getElementById('confirm-overlay').style.display = 'none';
         document.getElementById('custom-confirm').style.display = 'none';
@@ -637,7 +655,10 @@
 
     function executarAcaoMassa(caps, estado) {
         const updates = {};
-        caps.forEach(ch => { updates[`${ch.b}_c${ch.c}`] = estado ? true : null; });
+        caps.forEach(ch => { 
+            // Se estado for true, marca. Se for false, remove (null).
+            updates[`${ch.b}_c${ch.c}`] = estado ? true : null; 
+        });
         db.ref(`users/${currentUser}/progress`).update(updates).then(() => renderPlan());
     }
 
@@ -678,6 +699,7 @@
 </script>
 </body>
 </html>
+
 
 
 
