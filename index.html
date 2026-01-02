@@ -362,16 +362,45 @@
     db.ref('users').on('value', snap => renderCommunity(snap.val()));
 
     function renderCommunity(data) { 
-        const container = document.getElementById('users-container'); container.innerHTML = ""; if(!data) return;
-        const myProfiles = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
-        Object.keys(data).forEach(name => {
-            const user = data[name]; const isMine = myProfiles.includes(name);
-            const totalPercent = calculatePercentByChapters(user.progress);
-            const card = document.createElement('div'); card.className = `user-card ${isMine ? 'meu-perfil' : ''}`;
-            card.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px"><span style="font-weight:bold">${name}</span><span>${totalPercent}% Total</span></div><div class="mini-bar-bg" style="background:#eee; height:8px;"><div class="mini-bar-fill" style="width:${totalPercent}%; background:var(--verde-sucesso);"></div></div>${isMine ? `<div class="actions-row"><button class="btn-action btn-entrar" onclick="loginUser('${name}')">ENTRAR</button><button class="btn-action btn-editar" onclick="editUser('${name}')">EDITAR</button><button class="btn-action btn-deletar" onclick="deleteUser('${name}')">APAGAR</button></div>` : ''}`;
-            container.appendChild(card);
-        });
-    }
+    const container = document.getElementById('users-container'); 
+    container.innerHTML = ""; 
+    if(!data) return;
+
+    const myProfiles = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
+
+    Object.keys(data).forEach(name => {
+        const user = data[name]; 
+        const isMine = myProfiles.includes(name);
+        const totalPercent = calculatePercentByChapters(user.progress);
+        
+        const card = document.createElement('div'); 
+        card.className = `user-card ${isMine ? 'meu-perfil' : ''}`;
+        
+        card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+                <span style="font-weight:bold">${name}</span>
+                <span>${totalPercent}% Total</span>
+            </div>
+            <div class="mini-bar-bg" style="background:#eee; height:8px;">
+                <div class="mini-bar-fill" style="width:${totalPercent}%; background:var(--verde-sucesso);"></div>
+            </div>
+            ${isMine ? `
+                <div class="actions-row">
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 5px;">
+                        <button class="btn-action btn-entrar" onclick="loginUser('${name}')">ENTRAR</button>
+                        <span style="font-size: 10px; color: #7f8c8d; margin-top: 2px;">Último acesso: ${user.ultimoAcesso || '---'}</span>
+                    </div>
+                    <button class="btn-action btn-editar" onclick="editUser('${name}')" style="flex: 0.5;">EDITAR</button>
+                    <button class="btn-action btn-deletar" onclick="deleteUser('${name}')" style="flex: 0.5;">APAGAR</button>
+                </div>` : `
+                <div style="margin-top: 8px; text-align: left;">
+                    <span style="font-size: 10px; color: #95a5a6;">Último acesso: ${user.ultimoAcesso || '---'}</span>
+                </div>
+            `}
+        `;
+        container.appendChild(card);
+    });
+}
 
     function editUser(oldName) {
         dadosEdicaoPendente = oldName;
@@ -415,7 +444,24 @@
     }
 
     function calculatePercentByChapters(progress) { if(!progress) return 0; let lidos = 0; Object.keys(progress).forEach(key => { if(key.includes('_c') && progress[key] === true) lidos++; }); return Math.round((lidos / TOTAL_BIBLE_CHAPTERS) * 100); }
-    function loginUser(name) { currentUser = name; document.getElementById('access-overlay').style.display = 'none'; document.getElementById('inner-branding').style.display = 'block'; document.getElementById('header-main').style.display = "block"; document.getElementById('progress-main').style.display = "block"; document.getElementById('plan-container').style.display = "block"; document.getElementById('footer-developer').style.display = "block";document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); }
+    function loginUser(name) {
+    // 1. Atualiza a data de acesso no banco de dados
+    const agora = new Date().toLocaleDateString('pt-BR');
+    db.ref(`users/${name}`).update({ ultimoAcesso: agora });
+
+    // 2. Executa o login e prepara a interface
+    currentUser = name;
+    document.getElementById('access-overlay').style.display = 'none';
+    document.getElementById('inner-branding').style.display = 'block';
+    document.getElementById('header-main').style.display = "block";
+    document.getElementById('progress-main').style.display = "block";
+    document.getElementById('plan-container').style.display = "block";
+    document.getElementById('footer-developer').style.display = "block";
+    document.getElementById('userNameDisplay').innerText = currentUser;
+    
+    // 3. Renderiza o plano de leitura
+    renderPlan();
+}
     function saveAndExit() { document.getElementById('inner-branding').style.display = 'none'; document.getElementById('header-main').style.display = "none"; document.getElementById('progress-main').style.display = "none"; document.getElementById('plan-container').style.display = "none"; document.getElementById('footer-developer').style.display = "none"; document.getElementById('access-overlay').style.display = 'flex'; currentUser = ""; window.scrollTo(0,0); db.ref('users').once('value', snap => renderCommunity(snap.val())); }
     function distributeChaptersBalanced(range, days) { let chaps = []; for (let i = range[0]; i <= range[1]; i++) { for (let c = 1; c <= BIBLE_BOOKS[i].c; c++) { chaps.push({ b: BIBLE_BOOKS[i].n, c: c }); } } let res = Array.from({ length: days }, () => []); let ratio = chaps.length / days; for (let i = 0; i < chaps.length; i++) { let dIdx = Math.min(Math.floor(i / ratio), days - 1); res[dIdx].push(chaps[i]); } return res; }
     function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); curr.setDate(curr.getDate() + 1); } return dates; }
@@ -727,7 +773,35 @@ async function carregarTextoBiblico() {
     const seletor = document.getElementById('select-versao');
     if (seletor) seletor.style.display = 'inline-block';
 }
-    function registerUser() { const n = document.getElementById('newName').value.trim(); if(!n) return; let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); if(!mp.includes(n)) mp.push(n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); db.ref('users/'+n).update({name:n}); loginUser(n); }
+    function registerUser() {
+    const n = document.getElementById('newName').value.trim();
+    if(!n) return;
+
+    // 1. Verifica quantos usuários já existem no Firebase
+    db.ref('users').once('value', snap => {
+        const users = snap.val() || {};
+        const totalUsers = Object.keys(users).length;
+
+        // 2. Se já houver 150 e o usuário for NOVO (não está apenas reentrando)
+        if (totalUsers >= 4 && !users[n]) {
+            alert("Limite de 4 participantes excedido! Procure o desenvolvedor para solicitar acesso.");
+            return;
+        }
+
+        // 3. Se estiver tudo ok, prossegue com o registro
+        let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
+        if(!mp.includes(n)) mp.push(n);
+        localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
+        
+        // Salva o nome e a data do primeiro acesso
+        const agora = new Date().toLocaleDateString('pt-BR');
+        db.ref('users/'+n).update({
+            name: n,
+            ultimoAcesso: agora
+        });
+        loginUser(n);
+    });
+}
 
     function toggleTri(i) {
         const el = document.getElementById(`list-${i}`);
@@ -851,6 +925,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
