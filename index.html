@@ -108,12 +108,35 @@
         #ajuda-leitor-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); z-index: 12000; width: 85%; max-width: 350px; text-align: center; }
         .ajuda-item { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; text-align: left; }
 
-        /* ESTILOS DEVOCIONAL - BANCO INTER */
-        .devocional-box { background: #FF8C00; border-radius: 20px; margin: 45px 0; overflow: hidden; box-shadow: 0 8px 25px rgba(255, 122, 0, 0.25); border: 1px solid #e66e00; }
-        .devocional-header { width: 100%; padding: 22px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; background: transparent; color: white; }
-        .devocional-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: 800; font-size: 1rem; text-transform: uppercase; }
-        .devocional-bar-bg { width: 100%; background: rgba(255, 255, 255, 0.3); height: 12px; border-radius: 6px; margin-top: 12px; overflow: hidden; }
-        .devocional-bar-fill { height: 100%; background: white; transition: 0.8s ease-in-out; width: 0%; }
+        /* ESTILOS DEVOCIONAL - STEEL BLUE */
+        .devocional-box { 
+            background: #4682B4; 
+            border-radius: 15px; 
+            margin-bottom: 20px; 
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            border: 1px solid #36648B; 
+            box-sizing: border-box;
+        }
+        .devocional-header { 
+            width: 100%; padding: 18px; border: none; 
+            display: flex; flex-direction: column; cursor: pointer; 
+            text-align: left; background: transparent; color: white; 
+        }
+        .devocional-title-row { 
+            display: flex; justify-content: space-between; 
+            align-items: center; width: 100%; font-weight: bold; 
+            font-size: 0.9rem; 
+        }
+        .devocional-bar-bg { 
+            width: 100%; background: rgba(255, 255, 255, 0.3); 
+            height: 12px; border-radius: 6px; margin-top: 5px; overflow: hidden; 
+        }
+        .devocional-bar-fill { 
+            height: 100%; background: white; transition: 0.8s ease-in-out; width: 0%; 
+        }
         .devocional-perc-text { color: white; font-weight: bold; }
     </style>
 </head>
@@ -321,30 +344,21 @@
         document.getElementById('confirm-overlay').style.display = 'block';
         document.getElementById('edit-confirm').style.display = 'block';
     }
-    
+
     function fecharEdit(salvar) {
         const newName = document.getElementById('edit-input-name').value.trim();
         const oldName = dadosEdicaoPendente;
         document.getElementById('confirm-overlay').style.display = 'none';
         document.getElementById('edit-confirm').style.display = 'none';
-        
         if (salvar && newName && newName !== oldName) {
             db.ref('users/' + oldName).once('value', snap => {
                 const userData = snap.val();
-                // 1. Cria o novo nó com os dados antigos
                 db.ref('users/' + newName).set(userData).then(() => {
-                    // 2. Remove o nome antigo
                     db.ref('users/' + oldName).remove().then(() => {
-                        // 3. Atualiza o localStorage para o App saber que este perfil é seu
                         let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
                         mp = mp.map(n => n === oldName ? newName : n);
                         localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
-                        
-                        // 4. CORREÇÃO: Força o Firebase a disparar o gatilho de redesenho da tela
-                        // Isso fará com que o renderCommunity rode de novo e mostre os botões
-                        db.ref('users').once('value', snap => {
-                            renderCommunity(snap.val());
-                        });
+                        db.ref('users').once('value', snap => { renderCommunity(snap.val()); });
                     });
                 });
             });
@@ -367,18 +381,7 @@
 
     function calculatePercentByChapters(progress) { if(!progress) return 0; let lidos = 0; Object.keys(progress).forEach(key => { if(key.includes('_c') && progress[key] === true) lidos++; }); return Math.round((lidos / TOTAL_BIBLE_CHAPTERS) * 100); }
     function loginUser(name) { currentUser = name; document.getElementById('access-overlay').style.display = 'none'; document.getElementById('inner-branding').style.display = 'block'; document.getElementById('header-main').style.display = "block"; document.getElementById('progress-main').style.display = "block"; document.getElementById('plan-container').style.display = "block"; document.getElementById('footer-developer').style.display = "block";document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); }
-    function saveAndExit() { 
-        document.getElementById('inner-branding').style.display = 'none'; 
-        document.getElementById('header-main').style.display = "none"; 
-        document.getElementById('progress-main').style.display = "none"; 
-        document.getElementById('plan-container').style.display = "none"; 
-        document.getElementById('footer-developer').style.display = "none"; 
-        document.getElementById('access-overlay').style.display = 'flex'; 
-        currentUser = ""; 
-        window.scrollTo(0,0);
-        // Recarrega a comunidade para garantir que os botões apareçam
-        db.ref('users').once('value', snap => renderCommunity(snap.val()));
-    }
+    function saveAndExit() { document.getElementById('inner-branding').style.display = 'none'; document.getElementById('header-main').style.display = "none"; document.getElementById('progress-main').style.display = "none"; document.getElementById('plan-container').style.display = "none"; document.getElementById('footer-developer').style.display = "none"; document.getElementById('access-overlay').style.display = 'flex'; currentUser = ""; window.scrollTo(0,0); db.ref('users').once('value', snap => renderCommunity(snap.val())); }
     function distributeChaptersBalanced(range, days) { let chaps = []; for (let i = range[0]; i <= range[1]; i++) { for (let c = 1; c <= BIBLE_BOOKS[i].c; c++) { chaps.push({ b: BIBLE_BOOKS[i].n, c: c }); } } let res = Array.from({ length: days }, () => []); let ratio = chaps.length / days; for (let i = 0; i < chaps.length; i++) { let dIdx = Math.min(Math.floor(i / ratio), days - 1); res[dIdx].push(chaps[i]); } return res; }
     function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); curr.setDate(curr.getDate() + 1); } return dates; }
 
@@ -463,7 +466,7 @@
                             <div class="info">
                                 <div class="info-text-group">
                                     <span class="info-date">${d.label}</span>
-                                    <span class="info-book" style="color:#FF8C00; cursor:pointer;" onclick="abrirLeitorDevocional('${idDev}', '${d.label}')">Devocional ${idDev}</span>
+                                    <span class="info-book" style="color:#4682B4; cursor:pointer;" onclick="abrirLeitorDevocional('${idDev}', '${d.label}')">Devocional ${idDev}</span>
                                 </div>
                             </div>
                         </div>`;
@@ -491,12 +494,12 @@
             const res = await fetch(url);
             if (!res.ok) throw new Error("Ainda não postado");
             const data = await res.json();
-            cont.innerHTML = `<h2 style="color:#FF8C00; text-align:center;">${data.titulo}</h2><p style="font-style:italic; color:var(--cinza-texto); text-align:center;">${data.referencia || ""}</p><hr style="border:0; border-top:1px solid #eee; margin:20px 0;"><div style="text-align:left; font-size: 1.1rem; line-height: 1.6;">${data.texto}</div>`;
+            cont.innerHTML = `<h2 style="color:#4682B4; text-align:center;">${data.titulo}</h2><p style="font-style:italic; color:var(--cinza-texto); text-align:center;">${data.referencia || ""}</p><hr style="border:0; border-top:1px solid #eee; margin:20px 0;"><div style="text-align:left; font-size: 1.1rem; line-height: 1.6;">${data.texto}</div>`;
             const footer = document.getElementById('reader-footer-ctrl');
             footer.innerHTML = "";
             footer.appendChild(criarBotaoLeitor("FINALIZAR DEVOCIONAL E FECHAR", "var(--verde-sucesso)", "white", () => concluirDevocional(id), false));
         } catch (e) {
-            cont.innerHTML = `<div style="text-align:center; padding:40px 20px;"><span style="font-size:4rem;">⏳</span><h3 style="color:#FF7A00;">Devocional Ainda Não Postado</h3><p>Este conteúdo será postado em breve.</p></div>`;
+            cont.innerHTML = `<div style="text-align:center; padding:40px 20px;"><span style="font-size:4rem;">⏳</span><h3 style="color:#4682B4;">Devocional Diário Ainda Não Postado</h3><p>Este conteúdo será postado em breve.</p></div>`;
             document.getElementById('reader-footer-ctrl').innerHTML = ""; 
         }
     }
