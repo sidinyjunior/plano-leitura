@@ -545,8 +545,17 @@ async function abrirLeitorDevocional(id, dataLabel) {
     // Limpa e mostra carregando
     cont.innerHTML = "<div style='text-align:center; padding:20px;'>Carregando Devocional...</div>";
 
-    // Esconde a toolbar da Bíblia para independência total
-    document.querySelector('.reader-toolbar').style.display = 'none';
+    // 1. Mostra a barra de ferramentas
+    const toolbar = document.querySelector('.reader-toolbar');
+    toolbar.style.display = 'flex';
+
+    // 2. Esconde apenas o seletor de versões da Bíblia (que não serve para o devocional)
+    const seletorVersao = document.getElementById('select-versao');
+    if (seletorVersao) seletorVersao.style.display = 'none';
+
+    // 3. Garante que os botões de ferramenta (A+, A-, cores) apareçam
+    const botoesTool = toolbar.querySelectorAll('.btn-tool');
+    botoesTool.forEach(btn => btn.style.display = 'inline-block');
 
     try {
         const url = `https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_${id}.json`;
@@ -658,7 +667,12 @@ function concluirDevocional(id) {
     function mudarFonte(delta) { fontSizeAtual += delta; document.getElementById('reader-text').style.fontSize = fontSizeAtual + "rem"; }
     function setTema(tema) { const overlay = document.getElementById('reader-overlay'); overlay.classList.remove('theme-sepia', 'theme-dark'); if (tema !== 'light') overlay.classList.add('theme-' + tema); }
     function trocarVersao(v) { leitorContexto.versao = v; carregarTextoBiblico(); }
-    function fecharLeitor() { document.getElementById('reader-overlay').style.display = 'none'; document.querySelector('.reader-toolbar').style.display = 'flex'; }
+    function fecharLeitor() { 
+    document.getElementById('reader-overlay').style.display = 'none'; 
+    // Garante que o seletor de versão volte a aparecer para a Bíblia
+    const seletor = document.getElementById('select-versao');
+    if (seletor) seletor.style.display = 'inline-block';
+}
     function registerUser() { const n = document.getElementById('newName').value.trim(); if(!n) return; let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); if(!mp.includes(n)) mp.push(n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); db.ref('users/'+n).update({name:n}); loginUser(n); }
 
     function toggleTri(i) {
@@ -783,6 +797,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
