@@ -454,20 +454,22 @@ function renderPlan() {
                             return `<div class="row"><div class="check-btn ${allDone ? 'done' : ''}"></div><div class="info"><div class="info-text-group"><span class="info-date">${d.label}</span><span class="info-book">${labelBook}</span></div><div class="caps-container">${btns}</div></div></div>`;
                         }).join('')}
                     </div>`; area.appendChild(box);
-                
+               
                 if (tIdx === 3) { 
                     renderBoxDevocional(area, prog);
                 }
-            }); 
+            }); // Este fecha o CONFIG.forEach corretamente
 
             if (ultimoTrimestreAberto !== null) {
                 const elParaReabrir = document.getElementById(`list-${ultimoTrimestreAberto}`);
                 if (elParaReabrir) elParaReabrir.style.display = "block";
             }
+   
             updateProgress();
         });
     }
 
+// FUNÇÃO QUE DESENHA O BOX LARANJA (Corrigida sem barras invertidas)
 function renderBoxDevocional(area, prog) {
     let lidosDev = 0;
     LISTA_DEVOCIONAIS.forEach((d, index) => {
@@ -475,6 +477,7 @@ function renderBoxDevocional(area, prog) {
         if (prog[`devocional_${idDev}`] === true) lidosDev++;
     });
     const pDev = Math.round((lidosDev / TOTAL_DEVOCIONAIS) * 100);
+
     const boxDev = document.createElement('div');
     boxDev.className = 'devocional-box';
     boxDev.innerHTML = `
@@ -504,61 +507,38 @@ function renderBoxDevocional(area, prog) {
                             </div>
                         </div>
                     </div>`;
+            }).join('')}
+        </div>
+    `;
+    area.appendChild(boxDev);
+}
 
-                
-            // Abre ou fecha a lista do Devocional
+// FUNÇÕES DE SUPORTE (Apenas uma cópia de cada)
 function toggleDevocionalList() {
     const el = document.getElementById('list-devocional');
     const isOpen = el.style.display === "block";
-    
-    // Fecha todos os outros trimestres bíblicos para focar no devocional
     document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none');
-    
     el.style.display = isOpen ? "none" : "block";
     ultimoTrimestreAberto = null; 
 }
 
-// Abre o leitor para o Devocional
 async function abrirLeitorDevocional(id, dataLabel) {
     document.getElementById('reader-overlay').style.display = 'flex';
     document.getElementById('reader-title').innerText = `Devocional ${id}`;
     const cont = document.getElementById('reader-text');
     cont.innerHTML = "<p>Carregando devocional...</p>";
-
-    // Esconde a barra de versões bíblicas
     document.querySelector('.reader-toolbar').style.display = 'none';
-
     try {
-        // AQUI: Lembre-se de ajustar para o seu link real do GitHub depois
-        const url = `https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPOSITORIO/main/Devocional_Diario/devocional_${id}.json`;
+        const url = `https://raw.githubusercontent.com/SEU_USUARIO/plano-leitura/main/Devocional_Diario/devocional_${id}.json`;
         const res = await fetch(url);
-        
         if (!res.ok) throw new Error("Ainda não postado");
-
         const data = await res.json();
-        
-        cont.innerHTML = `
-            <h2 style="color:#FF7A00; text-align:center;">${data.titulo}</h2>
-            <p style="font-style:italic; color:var(--cinza-texto); text-align:center;">${data.referencia || ""}</p>
-            <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
-            <div style="text-align:left; font-size: 1.1rem; line-height: 1.6;">${data.texto}</div>
-        `;
-
+        cont.innerHTML = `<h2 style="color:#FF7A00; text-align:center;">${data.titulo}</h2><p style="font-style:italic; color:var(--cinza-texto); text-align:center;">${data.referencia || ""}</p><hr style="border:0; border-top:1px solid #eee; margin:20px 0;"><div style="text-align:left; font-size: 1.1rem; line-height: 1.6;">${data.texto}</div>`;
         const footer = document.getElementById('reader-footer-ctrl');
         footer.innerHTML = "";
-        // O Botão Verde que você pediu:
-        const btnFim = criarBotaoLeitor("FINALIZAR DEVOCIONAL E FECHAR", "var(--verde-sucesso)", "white", () => concluirDevocional(id), false);
-        footer.appendChild(btnFim);
-
+        footer.appendChild(criarBotaoLeitor("FINALIZAR DEVOCIONAL E FECHAR", "var(--verde-sucesso)", "white", () => concluirDevocional(id), false));
     } catch (e) {
-        // Janela padronizada de "Ainda não postado"
-        cont.innerHTML = `
-            <div style="text-align:center; padding:40px 20px;">
-                <span style="font-size:4rem;">⏳</span>
-                <h3 style="color:#FF7A00;">Devocional Ainda Não Postado</h3>
-                <p>Este conteúdo será postado em breve. Continue firme na sua leitura bíblica!</p>
-            </div>
-        `;
+        cont.innerHTML = `<div style="text-align:center; padding:40px 20px;"><span style="font-size:4rem;">⏳</span><h3 style="color:#FF7A00;">Devocional Ainda Não Postado</h3><p>Este conteúdo será postado em breve.</p></div>`;
         document.getElementById('reader-footer-ctrl').innerHTML = ""; 
     }
 }
@@ -832,6 +812,7 @@ function fecharAjudaLeitor() {
 </script>
 </body>
 </html>
+
 
 
 
