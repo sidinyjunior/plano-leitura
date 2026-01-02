@@ -455,18 +455,15 @@ function renderPlan() {
                         }).join('')}
                     </div>`; area.appendChild(box);
                 
-             if (tIdx === 3) { 
+                if (tIdx === 3) { 
                     renderBoxDevocional(area, prog);
-
                 }
+            }); 
 
-                  });
-
-                if (ultimoTrimestreAberto !== null) {
+            if (ultimoTrimestreAberto !== null) {
                 const elParaReabrir = document.getElementById(`list-${ultimoTrimestreAberto}`);
                 if (elParaReabrir) elParaReabrir.style.display = "block";
             }
-   
             updateProgress();
         });
     }
@@ -478,7 +475,6 @@ function renderBoxDevocional(area, prog) {
         if (prog[`devocional_${idDev}`] === true) lidosDev++;
     });
     const pDev = Math.round((lidosDev / TOTAL_DEVOCIONAIS) * 100);
-
     const boxDev = document.createElement('div');
     boxDev.className = 'devocional-box';
     boxDev.innerHTML = `
@@ -495,7 +491,7 @@ function renderBoxDevocional(area, prog) {
             ${LISTA_DEVOCIONAIS.map((d, index) => {
                 const idDev = (index + 1).toString().padStart(3, '0');
                 const isDone = prog[`devocional_${idDev}`] === true;
-                return \`
+                return `
                     <div class="row">
                         <div class="check-btn ${isDone ? 'done' : ''}"></div>
                         <div class="info">
@@ -507,17 +503,49 @@ function renderBoxDevocional(area, prog) {
                                 </span>
                             </div>
                         </div>
-                    </div>\`;
+                    </div>`;
             }).join('')}
         </div>
     `;
     area.appendChild(boxDev);
 }
 
+function toggleDevocionalList() {
+    const el = document.getElementById('list-devocional');
+    const isOpen = el.style.display === "block";
+    document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none');
+    el.style.display = isOpen ? "none" : "block";
+    ultimoTrimestreAberto = null; 
+}
 
+async function abrirLeitorDevocional(id, dataLabel) {
+    document.getElementById('reader-overlay').style.display = 'flex';
+    document.getElementById('reader-title').innerText = `Devocional ${id}`;
+    const cont = document.getElementById('reader-text');
+    cont.innerHTML = "<p>Carregando devocional...</p>";
+    document.querySelector('.reader-toolbar').style.display = 'none';
+    try {
+        const url = `https://raw.githubusercontent.com/SEU_USUARIO/plano-leitura/main/Devocional_Diario/devocional_${id}.json`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Ainda não postado");
+        const data = await res.json();
+        cont.innerHTML = `<h2 style="color:#FF7A00; text-align:center;">${data.titulo}</h2><p style="font-style:italic; color:var(--cinza-texto); text-align:center;">${data.referencia || ""}</p><hr style="border:0; border-top:1px solid #eee; margin:20px 0;"><div style="text-align:left; font-size: 1.1rem; line-height: 1.6;">${data.texto}</div>`;
+        const footer = document.getElementById('reader-footer-ctrl');
+        footer.innerHTML = "";
+        footer.appendChild(criarBotaoLeitor("FINALIZAR DEVOCIONAL E FECHAR", "var(--verde-sucesso)", "white", () => concluirDevocional(id), false));
+    } catch (e) {
+        cont.innerHTML = `<div style="text-align:center; padding:40px 20px;"><span style="font-size:4rem;">⏳</span><h3 style="color:#FF7A00;">Devocional Ainda Não Postado</h3><p>Este conteúdo será postado em breve.</p></div>`;
+        document.getElementById('reader-footer-ctrl').innerHTML = ""; 
+    }
+}
 
-
-    
+function concluirDevocional(id) {
+    db.ref(`users/${currentUser}/progress/devocional_${id}`).set(true).then(() => {
+        renderPlan();
+        fecharLeitor();
+        document.querySelector('.reader-toolbar').style.display = 'flex';
+    });
+}
 
             // Abre ou fecha a lista do Devocional
 function toggleDevocionalList() {
@@ -845,6 +873,7 @@ function fecharAjudaLeitor() {
 </script>
 </body>
 </html>
+
 
 
 
