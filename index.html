@@ -359,7 +359,25 @@
     const TOTAL_BIBLE_CHAPTERS = 1189;
     const CONFIG = [{ ano: 2026, tri: "1º Trimestre: Pentateuco", start: "2026-01-05", end: "2026-03-31", booksIdx: [0, 4] }, { ano: 2026, tri: "2º Trimestre: Históricos Parte 1", start: "2026-04-01", end: "2026-06-30", booksIdx: [5, 9] }, { ano: 2026, tri: "3º Trimestre: Históricos Parte 2", start: "2026-07-01", end: "2026-09-30", booksIdx: [10, 13] }, { ano: 2026, tri: "4º Trimestre: Históricos Parte 3 / Jó", start: "2026-10-01", end: "2026-12-18", booksIdx: [14, 17] }, { ano: 2027, tri: "1º Trimestre: Poéticos", start: "2027-01-04", end: "2027-03-31", booksIdx: [18, 21] }, { ano: 2027, tri: "2º Trimestre: Profetas Maiores", start: "2027-04-01", end: "2027-06-30", booksIdx: [22, 26] }, { ano: 2027, tri: "3º Trimestre: Profetas Menores + N.T. Parte 1", start: "2027-07-01", end: "2027-09-30", booksIdx: [27, 43] }, { ano: 2027, tri: "4º Trimestre: Novo Testamento Parte 2", start: "2027-10-01", end: "2027-12-17", booksIdx: [44, 65] }];
 
-    db.ref('users').on('value', snap => renderCommunity(snap.val()));
+    db.ref('users').on('value', snap => {
+        const data = snap.val();
+        if (data) {
+            // Quando há internet, ele salva uma cópia da comunidade no celular
+            localStorage.setItem('cache_comunidade', JSON.stringify(data));
+            renderCommunity(data);
+        }
+    }, err => {
+        // Se falhar (falta de internet), ele carrega a cópia salva
+        console.log("Carregando nomes em modo offline...");
+        const cache = JSON.parse(localStorage.getItem('cache_comunidade') || "{}");
+        renderCommunity(cache);
+    });
+
+    // Caso abra o app já sem internet, tenta carregar o cache imediatamente
+    if (!navigator.onLine) {
+        const cache = JSON.parse(localStorage.getItem('cache_comunidade') || "{}");
+        if (Object.keys(cache).length > 0) renderCommunity(cache);
+    }
 
     function renderCommunity(data) { 
     const container = document.getElementById('users-container'); 
@@ -956,6 +974,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
