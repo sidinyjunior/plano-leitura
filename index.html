@@ -244,6 +244,7 @@
     <option value="kja">KJA (Português)</option>
     <option value="kjv">KJV (Inglês)</option> </select>
         
+        <button class="btn-tool" id="btn-voz" onclick="alternarVoz()" style="background: var(--amarelo); color: #333; font-size: 1.2rem;">🔊 OUVIRE</button>
         <button class="btn-tool" onclick="mudarFonte(-0.1)">A-</button>
         <button class="btn-tool" onclick="mudarFonte(0.1)">A+</button>
         <button class="btn-tool" style="background:#f4ecd8; color:#5b4636" onclick="setTema('sepia')">S</button>
@@ -825,12 +826,14 @@ async function carregarTextoBiblico() {
 }
     function setTema(tema) { const overlay = document.getElementById('reader-overlay'); overlay.classList.remove('theme-sepia', 'theme-dark'); if (tema !== 'light') overlay.classList.add('theme-' + tema); }
     function trocarVersao(v) { leitorContexto.versao = v.toLowerCase(); carregarTextoBiblico(); }
-    function fecharLeitor() { 
+    
+function fecharLeitor() { 
+    pararVoz(); // Para o áudio imediatamente ao clicar no X
     document.getElementById('reader-overlay').style.display = 'none'; 
-    // Garante que o seletor de versão volte a aparecer para a Bíblia
     const seletor = document.getElementById('select-versao');
     if (seletor) seletor.style.display = 'inline-block';
 }
+    
    function registerUser() {
     const inputNome = document.getElementById('newName');
     const n = inputNome.value.trim();
@@ -1016,9 +1019,59 @@ window.addEventListener('offline', atualizarStatusConexao);
 // Verifica o status assim que o app abre
 atualizarStatusConexao();
 
+    
+let sintetizador = window.speechSynthesis;
+let expressaoVoz = null;
+let lendoAgora = false;
+
+function alternarVoz() {
+    if (lendoAgora) {
+        pararVoz();
+    } else {
+        iniciarLeitura();
+    }
+}
+
+function iniciarLeitura() {
+    // Pega o texto do leitor (Bíblia ou Devocional)
+    const containerTexto = document.getElementById('reader-text');
+    
+    // Remove os números dos versículos para a leitura ficar mais fluida
+    let textoLimpo = containerTexto.innerText.replace(/[0-9]/g, '');
+
+    if (!textoLimpo) return;
+
+    expressaoVoz = new SpeechSynthesisUtterance(textoLimpo);
+    expressaoVoz.lang = 'pt-BR';
+    expressaoVoz.rate = 0.9; // Velocidade ideal para idosos
+
+    expressaoVoz.onstart = () => {
+        lendoAgora = true;
+        document.getElementById('btn-voz').innerText = "🛑 PARAR";
+        document.getElementById('btn-voz').style.background = "var(--vermelho)";
+        document.getElementById('btn-voz').style.color = "white";
+    };
+
+    expressaoVoz.onend = () => pararVoz();
+
+    sintetizador.speak(expressaoVoz);
+}
+
+function pararVoz() {
+    sintetizador.cancel();
+    lendoAgora = false;
+    const btn = document.getElementById('btn-voz');
+    if(btn) {
+        btn.innerText = "🔊 OUVIR";
+        btn.style.background = "var(--amarelo)";
+        btn.style.color = "#333";
+    }
+}
+    
 </script>    
 </body>
 </html>
+
 
 
 
