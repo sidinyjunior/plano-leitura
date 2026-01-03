@@ -244,7 +244,7 @@
     <option value="kja">KJA (Português)</option>
     <option value="kjv">KJV (Inglês)</option> </select>
         
-        <button class="btn-tool" id="btn-voz" onclick="alternarVoz()" style="background: var(--amarelo); color: #333; font-size: 1.2rem;">🔊</button>
+        <button class="btn-tool" id="btn-voz" onclick="alternarVoz()" style="background: var(--amarelo); color: #333; font-size: 1.2rem; min-width: 44px;">🔊</button>
         <button class="btn-tool" onclick="mudarFonte(-0.1)">A-</button>
         <button class="btn-tool" onclick="mudarFonte(0.1)">A+</button>
         <button class="btn-tool" style="background:#f4ecd8; color:#5b4636" onclick="setTema('sepia')">S</button>
@@ -1033,27 +1033,24 @@ function alternarVoz() {
 }
 
 function iniciarLeitura() {
-    // Pega o texto do leitor (Bíblia ou Devocional)
     const containerTexto = document.getElementById('reader-text');
-    
-    // Remove os números dos versículos para a leitura ficar mais fluida
     let textoLimpo = containerTexto.innerText.replace(/[0-9]/g, '');
 
     if (!textoLimpo) return;
 
     expressaoVoz = new SpeechSynthesisUtterance(textoLimpo);
     expressaoVoz.lang = 'pt-BR';
-    expressaoVoz.rate = 0.9; // Velocidade ideal para idosos
+    expressaoVoz.rate = 0.9; 
 
     expressaoVoz.onstart = () => {
         lendoAgora = true;
-        document.getElementById('btn-voz').innerText = "🛑";
+        // ATUALIZAÇÃO: Muda apenas para o ícone de Stop
+        document.getElementById('btn-voz').innerText = "🛑"; 
         document.getElementById('btn-voz').style.background = "var(--vermelho)";
         document.getElementById('btn-voz').style.color = "white";
     };
 
     expressaoVoz.onend = () => pararVoz();
-
     sintetizador.speak(expressaoVoz);
 }
 
@@ -1062,7 +1059,8 @@ function pararVoz() {
     lendoAgora = false;
     const btn = document.getElementById('btn-voz');
     if(btn) {
-        btn.innerText = "🔊";
+        // ATUALIZAÇÃO: Volta para o ícone de Som
+        btn.innerText = "🔊"; 
         btn.style.background = "var(--amarelo)";
         btn.style.color = "#333";
     }
@@ -1071,6 +1069,7 @@ function pararVoz() {
 </script>    
 </body>
 </html>
+
 
 
 
