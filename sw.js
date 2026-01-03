@@ -1,4 +1,4 @@
-const CACHE_NAME = 'plano-bienal-v3'; // Mudei para V2 para forçar a atualização dos ícones
+const CACHE_NAME = 'plano-bienal-v4'; 
 const DINAMICO_CACHE = 'devocionais-dinamicos-v1';
 
 // Arquivos que o celular baixa "invisivelmente" assim que instala
