@@ -1,6 +1,6 @@
 const CACHE_NAME = 'plano-bienal-v1';
 
-// Lista de arquivos para salvar no celular do usuário
+// Arquivos que o celular baixa "invisivelmente" assim que instala
 const assets = [
   './',
   './index.html',
@@ -12,26 +12,25 @@ const assets = [
   './acf.json',
   './kja.json',
   './kjv.json',
-  './nvi.json'
+  './nvi.json',
+  'https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_001.json'
 ];
 
-// Instalação do Service Worker: Salva os arquivos no Cache
+// MANTENHA O INSTALL (Ele baixa a Bíblia e o Layout)
 self.addEventListener('install', event => {
-  console.log('[Service Worker] Instalando: PLANO BIENAL DE LEITURA BÍBLICA & DEVOCIONAL');
+  console.log('[Service Worker] Instalando recursos fixos...');
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(assets);
-    })
+    caches.open(CACHE_NAME).then(cache => cache.addAll(assets))
   );
 });
 
-// Ativação: Limpa caches antigos se você atualizar a versão
+// MANTENHA O ACTIVATE (Ele limpa lixo de versões antigas)
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cache => {
-          if (cache !== CACHE_NAME) {
+          if (cache !== CACHE_NAME && cache !== 'devocionais-dinamicos') {
             return caches.delete(cache);
           }
         })
@@ -40,11 +39,30 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Estratégia de Busca: Tenta o Cache primeiro, se não tiver, busca na rede
+// ESTE É O NOVO FETCH (A inteligência para os devocionais novos)
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    })
-  );
+  const url = event.request.url;
+
+  // Se o App estiver pedindo um devocional (Ex: 002, 003...)
+  if (url.includes('Devocional_Diario/devocional_')) {
+    event.respondWith(
+      fetch(event.request)
+        .then(networkResponse => {
+          // Se tiver internet e o arquivo existir no GitHub, salva no cache novo
+          return caches.open('devocionais-dinamicos').then(cache => {
+            cache.put(event.request, networkResponse.clone());
+            return networkResponse;
+          });
+        })
+        .catch(() => {
+          // Se estiver offline, entrega o que estiver guardado
+          return caches.match(event.request);
+        })
+    );
+  } else {
+    // Para Bíblia e Layout, usa o cache principal
+    event.respondWith(
+      caches.match(event.request).then(response => response || fetch(event.request))
+    );
+  }
 });
