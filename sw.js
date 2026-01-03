@@ -1,4 +1,4 @@
-const CACHE_NAME = 'plano-bienal-v5'; 
+const CACHE_NAME = 'plano-bienal-v6'; 
 const DINAMICO_CACHE = 'devocionais-dinamicos-v1';
 
 // Arquivos que o celular baixa "invisivelmente" assim que instala
