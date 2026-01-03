@@ -361,14 +361,28 @@
 
     db.ref('users').on('value', snap => renderCommunity(snap.val()));
 
-    function renderCommunity(data) { 
+  function renderCommunity(data) { 
     const container = document.getElementById('users-container'); 
     container.innerHTML = ""; 
     if(!data) return;
 
+    // 1. Pega a lista local (ela já mantém a ordem de quem foi salvo primeiro)
     const myProfiles = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
+    
+    // 2. Pega todos os usuários vindos do Firebase
+    const allUsers = Object.keys(data);
 
-    Object.keys(data).forEach(name => {
+    // 3. ORDENAÇÃO INTELIGENTE:
+    // Filtramos apenas os nomes locais que EXISTEM no Firebase (para evitar erros)
+    const meusPerfisOrdenados = myProfiles.filter(name => allUsers.includes(name));
+    
+    // Filtramos os outros usuários que NÃO estão no meu celular
+    const outrosPerfis = allUsers.filter(name => !myProfiles.includes(name));
+
+    // 4. JUNÇÃO FINAL: Primeiro os meus na ordem do LocalStorage, depois os demais
+    const listaOrdenada = [...meusPerfisOrdenados, ...outrosPerfis];
+
+    listaOrdenada.forEach(name => {
         const user = data[name]; 
         const isMine = myProfiles.includes(name);
         const totalPercent = calculatePercentByChapters(user.progress);
@@ -378,8 +392,8 @@
         
         card.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
-                <span style="font-weight:bold">${name}</span>
-                <span>${totalPercent}% Total</span>
+                <span style="font-weight:bold">${isMine ? '⭐ ' + name : name}</span>
+                <span>${totalPercent}%</span>
             </div>
             <div class="mini-bar-bg" style="background:#eee; height:8px;">
                 <div class="mini-bar-fill" style="width:${totalPercent}%; background:var(--verde-sucesso);"></div>
@@ -388,12 +402,12 @@
                 <div class="actions-row">
                     <div style="flex: 1; display: flex; flex-direction: column; gap: 5px;">
                         <button class="btn-action btn-entrar" onclick="loginUser('${name}')">ENTRAR</button>
-                        <span style="font-size: 10px; color: #7f8c8d; margin-top: 2px;">Último acesso: ${user.ultimoAcesso || '---'}</span>
+                        <span style="font-size: 10px; color: #7f8c8d;">Último acesso: ${user.ultimoAcesso || '---'}</span>
                     </div>
                     <button class="btn-action btn-editar" onclick="editUser('${name}')" style="flex: 0.5;">EDITAR</button>
                     <button class="btn-action btn-deletar" onclick="deleteUser('${name}')" style="flex: 0.5;">APAGAR</button>
                 </div>` : `
-                <div style="margin-top: 8px; text-align: left;">
+                <div style="margin-top: 8px;">
                     <span style="font-size: 10px; color: #95a5a6;">Último acesso: ${user.ultimoAcesso || '---'}</span>
                 </div>
             `}
@@ -778,16 +792,27 @@ async function carregarTextoBiblico() {
     const n = inputNome.value.trim();
     if(!n) return;
 
+    // 1. Pega os perfis já salvos neste celular para verificar o limite local
+    let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
+
+    // 2. Trava de 3 perfis por dispositivo (celular)
+    if (mp.length >= 3 && !mp.includes(n)) {
+        alert("Limite atingido! Cada dispositivo pode gerenciar no máximo 3 perfis.");
+        return;
+    }
+
+    // 3. Acessa o Firebase para verificar o limite global (100 pessoas)
     db.ref('users').once('value', snap => {
         const users = snap.val() || {};
         const totalUsers = Object.keys(users).length;
 
+        // Se já houver 100 e o nome for novo no banco de dados
         if (totalUsers >= 100 && !users[n]) {
             alert("Limite de 100 participantes excedido! Procure o desenvolvedor para solicitar acesso.");
             return;
         }
 
-        let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
+        // 4. Se passou nas travas, salva no LocalStorage e no Firebase
         if(!mp.includes(n)) mp.push(n);
         localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
         
@@ -796,9 +821,8 @@ async function carregarTextoBiblico() {
             name: n,
             ultimoAcesso: agora
         }).then(() => {
-            // --- LINHA QUE LIMPA O CAMPO ---
+            // --- O GRAN FINALE: LIMPA O CAMPO E ENTRA ---
             inputNome.value = ""; 
-            // ------------------------------
             loginUser(n);
         });
     });
@@ -926,6 +950,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
