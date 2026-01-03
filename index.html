@@ -1034,9 +1034,16 @@ function alternarVoz() {
 
 function iniciarLeitura() {
     const containerTexto = document.getElementById('reader-text');
-    let textoLimpo = containerTexto.innerText.replace(/[0-9]/g, '');
+    
+    // 1. Pega o texto
+    // 2. Remove os números (0-9)
+    // 3. O SEGREDO: substitui quebras de linha por um espaço simples
+    let textoLimpo = containerTexto.innerText
+                        .replace(/[0-9]/g, '')
+                        .replace(/\n/g, ' ') 
+                        .replace(/\s+/g, ' '); // Remove espaços duplos
 
-    if (!textoLimpo) return;
+    if (!textoLimpo.trim()) return;
 
     expressaoVoz = new SpeechSynthesisUtterance(textoLimpo);
     
@@ -1079,6 +1086,7 @@ function pararVoz() {
 </script>    
 </body>
 </html>
+
 
 
 
