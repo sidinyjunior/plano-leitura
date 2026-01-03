@@ -171,10 +171,6 @@
 
 <body>
 
-<div id="offline-status-bar" style="display:none; width: 100%; background: #ff7675; color: white; text-align: center; padding: 10px; font-size: 0.8rem; font-weight: bold; position: fixed; top: 0; left: 0; z-index: 99999;">
-    ⚠️ VOCÊ ESTÁ OFFLINE. Algumas funções e o ranking podem estar limitados.
-</div>
-    
 <div id="splash-screen">
     <img src="assets/icone.png" alt="Logo">
     <h3>Plano Bienal de Leitura Bíblica & Devocional</h3>
@@ -1017,8 +1013,14 @@ window.addEventListener('offline', atualizarStatusConexao);
 atualizarStatusConexao();
 
 </script>
+
+    <div id="offline-status-bar" style="display:none; width: 100%; background: #ff7675; color: white; text-align: center; padding: 10px; font-size: 0.8rem; font-weight: bold; position: fixed; top: 0; left: 0; z-index: 99999;">
+    ⚠️ VOCÊ ESTÁ OFFLINE. ALGUMAS FUNÇÕES ESTÃO LIMITADAS.
+</div>
+    
 </body>
 </html>
+
 
 
 
