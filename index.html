@@ -171,6 +171,10 @@
 
 <body>
 
+<div id="offline-status-bar" style="display:none; width: 100%; background: #ff7675; color: white; text-align: center; padding: 10px; font-size: 0.8rem; font-weight: bold; position: fixed; top: 0; left: 0; z-index: 99999;">
+    ⚠️ VOCÊ ESTÁ OFFLINE. Algumas funções e o ranking podem estar limitados.
+</div>
+    
 <div id="splash-screen">
     <img src="assets/icone.png" alt="Logo">
     <h3>Plano Bienal de Leitura Bíblica & Devocional</h3>
@@ -789,25 +793,29 @@ async function carregarTextoBiblico() {
     }
 
     function concluirEFechar() {
-        const updates = {};
-        const idxAtual = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
-        const isUltimo = idxAtual === leitorContexto.diaCaps.length - 1;
+    const updates = {};
+    const idxAtual = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
+    const isUltimo = idxAtual === leitorContexto.diaCaps.length - 1;
 
-        if (isUltimo) {
-            // Se chegou ao fim da série do dia, marca todos os capítulos da lista
-            leitorContexto.diaCaps.forEach(ch => {
-                updates[`${ch.b}_c${ch.c}`] = true;
-            });
-        } else {
-            // Se fechar no meio da série, marca apenas o capítulo que está na tela
-            updates[`${leitorContexto.livro}_c${leitorContexto.capAtual}`] = true;
-        }
-
-        db.ref(`users/${currentUser}/progress`).update(updates).then(() => {
-            renderPlan();
-            fecharLeitor();
+    if (isUltimo) {
+        // Se chegou ao fim da série do dia, marca todos os capítulos da lista
+        leitorContexto.diaCaps.forEach(ch => {
+            updates[`${ch.b}_c${ch.c}`] = true;
         });
+    } else {
+        // Se fechar no meio da série, marca apenas o capítulo que está na tela
+        updates[`${leitorContexto.livro}_c${leitorContexto.capAtual}`] = true;
     }
+
+    db.ref(`users/${currentUser}/progress`).update(updates).then(() => {
+        // AVISO DE OFFLINE
+        if (!navigator.onLine) {
+            alert("Progresso salvo localmente! O ranking da família será atualizado assim que você se conectar à internet.");
+        }
+        renderPlan();
+        fecharLeitor();
+    });
+}
     
     function mudarFonte(delta) { 
     fontSizeAtual += delta; 
@@ -917,13 +925,20 @@ async function carregarTextoBiblico() {
     }
 
   function executarAcaoMassa(caps, estado) {
-        const updates = {};
-        caps.forEach(ch => { 
-            // true para marcar, null para remover a chave e desmarcar de verdade
-            updates[`${ch.b}_c${ch.c}`] = estado ? true : null; 
-        });
-        db.ref(`users/${currentUser}/progress`).update(updates).then(() => renderPlan());
-    }
+    const updates = {};
+    caps.forEach(ch => { 
+        // true para marcar, null para remover a chave e desmarcar de verdade
+        updates[`${ch.b}_c${ch.c}`] = estado ? true : null; 
+    });
+
+    db.ref(`users/${currentUser}/progress`).update(updates).then(() => {
+        // AVISO DE OFFLINE
+        if (!navigator.onLine) {
+            alert("Progresso salvo localmente! O ranking da família será atualizado assim que você se conectar à internet.");
+        }
+        renderPlan();
+    });
+}
 
 async function compararVersiculo(indiceVerso) {
     const versoNum = indiceVerso + 1;
@@ -985,9 +1000,28 @@ async function compararVersiculo(indiceVerso) {
 
     function abrirAjudaLeitor() { document.getElementById('confirm-overlay').style.display = 'block'; document.getElementById('ajuda-leitor-modal').style.display = 'block'; }
     function fecharAjudaLeitor() { document.getElementById('ajuda-leitor-modal').style.display = 'none'; document.getElementById('confirm-overlay').style.display = 'none'; }
+
+// Função que alterna o aviso de offline
+function atualizarStatusConexao() {
+    const banner = document.getElementById('offline-status-bar');
+    if (navigator.onLine) {
+        banner.style.display = 'none'; // Esconde se estiver online
+    } else {
+        banner.style.display = 'block'; // Mostra se estiver offline
+    }
+}
+
+// Ouvintes que detectam a mudança de rede instantaneamente
+window.addEventListener('online', atualizarStatusConexao);
+window.addEventListener('offline', atualizarStatusConexao);
+
+// Verifica o status assim que o app abre
+atualizarStatusConexao();
+
 </script>
 </body>
 </html>
+
 
 
 
