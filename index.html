@@ -509,67 +509,76 @@
     function distributeChaptersBalanced(range, days) { let chaps = []; for (let i = range[0]; i <= range[1]; i++) { for (let c = 1; c <= BIBLE_BOOKS[i].c; c++) { chaps.push({ b: BIBLE_BOOKS[i].n, c: c }); } } let res = Array.from({ length: days }, () => []); let ratio = chaps.length / days; for (let i = 0; i < chaps.length; i++) { let dIdx = Math.min(Math.floor(i / ratio), days - 1); res[dIdx].push(chaps[i]); } return res; }
     function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); curr.setDate(curr.getDate() + 1); } return dates; }
 
-    function renderPlan() {
-        const area = document.getElementById('plan-container'); area.innerHTML = "";
-        db.ref('users/'+currentUser+'/progress').once('value', snap => {
-            const prog = snap.val() || {}; let curYear = 0;
-            CONFIG.forEach((t, tIdx) => {
-                if (t.ano !== curYear) { 
-                    curYear = t.ano; 
-                    const y = document.createElement('div'); 
-                    y.style.cssText="font-weight:bold; margin:30px 5px 15px 5px;"; 
-                    y.innerText=`📅 ANO ${curYear}`; 
-                    area.appendChild(y); 
-                }
-                const days = getWeekdays(t.start, t.end); 
-                const readingsByDay = distributeChaptersBalanced(t.booksIdx, days.length);
-                const isCur = tIdx === (function(){ const today = new Date(); for(let i=0; i<CONFIG.length; i++) if(today >= new Date(CONFIG[i].start) && today <= new Date(CONFIG[i].end)) return i; return 0; })();
-                let triLidos = 0; let triTotal = 0;
-                for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) { triTotal += BIBLE_BOOKS[bIdx].c; const bookName = BIBLE_BOOKS[bIdx].n; for(let c = 1; c <= BIBLE_BOOKS[bIdx].c; c++) { if(prog[`${bookName}_c${c}`] === true) triLidos++; } }
-                const pTri = Math.round((triLidos / triTotal) * 100); const isConcluido = pTri === 100;
-                const box = document.createElement('div'); box.className = `trimestre-box ${isCur && !isConcluido ? 'atual' : ''} ${isConcluido ? 'concluido' : ''}`;
-                box.innerHTML = `
-                    <button class="tri-header" onclick="toggleTri(${tIdx})">
-                        <div class="tri-title-row"><span>${t.tri}</span><span id="tri-perc-label-${tIdx}">${pTri}%</span></div>
-                        <div class="mini-bar-bg" style="background:#eee;"><div id="tri-bar-${tIdx}" class="mini-bar-fill" style="width:${pTri}%; background:var(--verde-sucesso);"></div></div>
-                    </button>
-                    <div class="reading-list" id="list-${tIdx}" style="display:none;"> ${days.map((d, dIdx) => {
-                            const dayChaps = readingsByDay[dIdx]; if(!dayChaps.length) return "";
-                            let btns = ""; let allDone = true;
-                            dayChaps.forEach(ch => { 
-                                const key = `${ch.b}_c${ch.c}`; 
-                                const isDone = prog[key] === true; 
-                                if(!isDone) allDone = false; 
-                                btns += `<span class="cap-btn ${isDone?'lido':''}" onclick="abrirLeitor('${ch.b}', ${ch.c}, ${tIdx}, ${dIdx}, '${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}')">${ch.c}</span>`; 
-                            });
-                            btns += `<span class="btn-fisica" title="Marcar leitura física" onclick="confirmarLeituraFisica('${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}', '${d.label}')">📖</span>`;
-                            const first = dayChaps[0], last = dayChaps[dayChaps.length-1]; const labelBook = first.b === last.b ? `${first.b} ${first.c}-${last.c}` : `${first.b} ${first.c} a ${last.b} ${last.c}`;
-                            return `<div class="row"><div class="check-btn ${allDone ? 'done' : ''}"></div><div class="info"><div class="info-text-group"><span class="info-date">${d.label}</span><span class="info-book">${labelBook}</span></div><div class="caps-container">${btns}</div></div></div>`;
-                        }).join('')}
-                    </div>`; 
-                area.appendChild(box);
-                
-             if (tIdx === 3) { 
-                    renderBoxDevocional(area, prog);
-                    
-                    // Verifica se a gaveta de devocionais deve permanecer aberta
-                    if (devocionalAberto) {
-                        const listDev = document.getElementById('list-devocional');
-                        if (listDev) {
-                            listDev.style.display = "block";
-                        }
-                    }
-                }
-            }); // Este fechamento encerra o loop de trimestres (forEach) corretamente
+function renderPlan() {
+    const area = document.getElementById('plan-container'); 
+    area.innerHTML = "";
+    
+    // Chave única para o progresso deste usuário específico
+    const cacheKey = `cache_progresso_${currentUser}`;
 
-            if (ultimoTrimestreAberto !== null) {
-                const elParaReabrir = document.getElementById(`list-${ultimoTrimestreAberto}`);
-                if (elParaReabrir) elParaReabrir.style.display = "block";
+    // 1. FUNÇÃO INTERNA PARA DESENHAR (Lógica que você já tinha)
+    const desenharInterface = (prog) => {
+        area.innerHTML = ""; // Limpa antes de redesenhar
+        let curYear = 0;
+        CONFIG.forEach((t, tIdx) => {
+            if (t.ano !== curYear) { 
+                curYear = t.ano; 
+                const y = document.createElement('div'); 
+                y.style.cssText="font-weight:bold; margin:30px 5px 15px 5px;"; 
+                y.innerText=`📅 ANO ${curYear}`; 
+                area.appendChild(y); 
             }
-            updateProgress();
+            const days = getWeekdays(t.start, t.end); 
+            const readingsByDay = distributeChaptersBalanced(t.booksIdx, days.length);
+            const isCur = tIdx === (function(){ const today = new Date(); for(let i=0; i<CONFIG.length; i++) if(today >= new Date(CONFIG[i].start) && today <= new Date(CONFIG[i].end)) return i; return 0; })();
+            let triLidos = 0; let triTotal = 0;
+            for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) { triTotal += BIBLE_BOOKS[bIdx].c; const bookName = BIBLE_BOOKS[bIdx].n; for(let c = 1; c <= BIBLE_BOOKS[bIdx].c; c++) { if(prog[`${bookName}_c${c}`] === true) triLidos++; } }
+            const pTri = Math.round((triLidos / triTotal) * 100); const isConcluido = pTri === 100;
+            const box = document.createElement('div'); box.className = `trimestre-box ${isCur && !isConcluido ? 'atual' : ''} ${isConcluido ? 'concluido' : ''}`;
+            box.innerHTML = `
+                <button class="tri-header" onclick="toggleTri(${tIdx})">
+                    <div class="tri-title-row"><span>${t.tri}</span><span id="tri-perc-label-${tIdx}">${pTri}%</span></div>
+                    <div class="mini-bar-bg" style="background:#eee;"><div id="tri-bar-${tIdx}" class="mini-bar-fill" style="width:${pTri}%; background:var(--verde-sucesso);"></div></div>
+                </button>
+                <div class="reading-list" id="list-${tIdx}" style="display:none;"> ${days.map((d, dIdx) => {
+                        const dayChaps = readingsByDay[dIdx]; if(!dayChaps.length) return "";
+                        let btns = ""; let allDone = true;
+                        dayChaps.forEach(ch => { 
+                            const key = `${ch.b}_c${ch.c}`; 
+                            const isDone = prog[key] === true; 
+                            if(!isDone) allDone = false; 
+                            btns += `<span class="cap-btn ${isDone?'lido':''}" onclick="abrirLeitor('${ch.b}', ${ch.c}, ${tIdx}, ${dIdx}, '${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}')">${ch.c}</span>`; 
+                        });
+                        btns += `<span class="btn-fisica" title="Marcar leitura física" onclick="confirmarLeituraFisica('${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}', '${d.label}')">📖</span>`;
+                        const first = dayChaps[0], last = dayChaps[dayChaps.length-1]; const labelBook = first.b === last.b ? `${first.b} ${first.c}-${last.c}` : `${first.b} ${first.c} a ${last.b} ${last.c}`;
+                        return `<div class="row"><div class="check-btn ${allDone ? 'done' : ''}"></div><div class="info"><div class="info-text-group"><span class="info-date">${d.label}</span><span class="info-book">${labelBook}</span></div><div class="caps-container">${btns}</div></div></div>`;
+                    }).join('')}
+                </div>`; 
+            area.appendChild(box);
+            if (tIdx === 3) renderBoxDevocional(area, prog);
         });
+
+        if (ultimoTrimestreAberto !== null) {
+            const elParaReabrir = document.getElementById(`list-${ultimoTrimestreAberto}`);
+            if (elParaReabrir) elParaReabrir.style.display = "block";
+        }
+        updateProgress();
+    };
+
+    // 2. TENTA CARREGAR O CACHE DO USUÁRIO IMEDIATAMENTE
+    const progSalvo = JSON.parse(localStorage.getItem(cacheKey) || "{}");
+    if (Object.keys(progSalvo).length > 0) {
+        desenharInterface(progSalvo);
     }
 
+    // 3. BUSCA NO FIREBASE PARA ATUALIZAR
+    db.ref('users/'+currentUser+'/progress').once('value', snap => {
+        const progFirebase = snap.val() || {};
+        localStorage.setItem(cacheKey, JSON.stringify(progFirebase));
+        desenharInterface(progFirebase);
+    });
+}
+    
     function renderBoxDevocional(area, prog) {
         let lidosDev = 0;
         LISTA_DEVOCIONAIS.forEach((d, index) => {
@@ -979,6 +988,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
