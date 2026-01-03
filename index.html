@@ -513,16 +513,17 @@
     function distributeChaptersBalanced(range, days) { let chaps = []; for (let i = range[0]; i <= range[1]; i++) { for (let c = 1; c <= BIBLE_BOOKS[i].c; c++) { chaps.push({ b: BIBLE_BOOKS[i].n, c: c }); } } let res = Array.from({ length: days }, () => []); let ratio = chaps.length / days; for (let i = 0; i < chaps.length; i++) { let dIdx = Math.min(Math.floor(i / ratio), days - 1); res[dIdx].push(chaps[i]); } return res; }
     function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); curr.setDate(curr.getDate() + 1); } return dates; }
 
-function renderPlan() {
+
+    function renderPlan() {
     const area = document.getElementById('plan-container'); 
     area.innerHTML = "";
     
-    // Chave única para o progresso deste usuário específico
+    // Chave para buscar o progresso salvo deste usuário
     const cacheKey = `cache_progresso_${currentUser}`;
 
-    // 1. FUNÇÃO INTERNA PARA DESENHAR (Lógica que você já tinha)
+    // 1. Função interna para construir os blocos na tela
     const desenharInterface = (prog) => {
-        area.innerHTML = ""; // Limpa antes de redesenhar
+        area.innerHTML = ""; 
         let curYear = 0;
         CONFIG.forEach((t, tIdx) => {
             if (t.ano !== curYear) { 
@@ -569,17 +570,14 @@ function renderPlan() {
         updateProgress();
     };
 
-    // 2. TENTA CARREGAR O CACHE DO USUÁRIO IMEDIATAMENTE
-    const progSalvo = JSON.parse(localStorage.getItem(cacheKey) || "{}");
-    if (Object.keys(progSalvo).length > 0) {
-        desenharInterface(progSalvo);
-    }
+    // 2. LOGICA DE CARREGAMENTO: Tenta cache primeiro, depois Firebase
+    const progLocal = JSON.parse(localStorage.getItem(cacheKey) || "{}");
+    if (Object.keys(progLocal).length > 0) desenharInterface(progLocal);
 
-    // 3. BUSCA NO FIREBASE PARA ATUALIZAR
     db.ref('users/'+currentUser+'/progress').once('value', snap => {
         const progFirebase = snap.val() || {};
-        localStorage.setItem(cacheKey, JSON.stringify(progFirebase));
-        desenharInterface(progFirebase);
+        localStorage.setItem(cacheKey, JSON.stringify(progFirebase)); // Atualiza o cache
+        desenharInterface(progFirebase); // Atualiza a tela com dados reais
     });
 }
     
@@ -1021,6 +1019,7 @@ atualizarStatusConexao();
 </script>
 </body>
 </html>
+
 
 
 
