@@ -361,8 +361,7 @@
 
     db.ref('users').on('value', snap => renderCommunity(snap.val()));
 
-    
-function renderCommunity(data) { 
+    function renderCommunity(data) { 
     const container = document.getElementById('users-container'); 
     container.innerHTML = ""; 
     if(!data) return;
@@ -370,21 +369,20 @@ function renderCommunity(data) {
     const myProfiles = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
     const allUsers = Object.keys(data);
 
-    // 1. SEPARAÇÃO: Meus perfis (mantêm a ordem de instalação)
+    // 1. SEPARAÇÃO E RANKING
     const meusPerfisOrdenados = myProfiles.filter(name => allUsers.includes(name));
     
-    // 2. RANKING: Filtra os outros e ordena do maior para o menor %
     const outrosPerfisRankeados = allUsers
         .filter(name => !myProfiles.includes(name))
         .sort((a, b) => {
             const percA = calculatePercentByChapters(data[a].progress);
             const percB = calculatePercentByChapters(data[b].progress);
-            return percB - percA; // Ordem decrescente (Maior % primeiro)
+            return percB - percA;
         });
 
-    // 3. JUNÇÃO FINAL: Seus 3 no topo + Resto da família por Ranking
     const listaOrdenada = [...meusPerfisOrdenados, ...outrosPerfisRankeados];
 
+    // 2. RENDERIZAÇÃO
     listaOrdenada.forEach(name => {
         const user = data[name]; 
         const isMine = myProfiles.includes(name);
@@ -395,12 +393,16 @@ function renderCommunity(data) {
         
         card.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
-                <span style="font-weight:bold">${isMine ? '⭐ ' + name : name}</span>
-                <span style="font-size: 0.85rem; font-weight: bold; color: ${isMine ? 'var(--azul-link)' : 'var(--verde-escuro)'}">${totalPercent}% Total</span>
+                <span style="font-weight:bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 10px;">
+                    ${isMine ? '⭐ ' + name : name}
+                </span>
+                <span style="white-space: nowrap;">${totalPercent}% Total</span>
             </div>
+            
             <div class="mini-bar-bg" style="background:#eee; height:8px;">
                 <div class="mini-bar-fill" style="width:${totalPercent}%; background:var(--verde-sucesso);"></div>
             </div>
+
             ${isMine ? `
                 <div class="actions-row">
                     <div style="flex: 1; display: flex; flex-direction: column; gap: 5px;">
@@ -410,15 +412,15 @@ function renderCommunity(data) {
                     <button class="btn-action btn-editar" onclick="editUser('${name}')" style="flex: 0.5;">EDITAR</button>
                     <button class="btn-action btn-deletar" onclick="deleteUser('${name}')" style="flex: 0.5;">APAGAR</button>
                 </div>` : `
-                <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="margin-top: 8px;">
                     <span style="font-size: 10px; color: #95a5a6;">Último acesso: ${user.ultimoAcesso || '---'}</span>
-                    ${totalPercent === 100 ? '<span style="font-size: 12px;">🏆</span>' : ''}
                 </div>
             `}
         `;
         container.appendChild(card);
     });
 }
+
 
     function editUser(oldName) {
         dadosEdicaoPendente = oldName;
@@ -954,6 +956,7 @@ async function compararVersiculo(indiceVerso) {
 </script>
 </body>
 </html>
+
 
 
 
