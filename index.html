@@ -244,7 +244,7 @@
     <option value="kja">KJA (Português)</option>
     <option value="kjv">KJV (Inglês)</option> </select>
         
-        <button class="btn-tool" id="btn-voz" onclick="alternarVoz()" style="background: var(--amarelo); color: #333; font-size: 1.2rem; min-width: 44px;">▶️</button>
+        <button class="btn-tool" id="btn-voz" onclick="alternarVoz()" style="background: var(--amarelo); color: #333; font-size: 1.2rem; min-width: 44px; display: flex; align-items: center; justify-content: center;">▶️</button>
         <button class="btn-tool" onclick="mudarFonte(-0.1)">A-</button>
         <button class="btn-tool" onclick="mudarFonte(0.1)">A+</button>
         <button class="btn-tool" style="background:#f4ecd8; color:#5b4636" onclick="setTema('sepia')">S</button>
@@ -828,7 +828,7 @@ async function carregarTextoBiblico() {
     function trocarVersao(v) { leitorContexto.versao = v.toLowerCase(); carregarTextoBiblico(); }
     
 function fecharLeitor() { 
-    pararVoz(); // Para o áudio imediatamente ao clicar no X
+    pararVoz(); 
     document.getElementById('reader-overlay').style.display = 'none'; 
     const seletor = document.getElementById('select-versao');
     if (seletor) seletor.style.display = 'inline-block';
@@ -1042,7 +1042,6 @@ function iniciarLeitura() {
     
     // Tenta encontrar uma voz masculina no sistema
     let vozes = sintetizador.getVoices();
-    // No Chrome/Android, a voz "Google português do Brasil" costuma ser a masculina padrão
     let vozMasculina = vozes.find(v => v.lang === 'pt-BR' && v.name.includes('Google'));
     
     if (vozMasculina) {
@@ -1050,14 +1049,15 @@ function iniciarLeitura() {
     }
 
     expressaoVoz.lang = 'pt-BR';
-    expressaoVoz.rate = 1.1; // Velocidade um pouco maior que a anterior
+    expressaoVoz.rate = 1.1; // Velocidade aumentada como solicitado
 
     expressaoVoz.onstart = () => {
         lendoAgora = true;
-        // Ícone da Plaquinha de Pare (Emoji de Pare)
-        document.getElementById('btn-voz').innerText = "🛑"; 
-        document.getElementById('btn-voz').style.background = "var(--vermelho)";
-        document.getElementById('btn-voz').style.color = "white";
+        const btn = document.getElementById('btn-voz');
+        // Ícone de Parar (Quadrado) com fundo amarelo mantido
+        btn.innerText = "⏹️"; 
+        btn.style.background = "var(--amarelo)"; 
+        btn.style.color = "#333";
     };
 
     expressaoVoz.onend = () => pararVoz();
@@ -1069,7 +1069,7 @@ function pararVoz() {
     lendoAgora = false;
     const btn = document.getElementById('btn-voz');
     if(btn) {
-        // Ícone de Play (estilo YouTube)
+        // Volta para o ícone de Play com fundo amarelo
         btn.innerText = "▶️"; 
         btn.style.background = "var(--amarelo)";
         btn.style.color = "#333";
@@ -1079,6 +1079,7 @@ function pararVoz() {
 </script>    
 </body>
 </html>
+
 
 
 
