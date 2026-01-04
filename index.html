@@ -24,6 +24,13 @@
         }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px 15px 2px 15px; display: flex; flex-direction: column; align-items: center; }
         
+        /* TELA DE REDIRECIONAMENTO (ARTIFÍCIO) */
+        #browser-warning {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); 
+            z-index: 30000; color: white; text-align: center; padding: 40px 20px; 
+            flex-direction: column; align-items: center; justify-content: center;
+        }
+
         #install-banner {
             display: none; width: 92%; max-width: 480px; background: #fff5f5; color: #2d3436;
             padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #fed7d7;
@@ -45,34 +52,11 @@
         .display-name { font-weight: bold; font-size: clamp(0.85rem, 4vw, 1.1rem); color: #2d3436; border-bottom: 2px solid var(--verde-whatsapp); padding: 5px 0; text-align: center; text-transform: capitalize; width: 100%; margin-bottom: 10px; }
         .btn-exit { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--verde-whatsapp); color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; text-transform: uppercase; }
         
-       #progress-main { 
-    display: none; 
-    width: 100%; 
-    max-width: 500px; 
-    text-align: center; 
-    
-    /* 1. DESCER O BOTÃO: aumenta o espaço entre o 'Salvar e Sair' e ele */
-    margin: 20px auto 20px auto !important; 
-    
-    /* 2. ESPESSURA (ALTURA): O primeiro valor (30px) controla a altura */
-    /* Aumentei de 15px para 30px para ele ficar bem robusto */
-    padding: 30px 15px; 
-    
-    box-sizing: border-box; 
-    
-    /* 3. COR: Navy */
-    background: #000080 !important; 
-    border-radius: 20px; 
-}
+        #progress-main { 
+            display: none; width: 100%; max-width: 500px; text-align: center; margin: 20px auto 20px auto !important; padding: 30px 15px; box-sizing: border-box; background: #000080 !important; border-radius: 20px; 
+        }
 
-#main-percent { 
-    /* 4. TEXTO MAIÚSCULO VIA CSS */
-    text-transform: uppercase;
-    font-size: 13px; 
-    font-weight: bold; 
-    color: white !important; 
-    margin-bottom: 10px; 
-}
+        #main-percent { text-transform: uppercase; font-size: 13px; font-weight: bold; color: white !important; margin-bottom: 10px; }
         .mini-bar-bg { width: 100%; background: rgba(255,255,255,0.3); height: 12px; border-radius: 6px; overflow: hidden; margin-top: 5px; }
         .mini-bar-fill { height: 100%; background: white; transition: 0.5s; width: 0%; }
 
@@ -134,42 +118,27 @@
         #ajuda-leitor-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); z-index: 12000; width: 85%; max-width: 350px; text-align: center; }
         .ajuda-item { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; text-align: left; }
 
-        /* ESTILOS DEVOCIONAL - STEEL BLUE */
-    .devocional-box { 
-    background: #4682B4; 
-    border-radius: 15px; 
-    /* O primeiro valor é o espaço em cima e embaixo */
-    margin-top: 40px !important; 
-    margin-bottom: 50px !important; 
-    width: 100%;
-    max-width: 500px;
-    overflow: hidden; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
-    border: 1px solid #36648B; 
-    box-sizing: border-box;
-}
-        .devocional-header { 
-            width: 100%; padding: 25px; border: none; 
-            display: flex; flex-direction: column; cursor: pointer; 
-            text-align: left; background: transparent; color: white; 
-        }
-        .devocional-title-row { 
-            display: flex; justify-content: space-between; 
-            align-items: center; width: 100%; font-weight: bold; 
-            font-size: 0.9rem; 
-        }
-        .devocional-bar-bg { 
-            width: 100%; background: rgba(255, 255, 255, 0.3); 
-            height: 12px; border-radius: 6px; margin-top: 5px; overflow: hidden; 
-        }
-        .devocional-bar-fill { 
-            height: 100%; background: white; transition: 0.8s ease-in-out; width: 0%; 
-        }
+        .devocional-box { background: #4682B4; border-radius: 15px; margin-top: 40px !important; margin-bottom: 50px !important; width: 100%; max-width: 500px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #36648B; box-sizing: border-box; }
+        .devocional-header { width: 100%; padding: 25px; border: none; display: flex; flex-direction: column; cursor: pointer; text-align: left; background: transparent; color: white; }
+        .devocional-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: bold; font-size: 0.9rem; }
+        .devocional-bar-bg { width: 100%; background: rgba(255, 255, 255, 0.3); height: 12px; border-radius: 6px; margin-top: 5px; overflow: hidden; }
+        .devocional-bar-fill { height: 100%; background: white; transition: 0.8s ease-in-out; width: 0%; }
         .devocional-perc-text { color: white; font-weight: bold; }
     </style>
 </head>
 
 <body>
+
+<div id="browser-warning">
+    <img src="assets/icone.png" style="width:100px; border-radius:20px; margin-bottom:20px;">
+    <h2 style="color:var(--amarelo); margin-bottom:10px;">Atenção Família!</h2>
+    <p style="font-size:1.1rem; line-height:1.6; margin-bottom:20px;">Para conseguir <b>Instalar</b> o App e usar a Bíblia <b>Offline</b>, você precisa sair do navegador interno do WhatsApp.</p>
+    <div style="background:#222; padding:20px; border-radius:15px; font-size:0.95rem; text-align:left; border-left:4px solid var(--amarelo); width:100%; box-sizing:border-box;">
+        1. Toque nos <b>3 pontinhos</b> (ou no ícone de bússola) lá no topo da tela.<br><br>
+        2. Selecione <b>"Abrir no Chrome"</b> ou <b>"Abrir no Safari"</b>.
+    </div>
+    <button onclick="document.getElementById('browser-warning').style.display='none'" style="margin-top:30px; background:none; border:1px solid #777; color:#777; padding:10px 25px; border-radius:30px; font-size:0.85rem; cursor:pointer;">Continuar sem instalar</button>
+</div>
 
 <div id="offline-status-bar" style="display:none; width: 100%; background: #ff7675; color: white; text-align: center; padding: 10px; font-size: 0.8rem; font-weight: bold; position: fixed; bottom: 0; left: 0; z-index: 99999; margin-bottom: env(safe-area-inset-bottom);">
     ⚠️ VOCÊ ESTÁ OFFLINE. ALGUMAS FUNÇÕES ESTÃO LIMITADAS.
@@ -239,10 +208,10 @@
     </div>
     <div class="reader-toolbar" style="display: flex; background: #245e41; padding: 8px 15px; gap: 10px; align-items: center; overflow-x: auto;">
         <select id="select-versao" onchange="trocarVersao(this.value)" style="background:var(--verde-escuro); color:white; border:none; border-radius:5px; padding:4px;">
-    <option value="acf">ACF (Fiel)</option>
-    <option value="nvi">NVI (Moderna)</option>
-    <option value="kja">KJA (Português)</option>
-    <option value="kjv">KJV (Inglês)</option> </select>
+            <option value="acf">ACF (Fiel)</option>
+            <option value="nvi">NVI (Moderna)</option>
+            <option value="kja">KJA (Português)</option>
+            <option value="kjv">KJV (Inglês)</option> </select>
         
         <button class="btn-tool" id="btn-voz" onclick="alternarVoz()" style="background: var(--amarelo); color: #333; font-size: 1.2rem; min-width: 44px; display: flex; align-items: center; justify-content: center;">▶️</button>
         <button class="btn-tool" onclick="mudarFonte(-0.1)">A-</button>
@@ -263,11 +232,10 @@
         <button class="btn-add" style="width: 100%; padding: 16px; border: none; border-radius: 15px; background: linear-gradient(135deg, var(--verde-whatsapp), var(--verde-escuro)); color: white; font-weight: bold; cursor: pointer;" onclick="registerUser()">CADASTRAR E ENTRAR</button>
         <div id="users-container" style="width:100%; margin-top:25px;"></div>
 
-<footer style="text-align: center; padding-bottom: 0px; margin-top: 25px; width: 100%;">
-    <p style="margin: 0; font-size: 0.85rem; color: #7f8c8d;">Criado e Desenvolvido por <strong>Sidiny Junior</strong></p>
-    <p style="margin: 2px 0 0 0; opacity: 0.6; font-size: 0.75rem; color: #7f8c8d;">Copyright Ⓒ 2026 - Todos os Direitos Reservados</p>
-</footer>
-       
+        <footer style="text-align: center; padding-bottom: 0px; margin-top: 25px; width: 100%;">
+            <p style="margin: 0; font-size: 0.85rem; color: #7f8c8d;">Criado e Desenvolvido por <strong>Sidiny Junior</strong></p>
+            <p style="margin: 2px 0 0 0; opacity: 0.6; font-size: 0.75rem; color: #7f8c8d;">Copyright Ⓒ 2026 - Todos os Direitos Reservados</p>
+        </footer>
     </div>
 </div>
 
@@ -282,7 +250,7 @@
 </div>
 
 <div id="progress-main">
-    <div id="main-percent">0% CONCLUÍDO DO PLANO DE  BÍBLICA</div>
+    <div id="main-percent">0% CONCLUÍDO DO PLANO DE BÍBLICA</div>
     <div class="mini-bar-bg"><div id="main-bar" class="mini-bar-fill"></div></div>
 </div>
 
@@ -301,6 +269,17 @@
     // CONFIGURAÇÃO DATAS DEVOCIONAL
     const DEVOCIONAL_START = "2026-01-05";
     const DEVOCIONAL_END = "2026-12-18";
+
+    function verificarNavegadorCompativel() {
+        const ua = navigator.userAgent || navigator.vendor || window.opera;
+        const isInstagram = ua.indexOf('Instagram') > -1;
+        const isFacebook = ua.indexOf('FBAN') > -1 || ua.indexOf('FBAV') > -1;
+        const isWhatsApp = ua.indexOf('WhatsApp') > -1;
+
+        if (isInstagram || isFacebook || isWhatsApp) {
+            document.getElementById('browser-warning').style.display = 'flex';
+        }
+    }
 
     function gerarDatasDevocional() {
         let curr = new Date(DEVOCIONAL_START + "T12:00:00");
@@ -328,11 +307,10 @@
     let leitorContexto = { livro: "", capAtual: 0, tIdx: 0, dIdx: 0, versao: "acf", diaCaps: [] };
     let fontSizeAtual = 1.2;
     let deferredPrompt;
-    let dadosTemporariosFisica = null;
     let acaoPendente = null;
     let dadosEdicaoPendente = null;
     let ultimoTrimestreAberto = null;
-    let devocionalAberto = false; // Controla se a lista de devocionais deve ficar aberta
+    let devocionalAberto = false;
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -364,728 +342,177 @@
     const TOTAL_BIBLE_CHAPTERS = 1189;
     const CONFIG = [{ ano: 2026, tri: "1º Trimestre: Pentateuco", start: "2026-01-05", end: "2026-03-31", booksIdx: [0, 4] }, { ano: 2026, tri: "2º Trimestre: Históricos Parte 1", start: "2026-04-01", end: "2026-06-30", booksIdx: [5, 9] }, { ano: 2026, tri: "3º Trimestre: Históricos Parte 2", start: "2026-07-01", end: "2026-09-30", booksIdx: [10, 13] }, { ano: 2026, tri: "4º Trimestre: Históricos Parte 3 / Jó", start: "2026-10-01", end: "2026-12-18", booksIdx: [14, 17] }, { ano: 2027, tri: "1º Trimestre: Poéticos", start: "2027-01-04", end: "2027-03-31", booksIdx: [18, 21] }, { ano: 2027, tri: "2º Trimestre: Profetas Maiores", start: "2027-04-01", end: "2027-06-30", booksIdx: [22, 26] }, { ano: 2027, tri: "3º Trimestre: Profetas Menores + N.T. Parte 1", start: "2027-07-01", end: "2027-09-30", booksIdx: [27, 43] }, { ano: 2027, tri: "4º Trimestre: Novo Testamento Parte 2", start: "2027-10-01", end: "2027-12-17", booksIdx: [44, 65] }];
 
-    
     function renderCommunity(data) { 
-    const container = document.getElementById('users-container'); 
-    container.innerHTML = ""; 
-    if(!data) return;
-
-    const myProfiles = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
-    const allUsers = Object.keys(data);
-
-    // 1. SEPARAÇÃO E RANKING
-    const meusPerfisOrdenados = myProfiles.filter(name => allUsers.includes(name));
-    
-    const outrosPerfisRankeados = allUsers
-        .filter(name => !myProfiles.includes(name))
-        .sort((a, b) => {
-            const percA = calculatePercentByChapters(data[a].progress);
-            const percB = calculatePercentByChapters(data[b].progress);
-            return percB - percA;
+        const container = document.getElementById('users-container'); 
+        container.innerHTML = ""; 
+        if(!data) return;
+        const myProfiles = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
+        const allUsers = Object.keys(data);
+        const meusPerfisOrdenados = myProfiles.filter(name => allUsers.includes(name));
+        const outrosPerfisRankeados = allUsers.filter(name => !myProfiles.includes(name)).sort((a, b) => calculatePercentByChapters(data[b].progress) - calculatePercentByChapters(data[a].progress));
+        const listaOrdenada = [...meusPerfisOrdenados, ...outrosPerfisRankeados];
+        listaOrdenada.forEach(name => {
+            const user = data[name]; const isMine = myProfiles.includes(name); const totalPercent = calculatePercentByChapters(user.progress);
+            const card = document.createElement('div'); card.className = `user-card ${isMine ? 'meu-perfil' : ''}`;
+            card.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px"><span style="font-weight:bold;">${isMine ? '⭐ ' + name : name}</span><span>${totalPercent}% Total</span></div><div class="mini-bar-bg" style="background:#eee; height:8px;"><div class="mini-bar-fill" style="width:${totalPercent}%; background:var(--verde-sucesso);"></div></div>${isMine ? `<div class="actions-row"><div style="flex: 1; display: flex; flex-direction: column; gap: 5px;"><button class="btn-action btn-entrar" onclick="loginUser('${name}')">ENTRAR</button><span style="font-size: 10px; color: #7f8c8d;">Último acesso: ${user.ultimoAcesso || '---'}</span></div><button class="btn-action btn-editar" onclick="editUser('${name}')" style="flex: 0.5;">EDITAR</button><button class="btn-action btn-deletar" onclick="deleteUser('${name}')" style="flex: 0.5;">APAGAR</button></div>` : `<div style="margin-top: 8px;"><span style="font-size: 10px; color: #95a5a6;">Último acesso: ${user.ultimoAcesso || '---'}</span></div>`}`;
+            container.appendChild(card);
         });
-
-    const listaOrdenada = [...meusPerfisOrdenados, ...outrosPerfisRankeados];
-
-    // 2. RENDERIZAÇÃO
-    listaOrdenada.forEach(name => {
-        const user = data[name]; 
-        const isMine = myProfiles.includes(name);
-        const totalPercent = calculatePercentByChapters(user.progress);
-        
-        const card = document.createElement('div'); 
-        card.className = `user-card ${isMine ? 'meu-perfil' : ''}`;
-        
-        card.innerHTML = `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
-                <span style="font-weight:bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 10px;">
-                    ${isMine ? '⭐ ' + name : name}
-                </span>
-                <span style="white-space: nowrap;">${totalPercent}% Total</span>
-            </div>
-            
-            <div class="mini-bar-bg" style="background:#eee; height:8px;">
-                <div class="mini-bar-fill" style="width:${totalPercent}%; background:var(--verde-sucesso);"></div>
-            </div>
-
-            ${isMine ? `
-                <div class="actions-row">
-                    <div style="flex: 1; display: flex; flex-direction: column; gap: 5px;">
-                        <button class="btn-action btn-entrar" onclick="loginUser('${name}')">ENTRAR</button>
-                        <span style="font-size: 10px; color: #7f8c8d;">Último acesso: ${user.ultimoAcesso || '---'}</span>
-                    </div>
-                    <button class="btn-action btn-editar" onclick="editUser('${name}')" style="flex: 0.5;">EDITAR</button>
-                    <button class="btn-action btn-deletar" onclick="deleteUser('${name}')" style="flex: 0.5;">APAGAR</button>
-                </div>` : `
-                <div style="margin-top: 8px;">
-                    <span style="font-size: 10px; color: #95a5a6;">Último acesso: ${user.ultimoAcesso || '---'}</span>
-                </div>
-            `}
-        `;
-        container.appendChild(card);
-    });
-}
-
- // TENTA CARREGAR O CACHE IMEDIATAMENTE (Garante visual instantâneo offline)
-    const carregarCacheLocal = () => {
-        const cache = JSON.parse(localStorage.getItem('cache_comunidade') || "{}");
-        if (Object.keys(cache).length > 0) {
-            console.log("Exibindo dados do cache local...");
-            renderCommunity(cache);
-        }
-    };
-
-      // Chama o cache logo na partida
-    carregarCacheLocal();
-
-    // ESCUTA O FIREBASE (Atualiza o cache se houver internet)
-    db.ref('users').on('value', snap => {
-        const data = snap.val();
-        if (data) {
-            console.log("Dados atualizados via Firebase. Sincronizando cache...");
-            localStorage.setItem('cache_comunidade', JSON.stringify(data));
-            renderCommunity(data);
-        }
-    });
-
-    // SEURANÇA EXTRA: Se o navegador detectar que está offline, força o cache de novo
-    window.addEventListener('offline', carregarCacheLocal);
-    
-    function editUser(oldName) {
-        dadosEdicaoPendente = oldName;
-        document.getElementById('edit-input-name').value = oldName;
-        document.getElementById('confirm-overlay').style.display = 'block';
-        document.getElementById('edit-confirm').style.display = 'block';
     }
 
+    const carregarCacheLocal = () => {
+        const cache = JSON.parse(localStorage.getItem('cache_comunidade') || "{}");
+        if (Object.keys(cache).length > 0) renderCommunity(cache);
+    };
+
+    carregarCacheLocal();
+    db.ref('users').on('value', snap => {
+        const data = snap.val();
+        if (data) { localStorage.setItem('cache_comunidade', JSON.stringify(data)); renderCommunity(data); }
+    });
+    window.addEventListener('offline', carregarCacheLocal);
+    
+    function editUser(oldName) { dadosEdicaoPendente = oldName; document.getElementById('edit-input-name').value = oldName; document.getElementById('confirm-overlay').style.display = 'block'; document.getElementById('edit-confirm').style.display = 'block'; }
     function fecharEdit(salvar) {
-        const newName = document.getElementById('edit-input-name').value.trim();
-        const oldName = dadosEdicaoPendente;
-        document.getElementById('confirm-overlay').style.display = 'none';
-        document.getElementById('edit-confirm').style.display = 'none';
+        const newName = document.getElementById('edit-input-name').value.trim(); const oldName = dadosEdicaoPendente; document.getElementById('confirm-overlay').style.display = 'none'; document.getElementById('edit-confirm').style.display = 'none';
         if (salvar && newName && newName !== oldName) {
-            db.ref('users/' + oldName).once('value', snap => {
-                const userData = snap.val();
-                db.ref('users/' + newName).set(userData).then(() => {
-                    db.ref('users/' + oldName).remove().then(() => {
-                        let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
-                        mp = mp.map(n => n === oldName ? newName : n);
-                        localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
-                        db.ref('users').once('value', snap => { renderCommunity(snap.val()); });
-                    });
-                });
-            });
+            db.ref('users/' + oldName).once('value', snap => { const userData = snap.val(); db.ref('users/' + newName).set(userData).then(() => { db.ref('users/' + oldName).remove().then(() => { let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); mp = mp.map(n => n === oldName ? newName : n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); db.ref('users').once('value', snap => { renderCommunity(snap.val()); }); }); }); });
         }
         dadosEdicaoPendente = null;
     }
 
-    function deleteUser(name) {
-        acaoPendente = () => {
-            db.ref('users/' + name).remove().then(() => {
-                let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
-                mp = mp.filter(n => n !== name);
-                localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
-            });
-        };
-        document.getElementById('confirm-text').innerText = `DESEJA REALMENTE APAGAR O PERFIL DE "${name.toUpperCase()}"?`;
-        document.getElementById('confirm-overlay').style.display = 'block';
-        document.getElementById('custom-confirm').style.display = 'block';
-    }
-
+    function deleteUser(name) { acaoPendente = () => { db.ref('users/' + name).remove().then(() => { let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]"); mp = mp.filter(n => n !== name); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); }); }; document.getElementById('confirm-text').innerText = `DESEJA REALMENTE APAGAR O PERFIL DE "${name.toUpperCase()}"?`; document.getElementById('confirm-overlay').style.display = 'block'; document.getElementById('custom-confirm').style.display = 'block'; }
     function calculatePercentByChapters(progress) { if(!progress) return 0; let lidos = 0; Object.keys(progress).forEach(key => { if(key.includes('_c') && progress[key] === true) lidos++; }); return Math.round((lidos / TOTAL_BIBLE_CHAPTERS) * 100); }
-    function loginUser(name) {
-    // 1. Atualiza a data de acesso no banco de dados
-    const agora = new Date().toLocaleDateString('pt-BR');
-    db.ref(`users/${name}`).update({ ultimoAcesso: agora });
-
-    // 2. Executa o login e prepara a interface
-    currentUser = name;
-    document.getElementById('access-overlay').style.display = 'none';
-    document.getElementById('inner-branding').style.display = 'block';
-    document.getElementById('header-main').style.display = "block";
-    document.getElementById('progress-main').style.display = "block";
-    document.getElementById('plan-container').style.display = "block";
-    document.getElementById('footer-developer').style.display = "block";
-    document.getElementById('userNameDisplay').innerText = currentUser;
-    
-    // 3. Renderiza o plano de 
-    renderPlan();
-}
+    function loginUser(name) { currentUser = name; document.getElementById('access-overlay').style.display = 'none'; document.getElementById('inner-branding').style.display = 'block'; document.getElementById('header-main').style.display = "block"; document.getElementById('progress-main').style.display = "block"; document.getElementById('plan-container').style.display = "block"; document.getElementById('footer-developer').style.display = "block"; document.getElementById('userNameDisplay').innerText = currentUser; renderPlan(); db.ref(`users/${name}`).update({ ultimoAcesso: new Date().toLocaleDateString('pt-BR') }); }
     function saveAndExit() { document.getElementById('inner-branding').style.display = 'none'; document.getElementById('header-main').style.display = "none"; document.getElementById('progress-main').style.display = "none"; document.getElementById('plan-container').style.display = "none"; document.getElementById('footer-developer').style.display = "none"; document.getElementById('access-overlay').style.display = 'flex'; currentUser = ""; window.scrollTo(0,0); db.ref('users').once('value', snap => renderCommunity(snap.val())); }
     function distributeChaptersBalanced(range, days) { let chaps = []; for (let i = range[0]; i <= range[1]; i++) { for (let c = 1; c <= BIBLE_BOOKS[i].c; c++) { chaps.push({ b: BIBLE_BOOKS[i].n, c: c }); } } let res = Array.from({ length: days }, () => []); let ratio = chaps.length / days; for (let i = 0; i < chaps.length; i++) { let dIdx = Math.min(Math.floor(i / ratio), days - 1); res[dIdx].push(chaps[i]); } return res; }
     function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); curr.setDate(curr.getDate() + 1); } return dates; }
 
-
     function renderPlan() {
-    const area = document.getElementById('plan-container'); 
-    area.innerHTML = "";
-    
-    // Chave para buscar o progresso salvo deste usuário
-    const cacheKey = `cache_progresso_${currentUser}`;
+        const area = document.getElementById('plan-container'); area.innerHTML = ""; const cacheKey = `cache_progresso_${currentUser}`;
+        const desenharInterface = (prog) => {
+            area.innerHTML = ""; let curYear = 0;
+            CONFIG.forEach((t, tIdx) => {
+                if (t.ano !== curYear) { curYear = t.ano; const y = document.createElement('div'); y.style.cssText="font-weight:bold; margin:30px 5px 15px 5px;"; y.innerText=`📅 ANO ${curYear}`; area.appendChild(y); }
+                const days = getWeekdays(t.start, t.end); const readingsByDay = distributeChaptersBalanced(t.booksIdx, days.length); const isCur = tIdx === (function(){ const today = new Date(); for(let i=0; i<CONFIG.length; i++) if(today >= new Date(CONFIG[i].start) && today <= new Date(CONFIG[i].end)) return i; return 0; })();
+                let triLidos = 0; let triTotal = 0; for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) { triTotal += BIBLE_BOOKS[bIdx].c; const bookName = BIBLE_BOOKS[bIdx].n; for(let c = 1; c <= BIBLE_BOOKS[bIdx].c; c++) { if(prog[`${bookName}_c${c}`] === true) triLidos++; } }
+                const pTri = Math.round((triLidos / triTotal) * 100); const isConcluido = pTri === 100;
+                const box = document.createElement('div'); box.className = `trimestre-box ${isCur && !isConcluido ? 'atual' : ''} ${isConcluido ? 'concluido' : ''}`;
+                box.innerHTML = `<button class="tri-header" onclick="toggleTri(${tIdx})"><div class="tri-title-row"><span>${t.tri}</span><span id="tri-perc-label-${tIdx}">${pTri}%</span></div><div class="mini-bar-bg"><div id="tri-bar-${tIdx}" class="mini-bar-fill" style="width:${pTri}%; background:var(--verde-sucesso);"></div></div></button><div class="reading-list" id="list-${tIdx}" style="display:none;">${days.map((d, dIdx) => { const dayChaps = readingsByDay[dIdx]; if(!dayChaps.length) return ""; let btns = ""; let allDone = true; dayChaps.forEach(ch => { const key = `${ch.b}_c${ch.c}`; const isDone = prog[key] === true; if(!isDone) allDone = false; btns += `<span class="cap-btn ${isDone?'lido':''}" onclick="abrirLeitor('${ch.b}', ${ch.c}, ${tIdx}, ${dIdx}, '${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}')">${ch.c}</span>`; }); btns += `<span class="btn-fisica" onclick="confirmarLeituraFisica('${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}', '${d.label}')">📖</span>`; const labelBook = dayChaps[0].b === dayChaps[dayChaps.length-1].b ? `${dayChaps[0].b} ${dayChaps[0].c}-${dayChaps[dayChaps.length-1].c}` : `${dayChaps[0].b} ${dayChaps[0].c} a ${dayChaps[dayChaps.length-1].b} ${dayChaps[dayChaps.length-1].c}`; return `<div class="row"><div class="check-btn ${allDone ? 'done' : ''}"></div><div class="info"><div class="info-text-group"><span class="info-date">${d.label}</span><span class="info-book">${labelBook}</span></div><div class="caps-container">${btns}</div></div></div>`; }).join('')}</div>`;
+                area.appendChild(box); if (tIdx === 3) renderBoxDevocional(area, prog);
+            });
+            if (ultimoTrimestreAberto !== null) { const el = document.getElementById(`list-${ultimoTrimestreAberto}`); if (el) el.style.display = "block"; }
+            updateProgress();
+        };
+        const progLocal = JSON.parse(localStorage.getItem(cacheKey) || "{}"); if (Object.keys(progLocal).length > 0) desenharInterface(progLocal);
+        db.ref('users/'+currentUser+'/progress').once('value', snap => { const progFirebase = snap.val() || {}; localStorage.setItem(cacheKey, JSON.stringify(progFirebase)); desenharInterface(progFirebase); });
+    }
 
-    // 1. Função interna para construir os blocos na tela
-    const desenharInterface = (prog) => {
-        area.innerHTML = ""; 
-        let curYear = 0;
-        CONFIG.forEach((t, tIdx) => {
-            if (t.ano !== curYear) { 
-                curYear = t.ano; 
-                const y = document.createElement('div'); 
-                y.style.cssText="font-weight:bold; margin:30px 5px 15px 5px;"; 
-                y.innerText=`📅 ANO ${curYear}`; 
-                area.appendChild(y); 
-            }
-            const days = getWeekdays(t.start, t.end); 
-            const readingsByDay = distributeChaptersBalanced(t.booksIdx, days.length);
-            const isCur = tIdx === (function(){ const today = new Date(); for(let i=0; i<CONFIG.length; i++) if(today >= new Date(CONFIG[i].start) && today <= new Date(CONFIG[i].end)) return i; return 0; })();
-            let triLidos = 0; let triTotal = 0;
-            for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) { triTotal += BIBLE_BOOKS[bIdx].c; const bookName = BIBLE_BOOKS[bIdx].n; for(let c = 1; c <= BIBLE_BOOKS[bIdx].c; c++) { if(prog[`${bookName}_c${c}`] === true) triLidos++; } }
-            const pTri = Math.round((triLidos / triTotal) * 100); const isConcluido = pTri === 100;
-            const box = document.createElement('div'); box.className = `trimestre-box ${isCur && !isConcluido ? 'atual' : ''} ${isConcluido ? 'concluido' : ''}`;
-            box.innerHTML = `
-                <button class="tri-header" onclick="toggleTri(${tIdx})">
-                    <div class="tri-title-row"><span>${t.tri}</span><span id="tri-perc-label-${tIdx}">${pTri}%</span></div>
-                    <div class="mini-bar-bg" style="background:#eee;"><div id="tri-bar-${tIdx}" class="mini-bar-fill" style="width:${pTri}%; background:var(--verde-sucesso);"></div></div>
-                </button>
-                <div class="reading-list" id="list-${tIdx}" style="display:none;"> ${days.map((d, dIdx) => {
-                        const dayChaps = readingsByDay[dIdx]; if(!dayChaps.length) return "";
-                        let btns = ""; let allDone = true;
-                        dayChaps.forEach(ch => { 
-                            const key = `${ch.b}_c${ch.c}`; 
-                            const isDone = prog[key] === true; 
-                            if(!isDone) allDone = false; 
-                            btns += `<span class="cap-btn ${isDone?'lido':''}" onclick="abrirLeitor('${ch.b}', ${ch.c}, ${tIdx}, ${dIdx}, '${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}')">${ch.c}</span>`; 
-                        });
-                        btns += `<span class="btn-fisica" title="Marcar leitura física" onclick="confirmarLeituraFisica('${JSON.stringify(dayChaps).replace(/"/g, '&quot;')}', '${d.label}')">📖</span>`;
-                        const first = dayChaps[0], last = dayChaps[dayChaps.length-1]; const labelBook = first.b === last.b ? `${first.b} ${first.c}-${last.c}` : `${first.b} ${first.c} a ${last.b} ${last.c}`;
-                        return `<div class="row"><div class="check-btn ${allDone ? 'done' : ''}"></div><div class="info"><div class="info-text-group"><span class="info-date">${d.label}</span><span class="info-book">${labelBook}</span></div><div class="caps-container">${btns}</div></div></div>`;
-                    }).join('')}
-                </div>`; 
-            area.appendChild(box);
-            if (tIdx === 3) renderBoxDevocional(area, prog);
-        });
-
-        if (ultimoTrimestreAberto !== null) {
-            const elParaReabrir = document.getElementById(`list-${ultimoTrimestreAberto}`);
-            if (elParaReabrir) elParaReabrir.style.display = "block";
-        }
-        updateProgress();
-    };
-
-    // 2. LOGICA DE CARREGAMENTO: Tenta cache primeiro, depois Firebase
-    const progLocal = JSON.parse(localStorage.getItem(cacheKey) || "{}");
-    if (Object.keys(progLocal).length > 0) desenharInterface(progLocal);
-
-    db.ref('users/'+currentUser+'/progress').once('value', snap => {
-        const progFirebase = snap.val() || {};
-        localStorage.setItem(cacheKey, JSON.stringify(progFirebase)); // Atualiza o cache
-        desenharInterface(progFirebase); // Atualiza a tela com dados reais
-    });
-}
-    
     function renderBoxDevocional(area, prog) {
-        let lidosDev = 0;
-        LISTA_DEVOCIONAIS.forEach((d, index) => {
-            const idDev = (index + 1).toString().padStart(3, '0');
-            if (prog[`devocional_${idDev}`] === true) lidosDev++;
-        });
+        let lidosDev = 0; LISTA_DEVOCIONAIS.forEach((d, index) => { if (prog[`devocional_${(index+1).toString().padStart(3, '0')}`] === true) lidosDev++; });
         const pDev = Math.round((lidosDev / TOTAL_DEVOCIONAIS) * 100);
-        const boxDev = document.createElement('div');
-        boxDev.className = 'devocional-box';
-        boxDev.innerHTML = `
-            <button class="devocional-header" onclick="toggleDevocionalList()">
-                <div class="devocional-title-row">
-                    <span>📙 DEVOCIONAL DIÁRIO 2026</span>
-                    <span id="dev-perc-label" class="devocional-perc-text">${pDev}%</span>
-                </div>
-                <div class="devocional-bar-bg">
-                    <div id="dev-bar-fill" class="devocional-bar-fill" style="width:${pDev}%"></div>
-                </div>
-            </button>
-            <div class="reading-list" id="list-devocional" style="display:none; background:#fff;">
-                ${LISTA_DEVOCIONAIS.map((d, index) => {
-                    const idDev = (index + 1).toString().padStart(3, '0');
-                    const isDone = prog[`devocional_${idDev}`] === true;
-                    return `<div class="row">
-                            <div class="check-btn ${isDone ? 'done' : ''}"></div>
-                            <div class="info">
-                                <div class="info-text-group">
-                                    <span class="info-date">${d.label}</span>
-                                    <span class="info-book" style="color:#4682B4; cursor:pointer;" onclick="abrirLeitorDevocional('${idDev}', '${d.label}')">Devocional ${idDev}</span>
-                                </div>
-                            </div>
-                        </div>`;
-                }).join('')}
-            </div>`;
+        const boxDev = document.createElement('div'); boxDev.className = 'devocional-box';
+        boxDev.innerHTML = `<button class="devocional-header" onclick="toggleDevocionalList()"><div class="devocional-title-row"><span>📙 DEVOCIONAL DIÁRIO 2026</span><span id="dev-perc-label" class="devocional-perc-text">${pDev}%</span></div><div class="devocional-bar-bg"><div id="dev-bar-fill" class="devocional-bar-fill" style="width:${pDev}%"></div></div></button><div class="reading-list" id="list-devocional" style="display:none; background:#fff;">${LISTA_DEVOCIONAIS.map((d, index) => { const idDev = (index + 1).toString().padStart(3, '0'); const isDone = prog[`devocional_${idDev}`] === true; return `<div class="row"><div class="check-btn ${isDone ? 'done' : ''}"></div><div class="info"><div class="info-text-group"><span class="info-date">${d.label}</span><span class="info-book" style="color:#4682B4; cursor:pointer;" onclick="abrirLeitorDevocional('${idDev}', '${d.label}')">Devocional ${idDev}</span></div></div></div>`; }).join('')}</div>`;
         area.appendChild(boxDev);
     }
 
- function toggleDevocionalList() {
-    const el = document.getElementById('list-devocional');
-    const isOpen = el.style.display === "block";
-    
-    // Fecha as outras listas de trimestres
-    document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none');
-    
-    if (isOpen) {
-        el.style.display = "none";
-        devocionalAberto = false;
-    } else {
-        el.style.display = "block";
-        devocionalAberto = true;
-        ultimoTrimestreAberto = null; 
-    }
-}
+    function toggleDevocionalList() { const el = document.getElementById('list-devocional'); const isOpen = el.style.display === "block"; document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none'); if (isOpen) { el.style.display = "none"; devocionalAberto = false; } else { el.style.display = "block"; devocionalAberto = true; ultimoTrimestreAberto = null; } }
 
-async function abrirLeitorDevocional(id, dataLabel) {
-    // 1. RESET DE ESTADO (O segredo da independência)
-    setTema('light'); // Força o modo claro sempre que abrir devocional
-    fontSizeAtual = 1.1; // Reseta o tamanho da fonte
-    document.getElementById('reader-text').style.fontSize = "1.1rem";
-
-    // 2. PREPARAÇÃO DA TELA
-    document.getElementById('reader-overlay').style.display = 'flex';
-    
-    // --- NOVO BLOCO DO TÍTULO COM ÍCONE ---
-    const idFormatado = String(id).padStart(3, '0');
-    document.getElementById('reader-title').innerHTML = `
-        <img src="assets/icone_titulo_devocional.png" 
-             style="width: 26px; height: 26px; vertical-align: middle; margin-right: 8px; margin-top: -3px;">
-        Devocional ${idFormatado} - ${dataLabel}
-    `;
-    // ---------------------------------------
-    
-    const cont = document.getElementById('reader-text');
-    
-    // Limpa e mostra carregando
-    cont.innerHTML = "<div style='text-align:center; padding:20px;'>Carregando Devocional...</div>";
-
-    // 1. Mostra a barra de ferramentas
-    const toolbar = document.querySelector('.reader-toolbar');
-    toolbar.style.display = 'flex';
-
-    // 2. Esconde apenas o seletor de versões da Bíblia
-    const seletorVersao = document.getElementById('select-versao');
-    if (seletorVersao) seletorVersao.style.display = 'none';
-
-    // 3. Garante que os botões de ferramenta (A+, A-, cores) apareçam
-    const botoesTool = toolbar.querySelectorAll('.btn-tool');
-    botoesTool.forEach(btn => btn.style.display = 'inline-block');
-
-    try {
-        const url = `https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_${id}.json`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("Não encontrado");
-        const data = await res.json();
-
-       // Monta o visual com classes que aceitam mudança de fonte e cor
-        cont.innerHTML = `
-            <div id="devocional-container" style="color: var(--texto-leitor);">
-                <h2 style="color:#4682B4; text-align:center; margin-bottom: 20px;">${data.titulo}</h2>
-                
-                <div style="background: rgba(70, 130, 180, 0.1); padding: 20px; border-radius: 12px; border-left: 5px solid #4682B4; margin-bottom: 25px;">
-                    <p style="font-style: italic; font-size: 1.1rem; margin: 0;">"${data.referencia}"</p>
-                    <p style="font-weight: bold; text-align: right; margin: 10px 0 0 0; color: #4682B4;">- ${data.versiculo}</p>
-                </div>
-
-                <div id="texto-corpo-devocional" style="line-height: 1.8; text-align: justify; font-size: inherit;">
-                    ${data.texto.replace(/\n/g, '<br>')}
-                </div>
-                <div style="height: 40px;"></div> 
-            </div>
-        `;
-
-        const footer = document.getElementById('reader-footer-ctrl');
-        footer.innerHTML = "";
-        footer.appendChild(criarBotaoLeitor("FINALIZAR DEVOCIONAL E FECHAR", "var(--verde-sucesso)", "white", () => concluirDevocional(id), false));
-
-    } catch (e) {
-        console.error(e);
-        cont.innerHTML = "<div style='text-align:center; padding:40px;'>⏳ Devocional ainda não postado.</div>";
-        document.getElementById('reader-footer-ctrl').innerHTML = ""; 
-    }
-}
-
-function concluirDevocional(id) {
-    db.ref(`users/${currentUser}/progress/devocional_${id}`).set(true).then(() => {
-        renderPlan();
-        fecharLeitor();
-        document.querySelector('.reader-toolbar').style.display = 'flex';
-    });
-}
-
-    async function abrirLeitor(livro, cap, t, d, diaCapsStr) {
-        leitorContexto = { ...leitorContexto, livro, capAtual: cap, tIdx: t, dIdx: d, diaCaps: JSON.parse(diaCapsStr) };
-        document.getElementById('reader-overlay').style.display = 'flex'; carregarTextoBiblico();
+    async function abrirLeitorDevocional(id, dataLabel) {
+        setTema('light'); fontSizeAtual = 1.1; document.getElementById('reader-text').style.fontSize = "1.1rem"; document.getElementById('reader-overlay').style.display = 'flex';
+        document.getElementById('reader-title').innerHTML = `<img src="assets/icone_titulo_devocional.png" style="width: 26px; height: 26px; vertical-align: middle; margin-right: 8px;"> Devocional ${id.padStart(3, '0')} - ${dataLabel}`;
+        const cont = document.getElementById('reader-text'); cont.innerHTML = "Carregando Devocional...";
+        document.querySelector('.reader-toolbar').style.display = 'flex'; document.getElementById('select-versao').style.display = 'none';
+        try {
+            const res = await fetch(`https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_${id}.json`);
+            if (!res.ok) throw new Error(); const data = await res.json();
+            cont.innerHTML = `<div id="devocional-container"><h2 style="color:#4682B4; text-align:center;">${data.titulo}</h2><div style="background: rgba(70, 130, 180, 0.1); padding: 20px; border-radius: 12px; border-left: 5px solid #4682B4; margin: 20px 0;"><p style="font-style: italic;">"${data.referencia}"</p><p style="font-weight: bold; text-align: right;">- ${data.versiculo}</p></div><div id="texto-corpo-devocional" style="line-height: 1.8; text-align: justify;">${data.texto.replace(/\n/g, '<br>')}</div></div>`;
+            document.getElementById('reader-footer-ctrl').innerHTML = `<button class="btn-nav-leitor btn-expand" style="background:var(--verde-sucesso); color:white;" onclick="concluirDevocional('${id}')">FINALIZAR DEVOCIONAL E FECHAR</button>`;
+        } catch (e) { cont.innerHTML = "⏳ Devocional ainda não postado."; document.getElementById('reader-footer-ctrl').innerHTML = ""; }
     }
 
-async function carregarTextoBiblico() {
-    try {
-        const res = await fetch(`${leitorContexto.versao}.json`);
-        
-        // Segurança: interrompe se o arquivo não for encontrado
-        if (!res.ok) throw new Error("Arquivo não encontrado");
-
-        const data = await res.json();
-
-        // Ajuste para KJV (Array direto) vs Outros (Objeto com chave .livros)
-        let listaLivros = Array.isArray(data) ? data : (data.livros || data.capitulos);
-
-        const mapaAbrev = { "Gênesis": "gn", "Êxodo": "ex", "Levítico": "lv", "Números": "nm", "Deuteronômio": "dt", "Josué": "js", "Juízes": "jz", "Rute": "rt", "1 Samuel": "1sm", "2 Samuel": "2sm", "1 Reis": "1rs", "2 Reis": "2rs", "1 Crônicas": "1cr", "2 Crônicas": "2cr", "Esdras": "ez", "Neemias": "ne", "Ester": "et", "Jó": "jo", "Salmos": "sl", "Provérbios": "pv", "Eclesiastes": "ec", "Cantares": "ct", "Isaías": "is", "Jeremias": "jr", "Lamentações": "lm", "Ezequiel": "ez", "Daniel": "dn", "Oseias": "os", "Joel": "jl", "Amós": "am", "Obadias": "ob", "Jonas": "jn", "Miqueias": "mq", "Naum": "na", "Habacuque": "hc", "Sofonias": "sf", "Ageu": "ag", "Zacarias": "zc", "Malaquias": "ml", "Mateus": "mt", "Marcos": "mc", "Lucas": "lc", "João": "jo", "Atos": "at", "Romanos": "rm", "1 Coríntios": "1co", "2 Coríntios": "2co", "Gálatas": "gl", "Efésios": "ef", "Filipenses": "fp", "Colossenses": "cl", "1 Tessalonicenses": "1ts", "2 Tessalonicenses": "2ts", "1 Timóteo": "1tm", "2 Timóteo": "2tm", "Tito": "tt", "Filemom": "fm", "Hebreus": "hb", "Tiago": "tg", "1 Pedro": "1pe", "2 Pedro": "2pe", "1 João": "1jo", "2 João": "2jo", "3 João": "3jo", "Judas": "jd", "Apocalipse": "ap" };
-        
-        const nomeBusca = leitorContexto.livro; 
-        const abrevBusca = mapaAbrev[nomeBusca]; 
-
-        // BUSCA INTELIGENTE: Cruza nome, nome em inglês e abreviação
-        const lData = listaLivros.find(l => {
-            const nomeArquivo = (l.nome || l.name || "").toLowerCase();
-            const abrevArquivo = (l.abbrev || l.abbreviation || l.abrev || "").toLowerCase();
-            
-            return nomeArquivo === nomeBusca.toLowerCase() || 
-                   nomeArquivo === nomeBusca || 
-                   abrevArquivo === abrevBusca;
-        });
-        
-        if (!lData) {
-            console.error("Livro não encontrado na versão selecionada:", nomeBusca);
-            return;
-        }
-        
-        const capítulos = lData.chapters || lData.capitulos;
-        const versos = capítulos[leitorContexto.capAtual - 1];
-        
-        document.getElementById('reader-title').innerText = `${leitorContexto.livro} ${leitorContexto.capAtual}`;
-        const cont = document.getElementById('reader-text');
-        
-        // Garante que o texto siga o tema (Claro/Noturno)
-        cont.style.color = "var(--texto-leitor)";
-        
-        cont.innerHTML = versos.map((v, i) => `<div class="verse-row" onclick="compararVersiculo(${i})"><span class="verse-num">${i+1}</span><span>${v}</span></div>`).join('');
-        cont.scrollTop = 0; 
-        atualizarBotoesNavegacao();
-
-    } catch(e) { 
-        console.error("Erro ao carregar texto bíblico:", e); 
+    function concluirDevocional(id) { db.ref(`users/${currentUser}/progress/devocional_${id}`).set(true).then(() => { renderPlan(); fecharLeitor(); }); }
+    async function abrirLeitor(livro, cap, t, d, diaCapsStr) { leitorContexto = { ...leitorContexto, livro, capAtual: cap, tIdx: t, dIdx: d, diaCaps: JSON.parse(diaCapsStr) }; document.getElementById('reader-overlay').style.display = 'flex'; carregarTextoBiblico(); }
+    async function carregarTextoBiblico() {
+        try {
+            const res = await fetch(`${leitorContexto.versao}.json`); if (!res.ok) throw new Error(); const data = await res.json();
+            let lista = Array.isArray(data) ? data : (data.livros || data.capitulos);
+            const mapa = { "Gênesis": "gn", "Êxodo": "ex", "Levítico": "lv", "Números": "nm", "Deuteronômio": "dt", "Josué": "js", "Juízes": "jz", "Rute": "rt", "1 Samuel": "1sm", "2 Samuel": "2sm", "1 Reis": "1rs", "2 Reis": "2rs", "1 Crônicas": "1cr", "2 Crônicas": "2cr", "Esdras": "ez", "Neemias": "ne", "Ester": "et", "Jó": "jo", "Salmos": "sl", "Provérbios": "pv", "Eclesiastes": "ec", "Cantares": "ct", "Isaías": "is", "Jeremias": "jr", "Lamentações": "lm", "Ezequiel": "ez", "Daniel": "dn", "Oseias": "os", "Joel": "jl", "Amós": "am", "Obadias": "ob", "Jonas": "jn", "Miqueias": "mq", "Naum": "na", "Habacuque": "hc", "Sofonias": "sf", "Ageu": "ag", "Zacarias": "zc", "Malaquias": "ml", "Mateus": "mt", "Marcos": "mc", "Lucas": "lc", "João": "jo", "Atos": "at", "Romanos": "rm", "1 Coríntios": "1co", "2 Coríntios": "2co", "Gálatas": "gl", "Efésios": "ef", "Filipenses": "fp", "Colossenses": "cl", "1 Tessalonicenses": "1ts", "2 Tessalonicenses": "2ts", "1 Timóteo": "1tm", "2 Timóteo": "2tm", "Tito": "tt", "Filemom": "fm", "Hebreus": "hb", "Tiago": "tg", "1 Pedro": "1pe", "2 Pedro": "2pe", "1 João": "1jo", "2 João": "2jo", "3 João": "3jo", "Judas": "jd", "Apocalipse": "ap" };
+            const lData = lista.find(l => (l.nome || l.name || "").toLowerCase() === leitorContexto.livro.toLowerCase() || (l.abbrev || "").toLowerCase() === mapa[leitorContexto.livro]);
+            const versos = (lData.chapters || lData.capitulos)[leitorContexto.capAtual - 1];
+            document.getElementById('reader-title').innerText = `${leitorContexto.livro} ${leitorContexto.capAtual}`;
+            const cont = document.getElementById('reader-text'); cont.style.color = "var(--texto-leitor)";
+            cont.innerHTML = versos.map((v, i) => `<div class="verse-row" onclick="compararVersiculo(${i})"><span class="verse-num">${i+1}</span><span>${v}</span></div>`).join('');
+            cont.scrollTop = 0; atualizarBotoesNavegacao();
+        } catch(e) { console.error(e); }
     }
-}
 
     function atualizarBotoesNavegacao() {
         const footer = document.getElementById('reader-footer-ctrl'); footer.innerHTML = "";
-        const idxAtual = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
-        const isPrimeiro = idxAtual === 0; const isUltimo = idxAtual === leitorContexto.diaCaps.length - 1;
-        if (!isPrimeiro) footer.appendChild(criarBotaoLeitor("❮", "#eee", "#333", () => navegarNoDia(-1), true));
-        else { const s = document.createElement("div"); s.style.flex = "0.8"; footer.appendChild(s); }
-        const labelVerde = isUltimo ? "LEITURA DO DIA CONCLUÍDA" : "FINALIZAR CAPÍTULO E FECHAR ";
-        footer.appendChild(criarBotaoLeitor(labelVerde, "var(--verde-sucesso)", "white", () => concluirEFechar(), false));
-        if (!isUltimo) footer.appendChild(criarBotaoLeitor("❯", "var(--azul-link)", "white", () => navegarNoDia(1), true));
-        else { const s = document.createElement("div"); s.style.flex = "0.8"; footer.appendChild(s); }
+        const idx = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
+        if (idx !== 0) footer.appendChild(criarBotaoLeitor("❮", "#eee", "#333", () => navegarNoDia(-1), true)); else { const s = document.createElement("div"); s.style.flex = "0.8"; footer.appendChild(s); }
+        footer.appendChild(criarBotaoLeitor(idx === leitorContexto.diaCaps.length - 1 ? "LEITURA DO DIA CONCLUÍDA" : "PRÓXIMO CAPÍTULO", "var(--verde-sucesso)", "white", () => concluirEFechar(), false));
+        if (idx !== leitorContexto.diaCaps.length - 1) footer.appendChild(criarBotaoLeitor("❯", "var(--azul-link)", "white", () => navegarNoDia(1), true)); else { const s = document.createElement("div"); s.style.flex = "0.8"; footer.appendChild(s); }
     }
 
-    function criarBotaoLeitor(label, bg, color, acao, isSide) {
-        const btn = document.createElement("button"); btn.className = `btn-nav-leitor ${isSide ? 'btn-side' : 'btn-expand'}`;
-        btn.style.background = bg; btn.style.color = color; btn.innerText = label; btn.onclick = acao; return btn;
-    }
-
-    function navegarNoDia(direcao) {
-        const idxAtual = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
-        const proximo = leitorContexto.diaCaps[idxAtual + direcao];
-        if (proximo) { leitorContexto.livro = proximo.b; leitorContexto.capAtual = proximo.c; carregarTextoBiblico(); }
-    }
-
-    function concluirEFechar() {
-    const updates = {};
-    const idxAtual = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual);
-    const isUltimo = idxAtual === leitorContexto.diaCaps.length - 1;
-
-    if (isUltimo) {
-        // Se chegou ao fim da série do dia, marca todos os capítulos da lista
-        leitorContexto.diaCaps.forEach(ch => {
-            updates[`${ch.b}_c${ch.c}`] = true;
-        });
-    } else {
-        // Se fechar no meio da série, marca apenas o capítulo que está na tela
-        updates[`${leitorContexto.livro}_c${leitorContexto.capAtual}`] = true;
-    }
-
-    db.ref(`users/${currentUser}/progress`).update(updates).then(() => {
-        // AVISO DE OFFLINE
-        if (!navigator.onLine) {
-            alert("Progresso salvo localmente! O ranking da família será atualizado assim que você se conectar à internet.");
-        }
-        renderPlan();
-        fecharLeitor();
-    });
-}
-    
-    function mudarFonte(delta) { 
-    fontSizeAtual += delta; 
-    document.getElementById('reader-text').style.fontSize = fontSizeAtual + "rem";
-    
-    // LINHA NOVA: Garante que o corpo do devocional também mude
-    const corpoDev = document.getElementById('texto-corpo-devocional');
-    if(corpoDev) corpoDev.style.fontSize = fontSizeAtual + "rem";
-}
+    function criarBotaoLeitor(label, bg, color, acao, isSide) { const btn = document.createElement("button"); btn.className = `btn-nav-leitor ${isSide ? 'btn-side' : 'btn-expand'}`; btn.style.background = bg; btn.style.color = color; btn.innerText = label; btn.onclick = acao; return btn; }
+    function navegarNoDia(dir) { const idx = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual); const proximo = leitorContexto.diaCaps[idx + dir]; if (proximo) { leitorContexto.livro = proximo.b; leitorContexto.capAtual = proximo.c; carregarTextoBiblico(); } }
+    function concluirEFechar() { const updates = {}; const idx = leitorContexto.diaCaps.findIndex(c => c.b === leitorContexto.livro && c.c === leitorContexto.capAtual); if (idx === leitorContexto.diaCaps.length - 1) { leitorContexto.diaCaps.forEach(ch => updates[`${ch.b}_c${ch.c}`] = true); } else { updates[`${leitorContexto.livro}_c${leitorContexto.capAtual}`] = true; } db.ref(`users/${currentUser}/progress`).update(updates).then(() => { if (!navigator.onLine) alert("Salvo offline!"); renderPlan(); fecharLeitor(); }); }
+    function mudarFonte(delta) { fontSizeAtual += delta; document.getElementById('reader-text').style.fontSize = fontSizeAtual + "rem"; }
     function setTema(tema) { const overlay = document.getElementById('reader-overlay'); overlay.classList.remove('theme-sepia', 'theme-dark'); if (tema !== 'light') overlay.classList.add('theme-' + tema); }
     function trocarVersao(v) { leitorContexto.versao = v.toLowerCase(); carregarTextoBiblico(); }
-    
-function fecharLeitor() { 
-    pararVoz(); 
-    document.getElementById('reader-overlay').style.display = 'none'; 
-    const seletor = document.getElementById('select-versao');
-    if (seletor) seletor.style.display = 'inline-block';
-}
-    
-   function registerUser() {
-    const inputNome = document.getElementById('newName');
-    const n = inputNome.value.trim();
-    if(!n) return;
+    function fecharLeitor() { pararVoz(); document.getElementById('reader-overlay').style.display = 'none'; document.getElementById('select-versao').style.display = 'inline-block'; }
 
-    // 1. Pega os perfis já salvos neste celular para verificar o limite local
-    let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
-
-    // 2. Trava de 3 perfis por dispositivo (celular)
-    if (mp.length >= 3 && !mp.includes(n)) {
-        alert("Limite atingido! Cada dispositivo pode gerenciar no máximo 3 perfis.");
-        return;
+    function registerUser() {
+        const input = document.getElementById('newName'); const n = input.value.trim(); if(!n) return;
+        let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
+        if (mp.length >= 3 && !mp.includes(n)) { alert("Limite de 3 perfis!"); return; }
+        db.ref('users').once('value', snap => { const users = snap.val() || {}; if (Object.keys(users).length >= 100 && !users[n]) { alert("Limite de 100 usuários!"); return; } if(!mp.includes(n)) mp.push(n); localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp)); db.ref('users/'+n).update({ name: n, ultimoAcesso: new Date().toLocaleDateString('pt-BR') }).then(() => { input.value = ""; loginUser(n); }); });
     }
 
-    // 3. Acessa o Firebase para verificar o limite global (100 pessoas)
-    db.ref('users').once('value', snap => {
-        const users = snap.val() || {};
-        const totalUsers = Object.keys(users).length;
+    function toggleTri(i) { const el = document.getElementById(`list-${i}`); const isOpen = el.style.display === "block"; document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none'); if (isOpen) { el.style.display = "none"; ultimoTrimestreAberto = null; } else { el.style.display = "block"; ultimoTrimestreAberto = i; } }
+    function updateProgress() { db.ref('users/'+currentUser+'/progress').once('value', snap => { const prog = snap.val() || {}; let totalLidos = 0; CONFIG.forEach((t, i) => { let lidosTri = 0; let totalTri = 0; for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) { totalTri += BIBLE_BOOKS[bIdx].c; for(let c = 1; c <= BIBLE_BOOKS[bIdx].c; c++) { if(prog[`${BIBLE_BOOKS[bIdx].n}_c${c}`] === true) { lidosTri++; totalLidos++; } } } const pTri = Math.round((lidosTri / totalTri) * 100); if(document.getElementById(`tri-perc-label-${i}`)) { document.getElementById(`tri-perc-label-${i}`).innerText = pTri + "%"; document.getElementById(`tri-bar-${i}`).style.width = pTri + "%"; } }); const pG = Math.round((totalLidos / TOTAL_BIBLE_CHAPTERS) * 100); document.getElementById('main-bar').style.width = pG + "%"; document.getElementById('main-percent').innerText = pG + "% CONCLUÍDO DO PLANO"; }); }
+    function confirmarLeituraFisica(diaCapsStr, dataRotulo) { const caps = JSON.parse(diaCapsStr); db.ref(`users/${currentUser}/progress`).once('value', snap => { const prog = snap.val() || {}; const todosLidos = caps.every(ch => prog[`${ch.b}_c${ch.c}`] === true); acaoPendente = () => executarAcaoMassa(caps, !todosLidos); document.getElementById('confirm-text').innerText = `${todosLidos ? "DESMARCAR" : "MARCAR"} ${dataRotulo} COMO FINALIZADO?`; document.getElementById('confirm-overlay').style.display = 'block'; document.getElementById('custom-confirm').style.display = 'block'; }); }
+    function fecharConfirm(r) { document.getElementById('confirm-overlay').style.display = 'none'; document.getElementById('custom-confirm').style.display = 'none'; if (r && acaoPendente) acaoPendente(); acaoPendente = null; }
+    function executarAcaoMassa(caps, est) { const updates = {}; caps.forEach(ch => updates[`${ch.b}_c${ch.c}`] = est ? true : null); db.ref(`users/${currentUser}/progress`).update(updates).then(() => renderPlan()); }
 
-        // Se já houver 100 e o nome for novo no banco de dados
-        if (totalUsers >= 100 && !users[n]) {
-            alert("Limite de 100 participantes excedido! Procure o desenvolvedor para solicitar acesso.");
-            return;
+    async function compararVersiculo(idx) {
+        document.getElementById('compare-ref').innerText = `${leitorContexto.livro} ${leitorContexto.capAtual}:${idx+1}`;
+        document.getElementById('compare-list').innerHTML = "Carregando..."; document.getElementById('confirm-overlay').style.display = 'block'; document.getElementById('compare-modal').style.display = 'block';
+        let resHtml = ""; const versoes = ['acf', 'nvi', 'kja', 'kjv'];
+        for (let v of versoes) {
+            try {
+                const res = await fetch(`${v}.json`); if (!res.ok) continue; const data = await res.json();
+                let lista = Array.isArray(data) ? data : data.livros;
+                const lData = lista.find(l => (l.nome || l.name || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() === leitorContexto.livro.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase());
+                if (lData) resHtml += `<div class="compare-item"><span class="compare-label">${v.toUpperCase()}</span><p>${(lData.chapters || lData.capitulos)[leitorContexto.capAtual - 1][idx]}</p></div>`;
+            } catch (e) {}
         }
-
-        // 4. Se passou nas travas, salva no LocalStorage e no Firebase
-        if(!mp.includes(n)) mp.push(n);
-        localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
-        
-        const agora = new Date().toLocaleDateString('pt-BR');
-        db.ref('users/'+n).update({
-            name: n,
-            ultimoAcesso: agora
-        }).then(() => {
-            // --- O GRAN FINALE: LIMPA O CAMPO E ENTRA ---
-            inputNome.value = ""; 
-            loginUser(n);
-        });
-    });
-}
-
-    function toggleTri(i) {
-        const el = document.getElementById(`list-${i}`);
-        const isOpen = el.style.display === "block";
-        document.querySelectorAll('.reading-list').forEach(l => l.style.display = 'none');
-        if (isOpen) { el.style.display = "none"; ultimoTrimestreAberto = null; } 
-        else { el.style.display = "block"; ultimoTrimestreAberto = i; }
-    }
-    
-    function updateProgress() {
-        db.ref('users/'+currentUser+'/progress').once('value', snap => {
-            const prog = snap.val() || {}; let totalLidosGeral = 0;
-            CONFIG.forEach((t, i) => {
-                let totalChapsTri = 0; for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) totalChapsTri += BIBLE_BOOKS[bIdx].c;
-                let lidosTri = 0; for(let bIdx = t.booksIdx[0]; bIdx <= t.booksIdx[1]; bIdx++) { const bookName = BIBLE_BOOKS[bIdx].n; for(let c = 1; c <= BIBLE_BOOKS[bIdx].c; c++) { if(prog[`${bookName}_c${c}`] === true) { lidosTri++; totalLidosGeral++; } } }
-                const pTri = Math.round((lidosTri / totalChapsTri) * 100); if(document.getElementById(`tri-perc-label-${i}`)) { document.getElementById(`tri-perc-label-${i}`).innerText = pTri + "%"; document.getElementById(`tri-bar-${i}`).style.width = pTri + "%"; }
-            });
-            const pGeral = Math.round((totalLidosGeral / TOTAL_BIBLE_CHAPTERS) * 100);
-            document.getElementById('main-bar').style.width = pGeral + "%";
-            document.getElementById('main-percent').innerText = pGeral + "% CONCLUÍDO DO PLANO DE LEITURA BÍBLICA";
-        });
+        document.getElementById('compare-list').innerHTML = resHtml || "Não encontrado.";
     }
 
-      function confirmarLeituraFisica(diaCapsStr, dataRotulo) {
-        const caps = JSON.parse(diaCapsStr);
-        
-        // BUSCA NO BANCO DE DADOS (DENTRO DA MEMÓRIA ATUAL) SE TODOS ESTÃO MARCADOS
-        db.ref(`users/${currentUser}/progress`).once('value', snap => {
-            const prog = snap.val() || {};
-            
-            // Verifica se todos os capítulos desse dia já estão como true no banco
-            const todosLidos = caps.every(ch => prog[`${ch.b}_c${ch.c}`] === true);
-            
-            const acao = todosLidos ? "DESMARCAR" : "MARCAR";
-            const estado = !todosLidos; // Se estão todos lidos, o novo estado será 'false' (desmarcar)
-
-            acaoPendente = () => executarAcaoMassa(caps, estado);
-            
-            document.getElementById('confirm-text').innerText = `${acao} ${dataRotulo} COMO FINALIZADO?`;
-            document.getElementById('confirm-overlay').style.display = 'block';
-            document.getElementById('custom-confirm').style.display = 'block';
-        });
-    }
-    
-    function fecharConfirm(resposta) {
-        document.getElementById('confirm-overlay').style.display = 'none';
-        document.getElementById('custom-confirm').style.display = 'none';
-        if (resposta && acaoPendente) acaoPendente();
-        acaoPendente = null;
-    }
-
-  function executarAcaoMassa(caps, estado) {
-    const updates = {};
-    caps.forEach(ch => { 
-        // true para marcar, null para remover a chave e desmarcar de verdade
-        updates[`${ch.b}_c${ch.c}`] = estado ? true : null; 
-    });
-
-    db.ref(`users/${currentUser}/progress`).update(updates).then(() => {
-        // AVISO DE OFFLINE
-        if (!navigator.onLine) {
-            alert("Progresso salvo localmente! O ranking da família será atualizado assim que você se conectar à internet.");
-        }
-        renderPlan();
-    });
-}
-
-async function compararVersiculo(indiceVerso) {
-    const versoNum = indiceVerso + 1;
-    const livroOriginal = leitorContexto.livro;
-    const cap = leitorContexto.capAtual;
-    const versoes = ['acf', 'nvi', 'kja', 'kjv']; // Incluído o KJV aqui
-    
-    document.getElementById('compare-ref').innerText = `${livroOriginal} ${cap}:${versoNum}`;
-    const list = document.getElementById('compare-list');
-    list.innerHTML = "<p style='text-align:center;'>Carregando comparativo...</p>";
-    document.getElementById('confirm-overlay').style.display = 'block';
-    document.getElementById('compare-modal').style.display = 'block';
-
-    let htmlResult = "";
-
-    // Função interna para limpar acentos e facilitar a busca
-    const limparTexto = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-
-    for (let v of versoes) {
-        try {
-            const res = await fetch(`${v}.json`);
-            if (!res.ok) continue;
-            const data = await res.json();
-            let listaLivros = Array.isArray(data) ? data : data.livros;
-            
-            // Busca o livro ignorando acentos e maiúsculas
-            const lData = listaLivros.find(l => {
-                const nomeNoArquivo = limparTexto(l.nome || l.name || "");
-                const nomeBuscado = limparTexto(livroOriginal);
-                return nomeNoArquivo === nomeBuscado || l.abbrev === nomeBuscado;
-            });
-
-            if (lData) {
-                const capítulos = lData.chapters || lData.capitulos;
-                const texto = capítulos[cap - 1][indiceVerso];
-                htmlResult += `
-                    <div class="compare-item">
-                        <span class="compare-label">${v.toUpperCase()}</span>
-                        <p class="compare-text" style="text-align: left; margin: 5px 0 0 0;">${texto}</p>
-                    </div>`;
-            }
-        } catch (e) {
-            console.error("Erro na versão " + v, e);
-        }
-    }
-    list.innerHTML = htmlResult || "<p style='text-align:center;'>Versículo não encontrado nas versões disponíveis.</p>";
-}
     function fecharComparacao() { document.getElementById('compare-modal').style.display = 'none'; document.getElementById('confirm-overlay').style.display = 'none'; }
-    window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); }, 3000); });
-
-    document.getElementById('confirm-overlay').onclick = function() {
-        document.getElementById('confirm-overlay').style.display = 'none';
-        document.getElementById('custom-confirm').style.display = 'none';
-        document.getElementById('edit-confirm').style.display = 'none';
-        document.getElementById('ajuda-leitor-modal').style.display = 'none'; 
-        if(document.getElementById('compare-modal')) document.getElementById('compare-modal').style.display = 'none';
-        acaoPendente = null;
-    };
-
+    window.addEventListener("load", () => { setTimeout(() => { document.getElementById("splash-screen").classList.add("hide"); verificarNavegadorCompativel(); }, 3000); });
+    document.getElementById('confirm-overlay').onclick = () => { document.getElementById('confirm-overlay').style.display = 'none'; document.getElementById('custom-confirm').style.display = 'none'; document.getElementById('edit-confirm').style.display = 'none'; document.getElementById('ajuda-leitor-modal').style.display = 'none'; document.getElementById('compare-modal').style.display = 'none'; acaoPendente = null; };
     function abrirAjudaLeitor() { document.getElementById('confirm-overlay').style.display = 'block'; document.getElementById('ajuda-leitor-modal').style.display = 'block'; }
     function fecharAjudaLeitor() { document.getElementById('ajuda-leitor-modal').style.display = 'none'; document.getElementById('confirm-overlay').style.display = 'none'; }
+    function atualizarStatusConexao() { document.getElementById('offline-status-bar').style.display = navigator.onLine ? 'none' : 'block'; }
+    window.addEventListener('online', atualizarStatusConexao); window.addEventListener('offline', atualizarStatusConexao); atualizarStatusConexao();
 
-// Função que alterna o aviso de offline
-function atualizarStatusConexao() {
-    const banner = document.getElementById('offline-status-bar');
-    if (navigator.onLine) {
-        banner.style.display = 'none'; // Esconde se estiver online
-    } else {
-        banner.style.display = 'block'; // Mostra se estiver offline
+    let sintetizador = window.speechSynthesis; let expressaoVoz = null; let lendoAgora = false;
+    function alternarVoz() { if (lendoAgora) pararVoz(); else iniciarLeitura(); }
+    function iniciarLeitura() {
+        const txt = document.getElementById('reader-text').innerText.replace(/[0-9]/g, '').replace(/\n/g, ' ').replace(/\s+/g, ' ');
+        if (!txt.trim()) return; expressaoVoz = new SpeechSynthesisUtterance(txt);
+        let v = sintetizador.getVoices().find(v => v.lang === 'pt-BR' && v.name.includes('Google')); if (v) expressaoVoz.voice = v;
+        expressaoVoz.lang = 'pt-BR'; expressaoVoz.rate = 1.2;
+        expressaoVoz.onstart = () => { lendoAgora = true; const b = document.getElementById('btn-voz'); b.innerText = "⏹️"; b.style.background = "var(--amarelo)"; };
+        expressaoVoz.onend = () => pararVoz(); sintetizador.speak(expressaoVoz);
     }
-}
-
-// Ouvintes que detectam a mudança de rede instantaneamente
-window.addEventListener('online', atualizarStatusConexao);
-window.addEventListener('offline', atualizarStatusConexao);
-
-// Verifica o status assim que o app abre
-atualizarStatusConexao();
-
-    
-let sintetizador = window.speechSynthesis;
-let expressaoVoz = null;
-let lendoAgora = false;
-
-function alternarVoz() {
-    if (lendoAgora) {
-        pararVoz();
-    } else {
-        iniciarLeitura();
-    }
-}
-
-function iniciarLeitura() {
-    const containerTexto = document.getElementById('reader-text');
-    
-    // 1. Pega o texto
-    // 2. Remove os números (0-9)
-    // 3. O SEGREDO: substitui quebras de linha por um espaço simples
-    let textoLimpo = containerTexto.innerText
-                        .replace(/[0-9]/g, '')
-                        .replace(/\n/g, ' ') 
-                        .replace(/\s+/g, ' '); // Remove espaços duplos
-
-    if (!textoLimpo.trim()) return;
-
-    expressaoVoz = new SpeechSynthesisUtterance(textoLimpo);
-    
-    // Tenta encontrar uma voz masculina no sistema
-    let vozes = sintetizador.getVoices();
-    let vozMasculina = vozes.find(v => v.lang === 'pt-BR' && v.name.includes('Google'));
-    
-    if (vozMasculina) {
-        expressaoVoz.voice = vozMasculina;
-    }
-
-    expressaoVoz.lang = 'pt-BR';
-    expressaoVoz.rate = 1.2; // Velocidade aumentada como solicitado
-
-    expressaoVoz.onstart = () => {
-        lendoAgora = true;
-        const btn = document.getElementById('btn-voz');
-        // Ícone de Parar (Quadrado) com fundo amarelo mantido
-        btn.innerText = "⏹️"; 
-        btn.style.background = "var(--amarelo)"; 
-        btn.style.color = "#333";
-    };
-
-    expressaoVoz.onend = () => pararVoz();
-    sintetizador.speak(expressaoVoz);
-}
-
-function pararVoz() {
-    sintetizador.cancel();
-    lendoAgora = false;
-    const btn = document.getElementById('btn-voz');
-    if(btn) {
-        // Volta para o ícone de Play com fundo amarelo
-        btn.innerText = "▶️"; 
-        btn.style.background = "var(--amarelo)";
-        btn.style.color = "#333";
-    }
-}
-    
-</script>    
+    function pararVoz() { sintetizador.cancel(); lendoAgora = false; const b = document.getElementById('btn-voz'); if(b) { b.innerText = "▶️"; b.style.background = "var(--amarelo)"; } }
+</script>   
 </body>
 </html>
+
 
 
 
