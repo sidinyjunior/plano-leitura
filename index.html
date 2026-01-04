@@ -270,16 +270,25 @@
     const DEVOCIONAL_START = "2026-01-05";
     const DEVOCIONAL_END = "2026-12-18";
 
-    function verificarNavegadorCompativel() {
-        const ua = navigator.userAgent || navigator.vendor || window.opera;
-        const isInstagram = ua.indexOf('Instagram') > -1;
-        const isFacebook = ua.indexOf('FBAN') > -1 || ua.indexOf('FBAV') > -1;
-        const isWhatsApp = ua.indexOf('WhatsApp') > -1;
+function verificarNavegadorCompativel() {
+    // 1. DETECÇÃO REAL (Lê a identidade do navegador)
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    const detectorReal = ua.indexOf('Instagram') > -1 || 
+                         ua.indexOf('FBAN') > -1 || 
+                         ua.indexOf('FBAV') > -1 || 
+                         ua.indexOf('WhatsApp') > -1;
 
-        if (isInstagram || isFacebook || isWhatsApp) {
-            document.getElementById('browser-warning').style.display = 'flex';
+    // 2. MODO DE TESTE (Altere para 'true' para testar no Chrome comum)
+    const modoTeste = true; 
+
+    // Se a detecção real for positiva OU o modo de teste estiver ligado, mostra o aviso
+    if (detectorReal || modoTeste) {
+        const warning = document.getElementById('browser-warning');
+        if (warning) {
+            warning.style.display = 'flex';
         }
     }
+}
 
     function gerarDatasDevocional() {
         let curr = new Date(DEVOCIONAL_START + "T12:00:00");
@@ -512,6 +521,7 @@
 </script>   
 </body>
 </html>
+
 
 
 
