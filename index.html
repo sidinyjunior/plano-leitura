@@ -397,30 +397,7 @@ const normalizar = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toL
         });
     }
     
-    // Bloco de correção automática para MAIÚSCULAS
-(function corrigirLocalStorage() {
-    const KEY_PARA_CORRIGIR = "meus_perfis_locais"; // Ajustado para bater com sua linha 384
     
-    let mp = localStorage.getItem(KEY_PARA_CORRIGIR);
-    
-    if (mp) {
-        try {
-            let perfis = JSON.parse(mp);
-            if (Array.isArray(perfis)) {
-                let perfisCorrigidos = perfis.map(nome => typeof nome === 'string' ? nome.toUpperCase() : nome);
-                
-                if (JSON.stringify(perfis) !== JSON.stringify(perfisCorrigidos)) {
-                    localStorage.setItem(KEY_PARA_CORRIGIR, JSON.stringify(perfisCorrigidos));
-                    console.log("LocalStorage atualizado para MAIÚSCULAS.");
-                }
-            }
-        } catch (e) {
-            console.error("Erro na conversão:", e);
-        }
-    }
-})();
-    
-
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
@@ -1245,37 +1222,11 @@ function pararVoz() {
         btn.style.color = "#333";
     }
 }
-
-function converterNomesParaMaiusculo() {
-    db.ref('users').once('value', snap => {
-        const users = snap.val();
-        if (!users) return;
-
-        const updates = {};
-        
-        Object.keys(users).forEach(oldName => {
-            const newName = oldName.toUpperCase();
-            
-            if (newName !== oldName) {
-                // Prepara os dados para o novo nome em maiúsculo
-                const userData = users[oldName];
-                userData.name = newName; // Garante que o campo 'name' interno também mude
-                
-                // Grava o novo e remove o antigo
-                db.ref('users/' + newName).set(userData);
-                db.ref('users/' + oldName).remove();
-            }
-        });
-        alert("✅ BANCO DE DADOS ATUALIZADO: Todos os nomes agora estão em MAIÚSCULO!");
-    });
-}
-
-// Chame a função uma única vez para limpar o banco:
-// converterNomesParaMaiusculo();    
-    
+  
 </script>    
 </body>
 </html>
+
 
 
 
