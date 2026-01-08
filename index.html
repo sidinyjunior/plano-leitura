@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PLANO BIENAL DE LEITURA BÍBLICA & DEVOCIONAL</title>
-    <!-- VERSÃO 23 -->
+    <!-- VERSÃO 24 -->
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -514,54 +514,46 @@ window.addEventListener('offline', carregarCacheLocal);
 
 function fecharEdit(salvar) {
     const inputField = document.getElementById('edit-input-name');
-    const newName = inputField.value.trim().replace(/\s+/g, ' ');
+    // Também força MAIÚSCULO na edição
+    const newName = inputField.value.trim().toUpperCase().replace(/\s+/g, ' ');
     const oldName = dadosEdicaoPendente;
     const deviceIdLocal = obterDeviceId();
 
-    // Fecha os modais de interface
     document.getElementById('confirm-overlay').style.display = 'none';
     document.getElementById('edit-confirm').style.display = 'none';
 
-    // Se o usuário clicou em salvar e o nome realmente mudou
     if (salvar && newName && newName !== oldName) {
         const partes = newName.split(" ");
         
-        // 1. TRAVA DE SEGURANÇA: Mínimo de 3 nomes na edição também
         if(partes.length < 3) {
-            alert("⚠️ NOME INCOMPLETO: O novo nome deve ter pelo menos 3 partes (Nome e Sobrenomes).");
+            alert("⚠️ O novo nome deve ter pelo menos 3 partes.");
+            return;
+        }
+
+        const temAbreviacao = partes.some(p => p.length <= 1 || (p.length === 2 && p.endsWith('.')));
+        if (temAbreviacao) {
+            alert("⚠️ NÃO ABREVIE: Escreva os nomes por extenso.");
             return;
         }
 
         db.ref('users').once('value', snap => {
             const users = snap.val() || {};
             const nomeNormNovo = normalizar(newName);
-            
-            // 2. TRAVA DE SEGURANÇA: Verifica se o novo nome (normalizado) já existe no banco
             const jaExiste = Object.keys(users).find(nome => normalizar(nome) === nomeNormNovo);
 
             if (jaExiste) {
-                alert(`⚠️ NÃO PERMITIDO: O nome "${jaExiste}" já está sendo usado por outra pessoa da família.`);
+                alert(`⚠️ NÃO PERMITIDO: O nome "${jaExiste}" já está em uso.`);
                 return;
             }
 
-            // 3. TRAVA DE SEGURANÇA: Verifica se quem está editando é o dono real
             const userData = users[oldName];
-            if (!userData || userData.ownerId !== deviceIdLocal) {
-                alert("⚠️ ERRO DE PERMISSÃO: Você não tem autorização para editar este perfil.");
-                return;
-            }
+            userData.name = newName; // Atualiza o nome dentro do objeto também
 
-            // 4. EXECUÇÃO DA TROCA NO BANCO DE DADOS
-            // Cria o novo nó com os dados antigos
             db.ref('users/' + newName).set(userData).then(() => {
-                // Remove o nó antigo
                 db.ref('users/' + oldName).remove().then(() => {
-                    // Atualiza a lista de perfis "meus" no LocalStorage do aparelho
                     let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
                     mp = mp.map(n => n === oldName ? newName : n);
                     localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
-                    
-                    alert("Perfil atualizado com sucesso!");
                 });
             });
         });
@@ -965,14 +957,22 @@ function fecharLeitor() {
     
 function registerUser() {
     const inputNome = document.getElementById('newName');
-    const n = inputNome.value.trim().replace(/\s+/g, ' '); 
+    // Força o nome para MAIÚSCULO e limpa espaços
+    const n = inputNome.value.trim().toUpperCase().replace(/\s+/g, ' '); 
     if(!n) return;
 
     const partesNovas = n.split(" ");
     
     // TRAVA 1: Mínimo de 3 nomes
     if(partesNovas.length < 3) {
-        alert("⚠️ NOME INCOMPLETO: Por favor, digite seu nome completo (mínimo 3 nomes). Ex: João Silva Santos");
+        alert("⚠️ NOME INCOMPLETO: Digite seu nome completo (mínimo 3 nomes). Ex: MARIA JOSE EDUARDO");
+        return;
+    }
+
+    // TRAVA 2: Bloqueio de Abreviações (Ex: E. ou SILVA J.)
+    const temAbreviacao = partesNovas.some(p => p.length <= 1 || (p.length === 2 && p.endsWith('.')));
+    if (temAbreviacao) {
+        alert("⚠️ NÃO ABREVIE: Por favor, escreva os nomes e sobrenomes por extenso, sem pontos ou iniciais.");
         return;
     }
 
@@ -982,42 +982,28 @@ function registerUser() {
     db.ref('users').once('value', snap => {
         const todosUsuarios = snap.val() || {};
         const nomesNoBanco = Object.keys(todosUsuarios);
-        const totalUsers = nomesNoBanco.length;
 
-        // TRAVA 2: Bloqueio APENAS se o nome completo (normalizado) for idêntico
-        // Isso permite "Maria Jose Eduardo" e "Maria Jose Eliseu" existirem juntos.
+        // TRAVA 3: Bloqueio de duplicidade (já normalizado)
         const conflitoExato = nomesNoBanco.find(nome => normalizar(nome) === nomeNormNovo);
 
         if (conflitoExato) {
             if (todosUsuarios[conflitoExato].ownerId !== deviceId) {
-                alert(`⚠️ ESTE NOME JÁ EXISTE: O perfil "${conflitoExato}" já está cadastrado. Se este for você, use o aparelho original. Se não, adicione outro sobrenome.`);
+                alert(`⚠️ ESTE NOME JÁ EXISTE: O perfil "${conflitoExato}" já está cadastrado.`);
                 return;
             }
             loginUser(conflitoExato);
             return;
         }
 
-        // TRAVA 3: Limite de 3 perfis por aparelho
-        let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
-        if (mp.length >= 3 && !mp.includes(n)) {
-            alert("Limite de 3 perfis por aparelho atingido.");
-            return;
-        }
-
-        // TRAVA 4: Limite global do App
-        if (totalUsers >= 100) {
-            alert("Limite máximo de 100 participantes atingido.");
-            return;
-        }
-
-        // --- TUDO OK, CRIAÇÃO DO PERFIL ---
+        // --- SALVAMENTO ---
         const agora = new Date().toLocaleDateString('pt-BR');
         db.ref('users/' + n).set({
-            name: n,
+            name: n, // Aqui o nome já vai em UPPERCASE
             ultimoAcesso: agora,
             ownerId: deviceId,
             progress: {}
         }).then(() => {
+            let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
             if(!mp.includes(n)) mp.push(n);
             localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
             inputNome.value = ""; 
@@ -1237,6 +1223,7 @@ function pararVoz() {
 </script>    
 </body>
 </html>
+
 
 
 
