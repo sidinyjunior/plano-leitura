@@ -35,9 +35,44 @@
         #btn-install-now { background: var(--verde-whatsapp); color: white; }
         #btn-not-now { background: var(--azul-link); color: white; }
 
-        #splash-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease; }
-        #splash-screen img { width: 160px; max-width: 70%; border-radius: 28px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        #splash-screen.hide { opacity: 0; pointer-events: none; }
+        #splash-screen { 
+    position: fixed; 
+    inset: 0; 
+    background: var(--bg); 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    z-index: 9999; 
+    transition: opacity 0.4s ease; 
+    padding: 20px; 
+    box-sizing: border-box;
+}
+
+#splash-screen img { 
+    width: 160px; 
+    max-width: 50%; 
+    border-radius: 28px; 
+    margin-bottom: 20px; 
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15); 
+}
+
+#splash-screen h3 {
+    white-space: nowrap;            /* Impede a quebra em duas linhas */
+    font-size: clamp(14px, 4.5vw, 24px); /* Diminui a letra em telas pequenas */
+    width: 100%;                    
+    text-align: center;
+    margin: 10px 0;
+    color: #2d3436;
+}
+
+#splash-screen p {
+    margin: 0;
+    font-weight: bold;
+    color: var(--cinza-texto);
+}
+
+#splash-screen.hide { opacity: 0; pointer-events: none; }
 
         .main-title { font-size: clamp(0.7rem, 3.8vw, 0.9rem); font-weight: 800; color: #2d3436; margin: 0 0 10px 0; text-transform: uppercase; white-space: nowrap; letter-spacing: -0.02em; }
         
@@ -1086,6 +1121,7 @@ function pararVoz() {
 </script>    
 </body>
 </html>
+
 
 
 
