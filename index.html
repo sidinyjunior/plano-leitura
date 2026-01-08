@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PLANO BIENAL DE LEITURA BÍBLICA & DEVOCIONAL</title>
-    <!-- VERSÃO 17 -->
+    <!-- VERSÃO 18 -->
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -519,58 +519,100 @@ function renderCommunity(data) {
     }
 
     function fecharEdit(salvar) {
-        const newName = document.getElementById('edit-input-name').value.trim();
-        const oldName = dadosEdicaoPendente;
-        document.getElementById('confirm-overlay').style.display = 'none';
-        document.getElementById('edit-confirm').style.display = 'none';
-        if (salvar && newName && newName !== oldName) {
-            db.ref('users/' + oldName).once('value', snap => {
-                const userData = snap.val();
-                db.ref('users/' + newName).set(userData).then(() => {
-                    db.ref('users/' + oldName).remove().then(() => {
-                        let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
-                        mp = mp.map(n => n === oldName ? newName : n);
-                        localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
-                        db.ref('users').once('value', snap => { renderCommunity(snap.val()); });
-                    });
+    const newName = document.getElementById('edit-input-name').value.trim();
+    const oldName = dadosEdicaoPendente;
+    const deviceIdLocal = obterDeviceId();
+
+    document.getElementById('confirm-overlay').style.display = 'none';
+    document.getElementById('edit-confirm').style.display = 'none';
+
+    if (salvar && newName && newName !== oldName) {
+        db.ref('users/' + oldName).once('value', snap => {
+            const userData = snap.val();
+
+            // SEGURANÇA: Verifica se o celular é o dono
+            if (userData.ownerId && userData.ownerId !== deviceIdLocal) {
+                alert("⚠️ Erro: Você não pode editar um perfil que não criou.");
+                return;
+            }
+
+            // Se for o dono, faz a troca de nomes
+            db.ref('users/' + newName).set(userData).then(() => {
+                db.ref('users/' + oldName).remove().then(() => {
+                    let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
+                    mp = mp.map(n => n === oldName ? newName : n);
+                    localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
                 });
             });
-        }
-        dadosEdicaoPendente = null;
+        });
     }
+    dadosEdicaoPendente = null;
+}
 
-    function deleteUser(name) {
+function deleteUser(name) {
+    const deviceIdLocal = obterDeviceId();
+
+    // Busca o dono no Firebase antes de permitir a exclusão
+    db.ref('users/' + name).once('value', snap => {
+        const user = snap.val();
+        
+        // SEGURANÇA MÁXIMA: Se o dono no banco for diferente do celular atual, bloqueia
+        if (user && user.ownerId && user.ownerId !== deviceIdLocal) {
+            alert("⚠️ PROIBIDO: Você não tem permissão para apagar este perfil!");
+            return;
+        }
+
+        // Se passar na trava, prossegue com a confirmação
         acaoPendente = () => {
             db.ref('users/' + name).remove().then(() => {
                 let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
                 mp = mp.filter(n => n !== name);
                 localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
+                alert("Perfil removido com sucesso!");
             });
         };
+
         document.getElementById('confirm-text').innerText = `DESEJA REALMENTE APAGAR O PERFIL DE "${name.toUpperCase()}"?`;
         document.getElementById('confirm-overlay').style.display = 'block';
         document.getElementById('custom-confirm').style.display = 'block';
-    }
+    });
+}
 
     function calculatePercentByChapters(progress) { if(!progress) return 0; let lidos = 0; Object.keys(progress).forEach(key => { if(key.includes('_c') && progress[key] === true) lidos++; }); return Math.round((lidos / TOTAL_BIBLE_CHAPTERS) * 100); }
-    function loginUser(name) {
-    // 1. Atualiza a data de acesso no banco de dados
-    const agora = new Date().toLocaleDateString('pt-BR');
-    db.ref(`users/${name}`).update({ ultimoAcesso: agora });
 
-    // 2. Executa o login e prepara a interface
-    currentUser = name;
-    document.getElementById('access-overlay').style.display = 'none';
-    document.getElementById('inner-branding').style.display = 'block';
-    document.getElementById('header-main').style.display = "block";
-    document.getElementById('progress-main').style.display = "block";
-    document.getElementById('plan-container').style.display = "block";
-    document.getElementById('footer-developer').style.display = "block";
-    document.getElementById('userNameDisplay').innerText = currentUser;
-    
-    // 3. Renderiza o plano de 
-    renderPlan();
+    function loginUser(name) {
+    const deviceIdLocal = obterDeviceId();
+    const agora = new Date().toLocaleDateString('pt-BR');
+
+    db.ref(`users/${name}`).once('value', snap => {
+        const user = snap.val();
+        
+        // Se o perfil existe mas está SEM DONO, o primeiro que entrar vira o dono
+        if (user && !user.ownerId) {
+            db.ref(`users/${name}`).update({ ownerId: deviceIdLocal });
+        } 
+        // Se já tem dono e não é você, bloqueia o login (proteção extra)
+        else if (user && user.ownerId && user.ownerId !== deviceIdLocal) {
+            alert("Este perfil pertence a outro dispositivo!");
+            return;
+        }
+
+        // Segue o login normal
+        db.ref(`users/${name}`).update({ ultimoAcesso: agora });
+        currentUser = name;
+        // ... (resto do seu código de abrir containers)
+        document.getElementById('access-overlay').style.display = 'none';
+        document.getElementById('inner-branding').style.display = 'block';
+        document.getElementById('header-main').style.display = "block";
+        document.getElementById('progress-main').style.display = "block";
+        document.getElementById('plan-container').style.display = "block";
+        document.getElementById('footer-developer').style.display = "block";
+        document.getElementById('userNameDisplay').innerText = currentUser;
+        renderPlan();
+    });
 }
+    
+
     function saveAndExit() { document.getElementById('inner-branding').style.display = 'none'; document.getElementById('header-main').style.display = "none"; document.getElementById('progress-main').style.display = "none"; document.getElementById('plan-container').style.display = "none"; document.getElementById('footer-developer').style.display = "none"; document.getElementById('access-overlay').style.display = 'flex'; currentUser = ""; window.scrollTo(0,0); db.ref('users').once('value', snap => renderCommunity(snap.val())); }
     function distributeChaptersBalanced(range, days) { let chaps = []; for (let i = range[0]; i <= range[1]; i++) { for (let c = 1; c <= BIBLE_BOOKS[i].c; c++) { chaps.push({ b: BIBLE_BOOKS[i].n, c: c }); } } let res = Array.from({ length: days }, () => []); let ratio = chaps.length / days; for (let i = 0; i < chaps.length; i++) { let dIdx = Math.min(Math.floor(i / ratio), days - 1); res[dIdx].push(chaps[i]); } return res; }
     function getWeekdays(start, end) { let curr = new Date(start + "T12:00:00"), last = new Date(end + "T12:00:00"), dates = []; while (curr <= last) { if (curr.getDay() !== 0 && curr.getDay() !== 6) dates.push({ label: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][curr.getDay()] + " " + curr.getDate().toString().padStart(2, '0') + "/" + (curr.getMonth()+1).toString().padStart(2, '0') }); curr.setDate(curr.getDate() + 1); } return dates; }
@@ -1140,6 +1182,7 @@ function pararVoz() {
 </script>    
 </body>
 </html>
+
 
 
 
