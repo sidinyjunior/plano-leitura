@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PLANO BIENAL DE LEITURA BÍBLICA & DEVOCIONAL</title>
-    <!-- VERSÃO 21 -->
+    <!-- VERSÃO 22 -->
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -349,6 +349,11 @@ function obterDeviceId() {
     return id;
 }
 
+// Função auxiliar para limpar acentos e converter para minúsculas
+const normalizar = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
+// Agora aqui embaixo seguem suas funções (registerUser, renderCommunity, loginUser, etc.)
+
     
     
     // CONFIGURAÇÃO DATAS DEVOCIONAL
@@ -417,75 +422,58 @@ function obterDeviceId() {
     const TOTAL_BIBLE_CHAPTERS = 1189;
     const CONFIG = [{ ano: 2026, tri: "1º Trimestre: Pentateuco", start: "2026-01-05", end: "2026-03-31", booksIdx: [0, 4] }, { ano: 2026, tri: "2º Trimestre: Históricos Parte 1", start: "2026-04-01", end: "2026-06-30", booksIdx: [5, 9] }, { ano: 2026, tri: "3º Trimestre: Históricos Parte 2", start: "2026-07-01", end: "2026-09-30", booksIdx: [10, 13] }, { ano: 2026, tri: "4º Trimestre: Históricos Parte 3 / Jó", start: "2026-10-01", end: "2026-12-18", booksIdx: [14, 17] }, { ano: 2027, tri: "1º Trimestre: Poéticos", start: "2027-01-04", end: "2027-03-31", booksIdx: [18, 21] }, { ano: 2027, tri: "2º Trimestre: Profetas Maiores", start: "2027-04-01", end: "2027-06-30", booksIdx: [22, 26] }, { ano: 2027, tri: "3º Trimestre: Profetas Menores + N.T. Parte 1", start: "2027-07-01", end: "2027-09-30", booksIdx: [27, 43] }, { ano: 2027, tri: "4º Trimestre: Novo Testamento Parte 2", start: "2027-10-01", end: "2027-12-17", booksIdx: [44, 65] }];
 
-    function renderCommunity(data) { 
+  function renderCommunity(data) { 
     const container = document.getElementById('users-container'); 
     container.innerHTML = ""; 
     if(!data) return;
 
-    // Pega o ID único deste celular para validar a posse do perfil
     const meuDeviceId = obterDeviceId();
     const myProfiles = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
     const allUsers = Object.keys(data);
 
-    // --- FUNÇÃO PARA FORMATAR O NOME NO RANKING ---
-    const formatarNomeExibicao = (nomeCompleto) => {
-        const partes = nomeCompleto.trim().split(/\s+/);
-        if (partes.length <= 2) return nomeCompleto;
-        // Retorna: Primeiro Segundo Terceiro(A.) -> Ex: Sidiny Junior S.
-        return partes[0] + " " + partes[1] + (partes[2] ? " " + partes[2].charAt(0) + "." : "");
-    };
+    // 1. SEPARAÇÃO (Dono no topo, outros no ranking abaixo)
+    const meusPerfis = allUsers.filter(name => data[name].ownerId === meuDeviceId);
+    const outrosPerfis = allUsers.filter(name => data[name].ownerId !== meuDeviceId);
 
-    // 1. SEPARAÇÃO E RANKING
-    const meusPerfisOrdenados = myProfiles.filter(name => allUsers.includes(name));
-    
-    const outrosPerfisRankeados = allUsers
-        .filter(name => !myProfiles.includes(name))
-        .sort((a, b) => {
-            const percA = calculatePercentByChapters(data[a].progress);
-            const percB = calculatePercentByChapters(data[b].progress);
-            return percB - percA;
-        });
+    // Ordena os outros por percentual de leitura
+    outrosPerfis.sort((a, b) => {
+        const percA = calculatePercentByChapters(data[a].progress);
+        const percB = calculatePercentByChapters(data[b].progress);
+        return percB - percA;
+    });
 
-    const listaOrdenada = [...meusPerfisOrdenados, ...outrosPerfisRankeados];
+    // Une as listas: Meus perfis primeiro, depois o ranking
+    const listaFinal = [...meusPerfis, ...outrosPerfis];
 
     // 2. RENDERIZAÇÃO
-    listaOrdenada.forEach(name => {
+    listaFinal.forEach(name => {
         const user = data[name]; 
         const totalPercent = calculatePercentByChapters(user.progress);
-        
-        // --- VALIDAÇÃO DE SEGURANÇA ---
-        // É "meu" apenas se o ID gravado no banco bater com o deste aparelho
         const isOwner = user.ownerId === meuDeviceId;
-        // Mantém a estrela visual para perfis criados aqui
-        const isMineLocal = myProfiles.includes(name);
-        
+        const temEstrela = myProfiles.includes(name);
+
         const card = document.createElement('div'); 
         card.className = `user-card ${isOwner ? 'meu-perfil' : ''}`;
         
         card.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
-                <span style="font-weight:bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 10px;">
-                    ${isMineLocal ? '⭐ ' + formatarNomeExibicao(name) : formatarNomeExibicao(name)}
+                <span style="font-weight:bold; color: #2d3436; font-size: 0.9rem;">
+                    ${temEstrela ? '⭐ ' : ''}${name}
                 </span>
-                <span style="white-space: nowrap;">${totalPercent}% Total</span>
+                <span style="white-space: nowrap; font-size: 0.85rem;">${totalPercent}%</span>
             </div>
-            
             <div class="mini-bar-bg" style="background:#eee; height:8px;">
                 <div class="mini-bar-fill" style="width:${totalPercent}%; background:var(--verde-sucesso);"></div>
             </div>
 
             ${isOwner ? `
                 <div class="actions-row">
-                    <div style="flex: 1; display: flex; flex-direction: column; gap: 5px;">
-                        <button class="btn-action btn-entrar" onclick="loginUser('${name}')">ENTRAR</button>
-                        <span style="font-size: 10px; color: #7f8c8d;">Último acesso: ${user.ultimoAcesso || '---'}</span>
-                    </div>
-                    <button class="btn-action btn-editar" onclick="editUser('${name}')" style="flex: 0.5;">EDITAR</button>
-                    <button class="btn-action btn-deletar" onclick="deleteUser('${name}')" style="flex: 0.5;">APAGAR</button>
+                    <button class="btn-action btn-entrar" onclick="loginUser('${name}')">ENTRAR</button>
+                    <button class="btn-action btn-editar" onclick="editUser('${name}')" style="background: #f1c40f; color: #333;">EDITAR</button>
+                    <button class="btn-action btn-deletar" onclick="deleteUser('${name}')" style="background: #e74c3c;">APAGAR</button>
                 </div>` : `
-                <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 2px;">
+                <div style="margin-top: 8px;">
                     <span style="font-size: 10px; color: #95a5a6; font-weight: bold;">MODO VISUALIZAÇÃO</span>
-                    <span style="font-size: 10px; color: #95a5a6;">Último acesso: ${user.ultimoAcesso || '---'}</span>
                 </div>
             `}
         `;
@@ -524,30 +512,56 @@ window.addEventListener('offline', carregarCacheLocal);
         document.getElementById('edit-confirm').style.display = 'block';
     }
 
-    function fecharEdit(salvar) {
-    const newName = document.getElementById('edit-input-name').value.trim();
+function fecharEdit(salvar) {
+    const inputField = document.getElementById('edit-input-name');
+    const newName = inputField.value.trim().replace(/\s+/g, ' ');
     const oldName = dadosEdicaoPendente;
     const deviceIdLocal = obterDeviceId();
 
+    // Fecha os modais de interface
     document.getElementById('confirm-overlay').style.display = 'none';
     document.getElementById('edit-confirm').style.display = 'none';
 
+    // Se o usuário clicou em salvar e o nome realmente mudou
     if (salvar && newName && newName !== oldName) {
-        db.ref('users/' + oldName).once('value', snap => {
-            const userData = snap.val();
+        const partes = newName.split(" ");
+        
+        // 1. TRAVA DE SEGURANÇA: Mínimo de 3 nomes na edição também
+        if(partes.length < 3) {
+            alert("⚠️ NOME INCOMPLETO: O novo nome deve ter pelo menos 3 partes (Nome e Sobrenomes).");
+            return;
+        }
 
-            // SEGURANÇA: Verifica se o celular é o dono
-            if (userData.ownerId && userData.ownerId !== deviceIdLocal) {
-                alert("⚠️ Erro: Você não pode editar um perfil que não criou.");
+        db.ref('users').once('value', snap => {
+            const users = snap.val() || {};
+            const nomeNormNovo = normalizar(newName);
+            
+            // 2. TRAVA DE SEGURANÇA: Verifica se o novo nome (normalizado) já existe no banco
+            const jaExiste = Object.keys(users).find(nome => normalizar(nome) === nomeNormNovo);
+
+            if (jaExiste) {
+                alert(`⚠️ NÃO PERMITIDO: O nome "${jaExiste}" já está sendo usado por outra pessoa da família.`);
                 return;
             }
 
-            // Se for o dono, faz a troca de nomes
+            // 3. TRAVA DE SEGURANÇA: Verifica se quem está editando é o dono real
+            const userData = users[oldName];
+            if (!userData || userData.ownerId !== deviceIdLocal) {
+                alert("⚠️ ERRO DE PERMISSÃO: Você não tem autorização para editar este perfil.");
+                return;
+            }
+
+            // 4. EXECUÇÃO DA TROCA NO BANCO DE DADOS
+            // Cria o novo nó com os dados antigos
             db.ref('users/' + newName).set(userData).then(() => {
+                // Remove o nó antigo
                 db.ref('users/' + oldName).remove().then(() => {
+                    // Atualiza a lista de perfis "meus" no LocalStorage do aparelho
                     let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
                     mp = mp.map(n => n === oldName ? newName : n);
                     localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
+                    
+                    alert("Perfil atualizado com sucesso!");
                 });
             });
         });
@@ -943,66 +957,71 @@ function fecharLeitor() {
     if (seletor) seletor.style.display = 'inline-block';
 }
     
+// 2. Função registerUser Fundida e Blindada
 function registerUser() {
     const inputNome = document.getElementById('newName');
-    // Remove espaços extras no início, fim e espaços duplos no meio
+    // Limpa espaços extras
     const n = inputNome.value.trim().replace(/\s+/g, ' '); 
     if(!n) return;
 
-    // 1. Validação de Nome e Sobrenome (mínimo 2 palavras)
     const partesNovas = n.split(" ");
-    if(partesNovas.length < 2) {
-        alert("Por favor, digite seu nome e pelo menos um sobrenome.");
+    
+    // TRAVA 1: Mínimo de 3 nomes (Ex: Nome Sobrenome Sobrenome)
+    if(partesNovas.length < 3) {
+        alert("⚠️ NOME INCOMPLETO: Por favor, digite seu nome completo (mínimo 3 nomes). Ex: João Silva Santos");
         return;
     }
 
-    // Identifica o "Nome Curto" (Primeiro + Segundo) para evitar confusão no ranking
-    const duplaNova = (partesNovas[0] + " " + partesNovas[1]).toLowerCase();
     const deviceId = obterDeviceId();
+    const nomeNormNovo = normalizar(n);
 
-    // 2. Acessa o banco para verificar conflitos e limites
+    // Identifica o "Nome Curto" (Primeiro + Segundo) para a trava de Nicole Lira
+    const duplaNova = (partesNovas[0] + " " + partesNovas[1]).toLowerCase();
+
     db.ref('users').once('value', snap => {
         const todosUsuarios = snap.val() || {};
-        const nomesExistentes = Object.keys(todosUsuarios);
-        const totalUsers = nomesExistentes.length;
+        const nomesNoBanco = Object.keys(todosUsuarios);
+        const totalUsers = nomesNoBanco.length;
 
-        // A - Busca conflito de "Nome Curto" (Nicole Lira Silva vs Nicole Lira)
-        const conflitoNomeCurto = nomesExistentes.find(existingName => {
+        // TRAVA 2: Bloqueio por Nome Identico ou com Acentos Diferentes (Maria José vs Maria Jose)
+        const conflitoExato = nomesNoBanco.find(nome => normalizar(nome) === nomeNormNovo);
+
+        if (conflitoExato) {
+            if (todosUsuarios[conflitoExato].ownerId !== deviceId) {
+                alert(`⚠️ ESTE NOME JÁ EXISTE: O perfil "${conflitoExato}" já está cadastrado por outro familiar.`);
+                return;
+            }
+            loginUser(conflitoExato); // Se for o dono no mesmo aparelho, apenas entra
+            return;
+        }
+
+        // TRAVA 3: Conflito de "Nome Curto" (Nicole Lira Silva vs Nicole Lira Santos)
+        // Impede que nomes muito parecidos confundam o ranking
+        const conflitoCurto = nomesNoBanco.find(existingName => {
             const p = existingName.split(" ");
             const duplaExistente = (p[0] + " " + p[1]).toLowerCase();
-            // Só é conflito se for de outro celular. Se for o mesmo celular tentando logar, deixa passar.
             return duplaExistente === duplaNova && todosUsuarios[existingName].ownerId !== deviceId;
         });
 
-        if (conflitoNomeCurto) {
-            alert(`⚠️ CONFLITO DE NOME: Já existe um(a) "${conflitoNomeCurto}" cadastrado. Para evitar confusão no ranking familiar, por favor adicione um segundo sobrenome ou uma letra para se diferenciar.`);
+        if (conflitoCurto) {
+            alert(`⚠️ CONFLITO: Já existe um familiar cadastrado como "${conflitoCurto}". Por favor, adicione um sobrenome diferente para evitar confusão.`);
             return;
         }
 
-        // B - Verifica se o nome exato já existe para permitir login/reinstalação
-        const userExistente = todosUsuarios[n];
-        if (userExistente) {
-            if (userExistente.ownerId && userExistente.ownerId !== deviceId) {
-                alert("⚠️ PERFIL PROTEGIDO: Este nome já pertence a outro aparelho.");
-                return;
-            }
-            loginUser(n); // Se for o dono, apenas entra
-            return;
-        }
-
-        // 3. Travas de limite (Cotas)
+        // TRAVA 4: Limite de 3 perfis por aparelho (LocalStorage)
         let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
         if (mp.length >= 3 && !mp.includes(n)) {
             alert("Limite de 3 perfis por aparelho atingido.");
             return;
         }
 
+        // TRAVA 5: Limite global do App (100 participantes)
         if (totalUsers >= 100) {
-            alert("Limite máximo de 100 participantes atingido no plano familiar.");
+            alert("Limite máximo de 100 participantes atingido. Procure o administrador.");
             return;
         }
 
-        // 4. Criação do novo perfil (Tudo OK)
+        // --- TUDO OK, CRIAÇÃO DO PERFIL ---
         const agora = new Date().toLocaleDateString('pt-BR');
         db.ref('users/' + n).set({
             name: n,
@@ -1229,6 +1248,7 @@ function pararVoz() {
 </script>    
 </body>
 </html>
+
 
 
 
