@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PLANO BIENAL DE LEITURA BÍBLICA & DEVOCIONAL</title>
-    <!-- VERSÃO 24 -->
+    <!-- VERSÃO 25 -->
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -422,28 +422,34 @@ const normalizar = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toL
     const TOTAL_BIBLE_CHAPTERS = 1189;
     const CONFIG = [{ ano: 2026, tri: "1º Trimestre: Pentateuco", start: "2026-01-05", end: "2026-03-31", booksIdx: [0, 4] }, { ano: 2026, tri: "2º Trimestre: Históricos Parte 1", start: "2026-04-01", end: "2026-06-30", booksIdx: [5, 9] }, { ano: 2026, tri: "3º Trimestre: Históricos Parte 2", start: "2026-07-01", end: "2026-09-30", booksIdx: [10, 13] }, { ano: 2026, tri: "4º Trimestre: Históricos Parte 3 / Jó", start: "2026-10-01", end: "2026-12-18", booksIdx: [14, 17] }, { ano: 2027, tri: "1º Trimestre: Poéticos", start: "2027-01-04", end: "2027-03-31", booksIdx: [18, 21] }, { ano: 2027, tri: "2º Trimestre: Profetas Maiores", start: "2027-04-01", end: "2027-06-30", booksIdx: [22, 26] }, { ano: 2027, tri: "3º Trimestre: Profetas Menores + N.T. Parte 1", start: "2027-07-01", end: "2027-09-30", booksIdx: [27, 43] }, { ano: 2027, tri: "4º Trimestre: Novo Testamento Parte 2", start: "2027-10-01", end: "2027-12-17", booksIdx: [44, 65] }];
 
-  function renderCommunity(data) { 
+function renderCommunity(data) { 
     const container = document.getElementById('users-container'); 
     container.innerHTML = ""; 
     if(!data) return;
 
     const meuDeviceId = obterDeviceId();
+    // myProfiles contém os nomes na ordem exata de criação (1º, 2º, 3º)
     const myProfiles = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
     const allUsers = Object.keys(data);
 
-    // 1. SEPARAÇÃO (Dono no topo, outros no ranking abaixo)
-    const meusPerfis = allUsers.filter(name => data[name].ownerId === meuDeviceId);
-    const outrosPerfis = allUsers.filter(name => data[name].ownerId !== meuDeviceId);
+    // 1. SEPARAÇÃO E ORDEM FIXA
+    
+    // MEUS PERFIS: Filtra o que está no banco usando a ordem do myProfiles local
+    const meusPerfisFixos = myProfiles.filter(name => 
+        allUsers.includes(name) && data[name].ownerId === meuDeviceId
+    );
 
-    // Ordena os outros por percentual de leitura
-    outrosPerfis.sort((a, b) => {
-        const percA = calculatePercentByChapters(data[a].progress);
-        const percB = calculatePercentByChapters(data[b].progress);
-        return percB - percA;
-    });
+    // OUTROS PERFIS: Filtra quem não é meu e ordena por ranking de leitura
+    const outrosPerfisRankeados = allUsers
+        .filter(name => !myProfiles.includes(name))
+        .sort((a, b) => {
+            const percA = calculatePercentByChapters(data[a].progress);
+            const percB = calculatePercentByChapters(data[b].progress);
+            return percB - percA;
+        });
 
-    // Une as listas: Meus perfis primeiro, depois o ranking
-    const listaFinal = [...meusPerfis, ...outrosPerfis];
+    // Une as listas: Seus 3 fixos no topo -> Ranking da família abaixo
+    const listaFinal = [...meusPerfisFixos, ...outrosPerfisRankeados];
 
     // 2. RENDERIZAÇÃO
     listaFinal.forEach(name => {
@@ -481,7 +487,7 @@ const normalizar = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toL
     });
 }
 
-// TENTA CARREGAR O CACHE IMEDIATAMENTE
+// O restante do código (cache e listeners) continua abaixo da função normalmente
 const carregarCacheLocal = () => {
     const cache = JSON.parse(localStorage.getItem('cache_comunidade') || "{}");
     if (Object.keys(cache).length > 0) {
@@ -489,10 +495,8 @@ const carregarCacheLocal = () => {
     }
 };
 
-// Chama o cache logo na partida
 carregarCacheLocal();
 
-// ESCUTA O FIREBASE
 db.ref('users').on('value', snap => {
     const data = snap.val();
     if (data) {
@@ -501,7 +505,6 @@ db.ref('users').on('value', snap => {
     }
 });
 
-// SEGURANÇA EXTRA OFFLINE
 window.addEventListener('offline', carregarCacheLocal);
 
     
@@ -1223,6 +1226,7 @@ function pararVoz() {
 </script>    
 </body>
 </html>
+
 
 
 
