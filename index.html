@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PLANO BIENAL DE LEITURA BÍBLICA & DEVOCIONAL</title>
-    <!-- VERSÃO 18 -->
+    <!-- VERSÃO 20 -->
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -417,8 +417,7 @@ function obterDeviceId() {
     const TOTAL_BIBLE_CHAPTERS = 1189;
     const CONFIG = [{ ano: 2026, tri: "1º Trimestre: Pentateuco", start: "2026-01-05", end: "2026-03-31", booksIdx: [0, 4] }, { ano: 2026, tri: "2º Trimestre: Históricos Parte 1", start: "2026-04-01", end: "2026-06-30", booksIdx: [5, 9] }, { ano: 2026, tri: "3º Trimestre: Históricos Parte 2", start: "2026-07-01", end: "2026-09-30", booksIdx: [10, 13] }, { ano: 2026, tri: "4º Trimestre: Históricos Parte 3 / Jó", start: "2026-10-01", end: "2026-12-18", booksIdx: [14, 17] }, { ano: 2027, tri: "1º Trimestre: Poéticos", start: "2027-01-04", end: "2027-03-31", booksIdx: [18, 21] }, { ano: 2027, tri: "2º Trimestre: Profetas Maiores", start: "2027-04-01", end: "2027-06-30", booksIdx: [22, 26] }, { ano: 2027, tri: "3º Trimestre: Profetas Menores + N.T. Parte 1", start: "2027-07-01", end: "2027-09-30", booksIdx: [27, 43] }, { ano: 2027, tri: "4º Trimestre: Novo Testamento Parte 2", start: "2027-10-01", end: "2027-12-17", booksIdx: [44, 65] }];
 
-    
-function renderCommunity(data) { 
+    function renderCommunity(data) { 
     const container = document.getElementById('users-container'); 
     container.innerHTML = ""; 
     if(!data) return;
@@ -427,6 +426,14 @@ function renderCommunity(data) {
     const meuDeviceId = obterDeviceId();
     const myProfiles = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
     const allUsers = Object.keys(data);
+
+    // --- FUNÇÃO PARA FORMATAR O NOME NO RANKING ---
+    const formatarNomeExibicao = (nomeCompleto) => {
+        const partes = nomeCompleto.trim().split(/\s+/);
+        if (partes.length <= 2) return nomeCompleto;
+        // Retorna: Primeiro Segundo Terceiro(A.) -> Ex: Sidiny Junior S.
+        return partes[0] + " " + partes[1] + (partes[2] ? " " + partes[2].charAt(0) + "." : "");
+    };
 
     // 1. SEPARAÇÃO E RANKING
     const meusPerfisOrdenados = myProfiles.filter(name => allUsers.includes(name));
@@ -458,7 +465,7 @@ function renderCommunity(data) {
         card.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
                 <span style="font-weight:bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 10px;">
-                    ${isMineLocal ? '⭐ ' + name : name}
+                    ${isMineLocal ? '⭐ ' + formatarNomeExibicao(name) : formatarNomeExibicao(name)}
                 </span>
                 <span style="white-space: nowrap;">${totalPercent}% Total</span>
             </div>
@@ -486,30 +493,29 @@ function renderCommunity(data) {
     });
 }
 
- // TENTA CARREGAR O CACHE IMEDIATAMENTE (Garante visual instantâneo offline)
-    const carregarCacheLocal = () => {
-        const cache = JSON.parse(localStorage.getItem('cache_comunidade') || "{}");
-        if (Object.keys(cache).length > 0) {
-            console.log("Exibindo dados do cache local...");
-            renderCommunity(cache);
-        }
-    };
+// TENTA CARREGAR O CACHE IMEDIATAMENTE
+const carregarCacheLocal = () => {
+    const cache = JSON.parse(localStorage.getItem('cache_comunidade') || "{}");
+    if (Object.keys(cache).length > 0) {
+        renderCommunity(cache);
+    }
+};
 
-      // Chama o cache logo na partida
-    carregarCacheLocal();
+// Chama o cache logo na partida
+carregarCacheLocal();
 
-    // ESCUTA O FIREBASE (Atualiza o cache se houver internet)
-    db.ref('users').on('value', snap => {
-        const data = snap.val();
-        if (data) {
-            console.log("Dados atualizados via Firebase. Sincronizando cache...");
-            localStorage.setItem('cache_comunidade', JSON.stringify(data));
-            renderCommunity(data);
-        }
-    });
+// ESCUTA O FIREBASE
+db.ref('users').on('value', snap => {
+    const data = snap.val();
+    if (data) {
+        localStorage.setItem('cache_comunidade', JSON.stringify(data));
+        renderCommunity(data);
+    }
+});
 
-    // SEURANÇA EXTRA: Se o navegador detectar que está offline, força o cache de novo
-    window.addEventListener('offline', carregarCacheLocal);
+// SEGURANÇA EXTRA OFFLINE
+window.addEventListener('offline', carregarCacheLocal);
+
     
     function editUser(oldName) {
         dadosEdicaoPendente = oldName;
@@ -937,34 +943,58 @@ function fecharLeitor() {
     if (seletor) seletor.style.display = 'inline-block';
 }
     
-  function registerUser() {
+function registerUser() {
     const inputNome = document.getElementById('newName');
-    const n = inputNome.value.trim();
+    // Remove espaços extras no início, fim e espaços duplos no meio
+    const n = inputNome.value.trim().replace(/\s+/g, ' '); 
     if(!n) return;
 
-    const deviceId = obterDeviceId(); // Pega a assinatura deste celular
+    const deviceId = obterDeviceId();
 
-    db.ref('users/' + n).once('value', snap => {
-        const userExistente = snap.val();
+    // 1. Acessa o banco para verificar duplicidade e limite global
+    db.ref('users').once('value', snap => {
+        const todosUsuarios = snap.val() || {};
+        const nomesExistentes = Object.keys(todosUsuarios);
+        const totalUsers = nomesExistentes.length;
 
-        // Se o usuário já existe e o DeviceID é diferente, ele não pode assumir esse perfil
-        if (userExistente && userExistente.ownerId && userExistente.ownerId !== deviceId) {
-            alert("Este nome já pertence a outro dispositivo. Escolha um nome diferente!");
+        // Procura se existe o nome ignorando maiúsculas/minúsculas
+        const nomeDuplicado = nomesExistentes.find(nome => nome.toLowerCase() === n.toLowerCase());
+        const userExistente = nomeDuplicado ? todosUsuarios[nomeDuplicado] : null;
+
+        if (userExistente) {
+            // Se o dono NÃO for este celular, bloqueia.
+            if (userExistente.ownerId && userExistente.ownerId !== deviceId) {
+                alert("⚠️ NOME JÁ EM USO: Este perfil pertence a outro membro. Use seu nome completo ou sobrenome para se diferenciar.");
+                return;
+            }
+            // Se o dono for o mesmo celular, apenas loga (ajuda se o usuário limpou o cache local)
+            loginUser(nomeDuplicado);
             return;
         }
 
+        // 2. Trava de segurança: Limite de perfis por celular (3)
         let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
-        if(!mp.includes(n)) mp.push(n);
-        localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
-        
+        if (mp.length >= 3 && !mp.includes(n)) {
+            alert("Limite de 3 perfis por aparelho atingido.");
+            return;
+        }
+
+        // 3. Trava de segurança: Limite global de 100 usuários no plano da família
+        if (totalUsers >= 100) {
+            alert("Limite máximo de 100 participantes atingido. Procure o administrador.");
+            return;
+        }
+
+        // 4. Criação do novo perfil
         const agora = new Date().toLocaleDateString('pt-BR');
-        
-        // SALVA O ownerId (Dono do Perfil)
-        db.ref('users/'+n).update({
+        db.ref('users/' + n).set({
             name: n,
             ultimoAcesso: agora,
-            ownerId: deviceId // Vincula este celular ao nome
+            ownerId: deviceId,
+            progress: {}
         }).then(() => {
+            if(!mp.includes(n)) mp.push(n);
+            localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
             inputNome.value = ""; 
             loginUser(n);
         });
@@ -1182,6 +1212,7 @@ function pararVoz() {
 </script>    
 </body>
 </html>
+
 
 
 
