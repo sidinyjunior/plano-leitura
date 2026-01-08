@@ -1,6 +1,6 @@
 /**
  * SERVICE WORKER - PROJETO FAMILIAR
- * Versão: V16
+ * Versão: V17
  * Objetivo: Garantir bíblias e devocionais disponíveis 100% Offline.
  */
 
