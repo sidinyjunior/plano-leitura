@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PLANO BIENAL DE LEITURA BÍBLICA & DEVOCIONAL</title>
-    <!-- VERSÃO 16 -->
+    <!-- VERSÃO 17 -->
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -338,6 +338,18 @@
     const firebaseConfig = { apiKey: "AIzaSyAefANpZLXBLstwIRoz2Y1o_uBHmDfgFxM", databaseURL: "https://plano-biblico-familiar-default-rtdb.firebaseio.com/", projectId: "plano-biblico-familiar" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+
+    // Gera ou recupera um ID único para este celular
+function obterDeviceId() {
+    let id = localStorage.getItem('meu_device_id');
+    if (!id) {
+        id = 'dev_' + Math.random().toString(36).substr(2, 9) + Date.now();
+        localStorage.setItem('meu_device_id', id);
+    }
+    return id;
+}
+
+    
     
     // CONFIGURAÇÃO DATAS DEVOCIONAL
     const DEVOCIONAL_START = "2026-01-05";
@@ -406,11 +418,13 @@
     const CONFIG = [{ ano: 2026, tri: "1º Trimestre: Pentateuco", start: "2026-01-05", end: "2026-03-31", booksIdx: [0, 4] }, { ano: 2026, tri: "2º Trimestre: Históricos Parte 1", start: "2026-04-01", end: "2026-06-30", booksIdx: [5, 9] }, { ano: 2026, tri: "3º Trimestre: Históricos Parte 2", start: "2026-07-01", end: "2026-09-30", booksIdx: [10, 13] }, { ano: 2026, tri: "4º Trimestre: Históricos Parte 3 / Jó", start: "2026-10-01", end: "2026-12-18", booksIdx: [14, 17] }, { ano: 2027, tri: "1º Trimestre: Poéticos", start: "2027-01-04", end: "2027-03-31", booksIdx: [18, 21] }, { ano: 2027, tri: "2º Trimestre: Profetas Maiores", start: "2027-04-01", end: "2027-06-30", booksIdx: [22, 26] }, { ano: 2027, tri: "3º Trimestre: Profetas Menores + N.T. Parte 1", start: "2027-07-01", end: "2027-09-30", booksIdx: [27, 43] }, { ano: 2027, tri: "4º Trimestre: Novo Testamento Parte 2", start: "2027-10-01", end: "2027-12-17", booksIdx: [44, 65] }];
 
     
-    function renderCommunity(data) { 
+function renderCommunity(data) { 
     const container = document.getElementById('users-container'); 
     container.innerHTML = ""; 
     if(!data) return;
 
+    // Pega o ID único deste celular para validar a posse do perfil
+    const meuDeviceId = obterDeviceId();
     const myProfiles = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
     const allUsers = Object.keys(data);
 
@@ -430,16 +444,21 @@
     // 2. RENDERIZAÇÃO
     listaOrdenada.forEach(name => {
         const user = data[name]; 
-        const isMine = myProfiles.includes(name);
         const totalPercent = calculatePercentByChapters(user.progress);
         
+        // --- VALIDAÇÃO DE SEGURANÇA ---
+        // É "meu" apenas se o ID gravado no banco bater com o deste aparelho
+        const isOwner = user.ownerId === meuDeviceId;
+        // Mantém a estrela visual para perfis criados aqui
+        const isMineLocal = myProfiles.includes(name);
+        
         const card = document.createElement('div'); 
-        card.className = `user-card ${isMine ? 'meu-perfil' : ''}`;
+        card.className = `user-card ${isOwner ? 'meu-perfil' : ''}`;
         
         card.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
                 <span style="font-weight:bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 10px;">
-                    ${isMine ? '⭐ ' + name : name}
+                    ${isMineLocal ? '⭐ ' + name : name}
                 </span>
                 <span style="white-space: nowrap;">${totalPercent}% Total</span>
             </div>
@@ -448,7 +467,7 @@
                 <div class="mini-bar-fill" style="width:${totalPercent}%; background:var(--verde-sucesso);"></div>
             </div>
 
-            ${isMine ? `
+            ${isOwner ? `
                 <div class="actions-row">
                     <div style="flex: 1; display: flex; flex-direction: column; gap: 5px;">
                         <button class="btn-action btn-entrar" onclick="loginUser('${name}')">ENTRAR</button>
@@ -457,7 +476,8 @@
                     <button class="btn-action btn-editar" onclick="editUser('${name}')" style="flex: 0.5;">EDITAR</button>
                     <button class="btn-action btn-deletar" onclick="deleteUser('${name}')" style="flex: 0.5;">APAGAR</button>
                 </div>` : `
-                <div style="margin-top: 8px;">
+                <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 2px;">
+                    <span style="font-size: 10px; color: #95a5a6; font-weight: bold;">MODO VISUALIZAÇÃO</span>
                     <span style="font-size: 10px; color: #95a5a6;">Último acesso: ${user.ultimoAcesso || '---'}</span>
                 </div>
             `}
@@ -875,41 +895,34 @@ function fecharLeitor() {
     if (seletor) seletor.style.display = 'inline-block';
 }
     
-   function registerUser() {
+  function registerUser() {
     const inputNome = document.getElementById('newName');
     const n = inputNome.value.trim();
     if(!n) return;
 
-    // 1. Pega os perfis já salvos neste celular para verificar o limite local
-    let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
+    const deviceId = obterDeviceId(); // Pega a assinatura deste celular
 
-    // 2. Trava de 3 perfis por dispositivo (celular)
-    if (mp.length >= 3 && !mp.includes(n)) {
-        alert("Limite atingido! Cada dispositivo pode gerenciar no máximo 3 perfis.");
-        return;
-    }
+    db.ref('users/' + n).once('value', snap => {
+        const userExistente = snap.val();
 
-    // 3. Acessa o Firebase para verificar o limite global (100 pessoas)
-    db.ref('users').once('value', snap => {
-        const users = snap.val() || {};
-        const totalUsers = Object.keys(users).length;
-
-        // Se já houver 100 e o nome for novo no banco de dados
-        if (totalUsers >= 100 && !users[n]) {
-            alert("Limite de 100 participantes excedido! Procure o desenvolvedor para solicitar acesso.");
+        // Se o usuário já existe e o DeviceID é diferente, ele não pode assumir esse perfil
+        if (userExistente && userExistente.ownerId && userExistente.ownerId !== deviceId) {
+            alert("Este nome já pertence a outro dispositivo. Escolha um nome diferente!");
             return;
         }
 
-        // 4. Se passou nas travas, salva no LocalStorage e no Firebase
+        let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
         if(!mp.includes(n)) mp.push(n);
         localStorage.setItem(KEY_MY_PROFILES, JSON.stringify(mp));
         
         const agora = new Date().toLocaleDateString('pt-BR');
+        
+        // SALVA O ownerId (Dono do Perfil)
         db.ref('users/'+n).update({
             name: n,
-            ultimoAcesso: agora
+            ultimoAcesso: agora,
+            ownerId: deviceId // Vincula este celular ao nome
         }).then(() => {
-            // --- O GRAN FINALE: LIMPA O CAMPO E ENTRA ---
             inputNome.value = ""; 
             loginUser(n);
         });
@@ -1127,6 +1140,7 @@ function pararVoz() {
 </script>    
 </body>
 </html>
+
 
 
 
