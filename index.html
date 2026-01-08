@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PLANO BIENAL DE LEITURA BÍBLICA & DEVOCIONAL</title>
-    <!-- VERSÃO 20 -->
+    <!-- VERSÃO 21 -->
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -949,43 +949,60 @@ function registerUser() {
     const n = inputNome.value.trim().replace(/\s+/g, ' '); 
     if(!n) return;
 
+    // 1. Validação de Nome e Sobrenome (mínimo 2 palavras)
+    const partesNovas = n.split(" ");
+    if(partesNovas.length < 2) {
+        alert("Por favor, digite seu nome e pelo menos um sobrenome.");
+        return;
+    }
+
+    // Identifica o "Nome Curto" (Primeiro + Segundo) para evitar confusão no ranking
+    const duplaNova = (partesNovas[0] + " " + partesNovas[1]).toLowerCase();
     const deviceId = obterDeviceId();
 
-    // 1. Acessa o banco para verificar duplicidade e limite global
+    // 2. Acessa o banco para verificar conflitos e limites
     db.ref('users').once('value', snap => {
         const todosUsuarios = snap.val() || {};
         const nomesExistentes = Object.keys(todosUsuarios);
         const totalUsers = nomesExistentes.length;
 
-        // Procura se existe o nome ignorando maiúsculas/minúsculas
-        const nomeDuplicado = nomesExistentes.find(nome => nome.toLowerCase() === n.toLowerCase());
-        const userExistente = nomeDuplicado ? todosUsuarios[nomeDuplicado] : null;
+        // A - Busca conflito de "Nome Curto" (Nicole Lira Silva vs Nicole Lira)
+        const conflitoNomeCurto = nomesExistentes.find(existingName => {
+            const p = existingName.split(" ");
+            const duplaExistente = (p[0] + " " + p[1]).toLowerCase();
+            // Só é conflito se for de outro celular. Se for o mesmo celular tentando logar, deixa passar.
+            return duplaExistente === duplaNova && todosUsuarios[existingName].ownerId !== deviceId;
+        });
 
-        if (userExistente) {
-            // Se o dono NÃO for este celular, bloqueia.
-            if (userExistente.ownerId && userExistente.ownerId !== deviceId) {
-                alert("⚠️ NOME JÁ EM USO: Este perfil pertence a outro membro. Use seu nome completo ou sobrenome para se diferenciar.");
-                return;
-            }
-            // Se o dono for o mesmo celular, apenas loga (ajuda se o usuário limpou o cache local)
-            loginUser(nomeDuplicado);
+        if (conflitoNomeCurto) {
+            alert(`⚠️ CONFLITO DE NOME: Já existe um(a) "${conflitoNomeCurto}" cadastrado. Para evitar confusão no ranking familiar, por favor adicione um segundo sobrenome ou uma letra para se diferenciar.`);
             return;
         }
 
-        // 2. Trava de segurança: Limite de perfis por celular (3)
+        // B - Verifica se o nome exato já existe para permitir login/reinstalação
+        const userExistente = todosUsuarios[n];
+        if (userExistente) {
+            if (userExistente.ownerId && userExistente.ownerId !== deviceId) {
+                alert("⚠️ PERFIL PROTEGIDO: Este nome já pertence a outro aparelho.");
+                return;
+            }
+            loginUser(n); // Se for o dono, apenas entra
+            return;
+        }
+
+        // 3. Travas de limite (Cotas)
         let mp = JSON.parse(localStorage.getItem(KEY_MY_PROFILES) || "[]");
         if (mp.length >= 3 && !mp.includes(n)) {
             alert("Limite de 3 perfis por aparelho atingido.");
             return;
         }
 
-        // 3. Trava de segurança: Limite global de 100 usuários no plano da família
         if (totalUsers >= 100) {
-            alert("Limite máximo de 100 participantes atingido. Procure o administrador.");
+            alert("Limite máximo de 100 participantes atingido no plano familiar.");
             return;
         }
 
-        // 4. Criação do novo perfil
+        // 4. Criação do novo perfil (Tudo OK)
         const agora = new Date().toLocaleDateString('pt-BR');
         db.ref('users/' + n).set({
             name: n,
@@ -1212,6 +1229,7 @@ function pararVoz() {
 </script>    
 </body>
 </html>
+
 
 
 
