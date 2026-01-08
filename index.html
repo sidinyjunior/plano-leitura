@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PLANO BIENAL DE LEITURA BÍBLICA & DEVOCIONAL</title>
-    <!-- VERSÃO 15 -->
+    <!-- VERSÃO 16 -->
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -59,12 +59,17 @@
 }
 
 #splash-screen h3 {
-    white-space: nowrap;            /* Impede a quebra em duas linhas */
-    font-size: clamp(14px, 4.5vw, 24px); /* Diminui a letra em telas pequenas */
-    width: 100%;                    
+    white-space: nowrap;
+    /* Reduzi de 4.5vw para 4.2vw e o máximo de 24px para 22px */
+    font-size: clamp(14px, 4.2vw, 22px); 
+    width: 100%;
     text-align: center;
     margin: 10px 0;
     color: #2d3436;
+    
+    /* ADICIONE ESTAS DUAS LINHAS ABAIXO */
+    padding: 0 10px;           /* Cria um respiro nas laterais */
+    box-sizing: border-box;    /* Garante que o padding não aumente o tamanho do elemento */
 }
 
 #splash-screen p {
@@ -1122,6 +1127,7 @@ function pararVoz() {
 </script>    
 </body>
 </html>
+
 
 
 
