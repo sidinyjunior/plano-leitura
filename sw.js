@@ -1,6 +1,6 @@
 /**
  * SERVICE WORKER - PROJETO FAMILIAR
- * Versão: V29
+ * Versão: V30
  * Objetivo: Garantir bíblias e devocionais disponíveis 100% Offline.
  */
 
@@ -28,6 +28,7 @@ const assets = [
   'https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_003.json',
   'https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_004.json',
   'https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_005.json'
+  'https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_006.json'
 ];
 
 // EVENTO DE INSTALAÇÃO: Acontece quando o app é aberto pela primeira vez ou quando a versão muda
