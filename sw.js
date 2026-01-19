@@ -4,7 +4,7 @@
  * Objetivo: Garantir bíblias e devocionais disponíveis 100% Offline.
  */
 
-const CACHE_NAME = 'projeto-familiar-v14'; 
+const CACHE_NAME = 'projeto-familiar-v15'; 
 const DINAMICO_CACHE = 'devocionais-dinamicos-v1';
 
 // 1. ARQUIVOS PARA BAIXAR IMEDIATAMENTE (CACHE ESTRUTURAL + CONTEÚDO INICIAL)
