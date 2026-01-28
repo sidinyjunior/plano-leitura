@@ -1,11 +1,12 @@
 /**
- * SERVICE WORKER - PROJETO FAMILIAR
- * Versao_V39
- * Objetivo: Garantir bíblias e devocionais disponíveis 100% Offline.
+
+ * SERVICE WORKER - PLANO BIENAL DE LEITURA BÍBLICA & DEVOCIONAL
+ * Objetivo: Garantir bíblias e devocionais disponíveis 100% Offline
+ 
  */
 
-const CACHE_NAME = 'projeto-familiar-v15'; 
-const DINAMICO_CACHE = 'devocionais-dinamicos-v1';
+const CACHE_NAME = 'PLANO BIENAL DE LEITURA BÍBLICA & DEVOCIONAL'; 
+const DINAMICO_CACHE = 'VERSAO_V18';
 
 // 1. ARQUIVOS PARA BAIXAR IMEDIATAMENTE (CACHE ESTRUTURAL + CONTEÚDO INICIAL)
 const assets = [
