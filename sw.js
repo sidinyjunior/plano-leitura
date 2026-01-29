@@ -41,7 +41,8 @@ const assets = [
   'https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_015.json',
   'https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_016.json',
   'https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_017.json',
-  'https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_018.json'
+  'https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_018.json',
+  'https://raw.githubusercontent.com/sidinyjunior/plano-leitura/main/Devocional_Diario/devocional_019.json'
 ];
 
 // EVENTO DE INSTALAÇÃO: Acontece quando o app é aberto pela primeira vez ou quando a versão muda
